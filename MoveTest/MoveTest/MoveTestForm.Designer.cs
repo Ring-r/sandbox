@@ -35,15 +35,11 @@
             this.textBoxWidth = new System.Windows.Forms.TextBox();
             this.labelHeight = new System.Windows.Forms.Label();
             this.textBoxHeight = new System.Windows.Forms.TextBox();
-            this.buttonAddEntity = new System.Windows.Forms.Button();
-            this.buttonDelEntity = new System.Windows.Forms.Button();
             this.labelSpeedT = new System.Windows.Forms.Label();
             this.textBoxSpeedT = new System.Windows.Forms.TextBox();
             this.checkBoxIsReverse = new System.Windows.Forms.CheckBox();
             this.labelOffsetT = new System.Windows.Forms.Label();
             this.textBoxOffsetT = new System.Windows.Forms.TextBox();
-            this.buttonAddPoint = new System.Windows.Forms.Button();
-            this.buttonDelPoint = new System.Windows.Forms.Button();
             this.labelXP = new System.Windows.Forms.Label();
             this.textBoxXP = new System.Windows.Forms.TextBox();
             this.labelYP = new System.Windows.Forms.Label();
@@ -52,18 +48,22 @@
             this.buttonStartStopTimer = new System.Windows.Forms.Button();
             this.checkBoxIsShowDots = new System.Windows.Forms.CheckBox();
             this.checkBoxIsShowPoints = new System.Windows.Forms.CheckBox();
-            this.buttonLoad = new System.Windows.Forms.Button();
-            this.buttonSave = new System.Windows.Forms.Button();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.tableLayoutPanelAddDelEntity = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonDelEntity = new System.Windows.Forms.Button();
+            this.buttonAddEntity = new System.Windows.Forms.Button();
             this.tableLayoutPanelAddDelPoints = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonDelPoint = new System.Windows.Forms.Button();
+            this.buttonAddPoint = new System.Windows.Forms.Button();
             this.tableLayoutPanelLoadSave = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.buttonLoad = new System.Windows.Forms.Button();
             this.trackBar = new System.Windows.Forms.TrackBar();
             this.labelMinT = new System.Windows.Forms.Label();
             this.labelMaxT = new System.Windows.Forms.Label();
             this.textBoxMinT = new System.Windows.Forms.TextBox();
             this.textBoxMaxT = new System.Windows.Forms.TextBox();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.tableLayoutPanelSettings.SuspendLayout();
             this.tableLayoutPanelAddDelEntity.SuspendLayout();
             this.tableLayoutPanelAddDelPoints.SuspendLayout();
@@ -179,32 +179,6 @@
             this.textBoxHeight.TabIndex = 3;
             this.textBoxHeight.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
-            // buttonAddEntity
-            // 
-            this.buttonAddEntity.AutoSize = true;
-            this.buttonAddEntity.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonAddEntity.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonAddEntity.Location = new System.Drawing.Point(3, 3);
-            this.buttonAddEntity.Name = "buttonAddEntity";
-            this.buttonAddEntity.Size = new System.Drawing.Size(92, 23);
-            this.buttonAddEntity.TabIndex = 4;
-            this.buttonAddEntity.Text = "Add entity";
-            this.buttonAddEntity.UseVisualStyleBackColor = true;
-            this.buttonAddEntity.Click += new System.EventHandler(this.buttonAddEntity_Click);
-            // 
-            // buttonDelEntity
-            // 
-            this.buttonDelEntity.AutoSize = true;
-            this.buttonDelEntity.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonDelEntity.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonDelEntity.Location = new System.Drawing.Point(101, 3);
-            this.buttonDelEntity.Name = "buttonDelEntity";
-            this.buttonDelEntity.Size = new System.Drawing.Size(92, 23);
-            this.buttonDelEntity.TabIndex = 5;
-            this.buttonDelEntity.Text = "Del entity";
-            this.buttonDelEntity.UseVisualStyleBackColor = true;
-            this.buttonDelEntity.Click += new System.EventHandler(this.buttonDelEntity_Click);
-            // 
             // labelSpeedT
             // 
             this.labelSpeedT.AutoSize = true;
@@ -259,32 +233,6 @@
             this.textBoxOffsetT.Size = new System.Drawing.Size(147, 20);
             this.textBoxOffsetT.TabIndex = 10;
             this.textBoxOffsetT.TextChanged += new System.EventHandler(this.textBox_TextChanged);
-            // 
-            // buttonAddPoint
-            // 
-            this.buttonAddPoint.AutoSize = true;
-            this.buttonAddPoint.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonAddPoint.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonAddPoint.Location = new System.Drawing.Point(3, 3);
-            this.buttonAddPoint.Name = "buttonAddPoint";
-            this.buttonAddPoint.Size = new System.Drawing.Size(92, 23);
-            this.buttonAddPoint.TabIndex = 11;
-            this.buttonAddPoint.Text = "Add point";
-            this.buttonAddPoint.UseVisualStyleBackColor = true;
-            this.buttonAddPoint.Click += new System.EventHandler(this.buttonAddPoint_Click);
-            // 
-            // buttonDelPoint
-            // 
-            this.buttonDelPoint.AutoSize = true;
-            this.buttonDelPoint.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonDelPoint.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonDelPoint.Location = new System.Drawing.Point(101, 3);
-            this.buttonDelPoint.Name = "buttonDelPoint";
-            this.buttonDelPoint.Size = new System.Drawing.Size(92, 23);
-            this.buttonDelPoint.TabIndex = 12;
-            this.buttonDelPoint.Text = "Del point";
-            this.buttonDelPoint.UseVisualStyleBackColor = true;
-            this.buttonDelPoint.Click += new System.EventHandler(this.buttonDelPoint_Click);
             // 
             // labelXP
             // 
@@ -382,36 +330,6 @@
             this.checkBoxIsShowPoints.Text = "Is show points";
             this.checkBoxIsShowPoints.UseVisualStyleBackColor = true;
             // 
-            // buttonLoad
-            // 
-            this.buttonLoad.AutoSize = true;
-            this.buttonLoad.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonLoad.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonLoad.Location = new System.Drawing.Point(3, 3);
-            this.buttonLoad.Name = "buttonLoad";
-            this.buttonLoad.Size = new System.Drawing.Size(92, 23);
-            this.buttonLoad.TabIndex = 21;
-            this.buttonLoad.Text = "Load...";
-            this.buttonLoad.UseVisualStyleBackColor = true;
-            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.AutoSize = true;
-            this.buttonSave.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonSave.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonSave.Location = new System.Drawing.Point(101, 3);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(92, 23);
-            this.buttonSave.TabIndex = 22;
-            this.buttonSave.Text = "Save...";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
-            // openFileDialog
-            // 
-            this.openFileDialog.FileName = "enteties.txml";
-            // 
             // tableLayoutPanelAddDelEntity
             // 
             this.tableLayoutPanelAddDelEntity.AutoSize = true;
@@ -427,9 +345,35 @@
             this.tableLayoutPanelAddDelEntity.Name = "tableLayoutPanelAddDelEntity";
             this.tableLayoutPanelAddDelEntity.RowCount = 1;
             this.tableLayoutPanelAddDelEntity.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelAddDelEntity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelAddDelEntity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanelAddDelEntity.Size = new System.Drawing.Size(196, 29);
             this.tableLayoutPanelAddDelEntity.TabIndex = 23;
+            // 
+            // buttonDelEntity
+            // 
+            this.buttonDelEntity.AutoSize = true;
+            this.buttonDelEntity.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonDelEntity.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonDelEntity.Location = new System.Drawing.Point(101, 3);
+            this.buttonDelEntity.Name = "buttonDelEntity";
+            this.buttonDelEntity.Size = new System.Drawing.Size(92, 23);
+            this.buttonDelEntity.TabIndex = 5;
+            this.buttonDelEntity.Text = "Del entity";
+            this.buttonDelEntity.UseVisualStyleBackColor = true;
+            this.buttonDelEntity.Click += new System.EventHandler(this.buttonDelEntity_Click);
+            // 
+            // buttonAddEntity
+            // 
+            this.buttonAddEntity.AutoSize = true;
+            this.buttonAddEntity.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonAddEntity.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonAddEntity.Location = new System.Drawing.Point(3, 3);
+            this.buttonAddEntity.Name = "buttonAddEntity";
+            this.buttonAddEntity.Size = new System.Drawing.Size(92, 23);
+            this.buttonAddEntity.TabIndex = 4;
+            this.buttonAddEntity.Text = "Add entity";
+            this.buttonAddEntity.UseVisualStyleBackColor = true;
+            this.buttonAddEntity.Click += new System.EventHandler(this.buttonAddEntity_Click);
             // 
             // tableLayoutPanelAddDelPoints
             // 
@@ -446,9 +390,35 @@
             this.tableLayoutPanelAddDelPoints.Name = "tableLayoutPanelAddDelPoints";
             this.tableLayoutPanelAddDelPoints.RowCount = 1;
             this.tableLayoutPanelAddDelPoints.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelAddDelPoints.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelAddDelPoints.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanelAddDelPoints.Size = new System.Drawing.Size(196, 29);
             this.tableLayoutPanelAddDelPoints.TabIndex = 24;
+            // 
+            // buttonDelPoint
+            // 
+            this.buttonDelPoint.AutoSize = true;
+            this.buttonDelPoint.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonDelPoint.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonDelPoint.Location = new System.Drawing.Point(101, 3);
+            this.buttonDelPoint.Name = "buttonDelPoint";
+            this.buttonDelPoint.Size = new System.Drawing.Size(92, 23);
+            this.buttonDelPoint.TabIndex = 12;
+            this.buttonDelPoint.Text = "Del point";
+            this.buttonDelPoint.UseVisualStyleBackColor = true;
+            this.buttonDelPoint.Click += new System.EventHandler(this.buttonDelPoint_Click);
+            // 
+            // buttonAddPoint
+            // 
+            this.buttonAddPoint.AutoSize = true;
+            this.buttonAddPoint.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonAddPoint.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonAddPoint.Location = new System.Drawing.Point(3, 3);
+            this.buttonAddPoint.Name = "buttonAddPoint";
+            this.buttonAddPoint.Size = new System.Drawing.Size(92, 23);
+            this.buttonAddPoint.TabIndex = 11;
+            this.buttonAddPoint.Text = "Add point";
+            this.buttonAddPoint.UseVisualStyleBackColor = true;
+            this.buttonAddPoint.Click += new System.EventHandler(this.buttonAddPoint_Click);
             // 
             // tableLayoutPanelLoadSave
             // 
@@ -465,9 +435,35 @@
             this.tableLayoutPanelLoadSave.Name = "tableLayoutPanelLoadSave";
             this.tableLayoutPanelLoadSave.RowCount = 1;
             this.tableLayoutPanelLoadSave.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelLoadSave.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelLoadSave.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.tableLayoutPanelLoadSave.Size = new System.Drawing.Size(196, 29);
             this.tableLayoutPanelLoadSave.TabIndex = 25;
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.AutoSize = true;
+            this.buttonSave.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonSave.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonSave.Location = new System.Drawing.Point(101, 3);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(92, 23);
+            this.buttonSave.TabIndex = 22;
+            this.buttonSave.Text = "Save...";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // buttonLoad
+            // 
+            this.buttonLoad.AutoSize = true;
+            this.buttonLoad.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.buttonLoad.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonLoad.Location = new System.Drawing.Point(3, 3);
+            this.buttonLoad.Name = "buttonLoad";
+            this.buttonLoad.Size = new System.Drawing.Size(92, 23);
+            this.buttonLoad.TabIndex = 21;
+            this.buttonLoad.Text = "Load...";
+            this.buttonLoad.UseVisualStyleBackColor = true;
+            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
             // 
             // trackBar
             // 
@@ -523,6 +519,10 @@
             this.textBoxMaxT.Size = new System.Drawing.Size(147, 20);
             this.textBoxMaxT.TabIndex = 30;
             this.textBoxMaxT.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "enteties.txml";
             // 
             // MoveTestForm
             // 
