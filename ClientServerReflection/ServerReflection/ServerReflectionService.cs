@@ -29,14 +29,6 @@ namespace ServerReflection
         #region Private methods.
 
         /// <summary>
-        /// Main application enter point.
-        /// </summary>
-        static void Main()
-        {
-            ServiceBase.Run(new ServiceBase[] { new ServerReflectionService() });
-        }
-
-        /// <summary>
         /// Thread for listening start function.
         /// </summary>
         private void ThreadStart()
