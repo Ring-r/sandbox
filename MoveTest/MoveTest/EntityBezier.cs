@@ -47,8 +47,7 @@ namespace MoveTest
         #region Time.
 
         private static readonly byte mListCapacity = 10;
-        private static readonly float[] mListX = new float[mListCapacity];
-        private static readonly float[] mListY = new float[mListCapacity];
+        private static readonly float[] mTempList = new float[2 * mListCapacity];
 
         private float mTime = 0;
 
@@ -60,24 +59,23 @@ namespace MoveTest
 
         public static float mKoefSpeedTime = 1;
 
-        public byte[] mListBX = new byte[mListCapacity];
-        public byte[] mListBY = new byte[mListCapacity];
+        public short[] mList = new short[2 * mListCapacity];
         public byte mListCount = 0;
 
         #region Not for java code.
 
-        public float getAtListX(int index)
+        public float getFloatAtListX(int index)
         {
-            return Options.mX + this.mListBX[index] / 100f * Options.mWidth;
+            return Options.mX + this.mList[2 * index] / 100f * Options.mWidth;
         }
-        public float getAtListY(int index)
+        public float getFloatAtListY(int index)
         {
-            return Options.mY + this.mListBY[index] / 100f * Options.mHeight;
+            return Options.mY + this.mList[2 * index + 1] / 100f * Options.mHeight;
         }
-        public void setAtListX(int index, float pX, float pY)
+        public void setFloatAtListX(int index, float pX, float pY)
         {
-            this.mListBX[index] = (byte)((pX - Options.mX) / Options.mWidth * 100);
-            this.mListBY[index] = (byte)((pY - Options.mY) / Options.mHeight * 100);
+            this.mList[2 * index] = (short)((pX - Options.mX) / Options.mWidth * 100);
+            this.mList[2 * index + 1] = (short)((pY - Options.mY) / Options.mHeight * 100);
         }
 
         public void RemoveAt(int index)
@@ -86,22 +84,22 @@ namespace MoveTest
             {
                 for (int i = index; i < this.mListCount - 1; i++)
                 {
-                    this.mListBX[i] = this.mListBX[i + 1];
-                    this.mListBY[i] = this.mListBY[i + 1];
+                    this.mList[2 * i] = this.mList[2 * (i + 1)];
+                    this.mList[2 * i + 1] = this.mList[2 * (i + 1) + 1];
                 }
                 this.mListCount--;
             }
         }
-        public void Add(byte x, byte y)
+        public void Add(short x, short y)
         {
             if (this.mListCount < mListCapacity)
             {
-                this.mListBX[this.mListCount] = x;
-                this.mListBY[this.mListCount] = y;
+                this.mList[2 * this.mListCount] = x;
+                this.mList[2 * this.mListCount + 1] = y;
                 this.mListCount++;
             }
         }
-        public void Insert(int index, byte x, byte y)
+        public void Insert(int index, short x, short y)
         {
             if (this.mListCount == 0)
             {
@@ -111,11 +109,11 @@ namespace MoveTest
             {
                 for (int i = mListCount; i > index; i--)
                 {
-                    this.mListBX[i] = this.mListBX[i - 1];
-                    this.mListBY[i] = this.mListBY[i - 1];
+                    this.mList[2 * i] = this.mList[2 * (i - 1)];
+                    this.mList[2 * i + 1] = this.mList[2 * (i - 1) + 1];
                 }
-                this.mListBX[index] = x;
-                this.mListBY[index] = y;
+                this.mList[2 * index] = x;
+                this.mList[2 * index + 1] = y;
                 this.mListCount++;
             }
         }
@@ -147,21 +145,20 @@ namespace MoveTest
 
         private void updatePoints()
         {
-            for (int i = 0; i < this.mListCount; i++)
+            int count = this.mListCount << 1;
+            for (int i = 0; i < count; i++)
             {
-                mListX[i] = this.mListBX[i];
-                mListY[i] = this.mListBY[i];
+                mTempList[i] = this.mList[i];
             }
             for (int j = 1; j < this.mListCount; j++)
             {
-                int count = this.mListCount - j;
+                count = (this.mListCount - j) << 1;
                 for (int i = 0; i < count; i++)
                 {
-                    mListX[i] = mListX[i] + (mListX[i + 1] - mListX[i]) * this.mTime;
-                    mListY[i] = mListY[i] + (mListY[i + 1] - mListY[i]) * this.mTime;
+                    mTempList[i] = mTempList[i] + (mTempList[i + 2] - mTempList[i]) * this.mTime;
                 }
             }
-            this.setCenterPosition(mListX[0] / 100 * Options.mWidth, mListY[0] / 100 * Options.mHeight);
+            this.setCenterPosition(this.mWidth / 2 + mTempList[0] * (Options.mWidth - this.mWidth) / 100, this.mHeight / 2 + mTempList[1] * (Options.mHeight - this.mHeight) / 100);
         }
 
         public void reset()

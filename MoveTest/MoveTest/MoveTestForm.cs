@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
-using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 
 namespace MoveTest
 {
@@ -57,8 +57,8 @@ namespace MoveTest
                     this.entityList[this.entIndex].mSpeedTime = float.Parse(this.textBoxSpeedT.Text);
                     this.entityList[this.entIndex].mIsReverseTime = this.checkBoxIsReverse.Checked;
 
-                    this.entityList[this.entIndex].mListBX[this.pointIndex] = byte.Parse(this.textBoxXP.Text);
-                    this.entityList[this.entIndex].mListBY[this.pointIndex] = byte.Parse(this.textBoxYP.Text);
+                    this.entityList[this.entIndex].mList[2 * this.pointIndex] = short.Parse(this.textBoxXP.Text);
+                    this.entityList[this.entIndex].mList[2 * this.pointIndex + 1] = short.Parse(this.textBoxYP.Text);
 
                     this.UpdateForm();
                 }
@@ -81,8 +81,8 @@ namespace MoveTest
             this.checkBoxIsReverse.Checked = this.entityList[this.entIndex].mIsReverseTime;
 
             this.labelPointsCount.Text = string.Format("Points count: {0}", this.entityList[this.entIndex].mListCount);
-            this.textBoxXP.Text = this.entityList[this.entIndex].mListBX[this.pointIndex].ToString();
-            this.textBoxYP.Text = this.entityList[this.entIndex].mListBY[this.pointIndex].ToString();
+            this.textBoxXP.Text = this.entityList[this.entIndex].mList[2 * this.pointIndex].ToString();
+            this.textBoxYP.Text = this.entityList[this.entIndex].mList[2 * this.pointIndex + 1].ToString();
 
             this.isUpdateForm = false;
 
@@ -163,8 +163,8 @@ namespace MoveTest
                 {
                     for (int j = 0; j < entity.mListCount; j++)
                     {
-                        float x = entity.getAtListX(j);
-                        float y = entity.getAtListY(j);
+                        float x = entity.getFloatAtListX(j);
+                        float y = entity.getFloatAtListY(j);
                         e.Graphics.FillEllipse(Brushes.Silver, x - this.pointRadius, y - this.pointRadius, 2 * this.pointRadius, 2 * this.pointRadius);
                         e.Graphics.DrawString(j.ToString(), this.Font, Brushes.Black, x + this.pointRadius, y + this.pointRadius);
                     }
@@ -183,7 +183,7 @@ namespace MoveTest
             {
                 EntityBezier entity = this.entityList[this.entIndex];
 
-                e.Graphics.FillEllipse(Brushes.Green, entity.getAtListX(this.pointIndex) - this.pointRadius, entity.getAtListY(this.pointIndex) - this.pointRadius, 2 * this.pointRadius, 2 * this.pointRadius);
+                e.Graphics.FillEllipse(Brushes.Green, entity.getFloatAtListX(this.pointIndex) - this.pointRadius, entity.getFloatAtListY(this.pointIndex) - this.pointRadius, 2 * this.pointRadius, 2 * this.pointRadius);
             }
         }
 
@@ -212,8 +212,8 @@ namespace MoveTest
                 EntityBezier entity = this.entityList[i];
                 for (int j = 0; j < entity.mListCount && !isFind; j++)
                 {
-                    float x = entity.getAtListX(j) - e.X;
-                    float y = entity.getAtListY(j) - e.Y;
+                    float x = entity.getFloatAtListX(j) - e.X;
+                    float y = entity.getFloatAtListY(j) - e.Y;
                     if (Math.Sqrt(x * x + y * y) < this.pointRadius)
                     {
                         isFind = true;
@@ -233,7 +233,7 @@ namespace MoveTest
             {
                 EntityBezier entity = this.entityList[this.entIndex];
 
-                entity.setAtListX(pointIndex, e.X, e.Y);
+                entity.setFloatAtListX(pointIndex, e.X, e.Y);
 
                 this.Invalidate();
                 this.UpdateForm();
@@ -247,8 +247,8 @@ namespace MoveTest
                 EntityBezier entity = this.entityList[this.entIndex];
 
                 float step = 100 / lineCount;
-                entity.mListBX[pointIndex] = (byte)(Math.Round(entity.mListBX[pointIndex] / step) * step);
-                entity.mListBY[pointIndex] = (byte)(Math.Round(entity.mListBY[pointIndex] / step) * step);
+                entity.mList[2 * pointIndex] = (short)(Math.Round(entity.mList[2 * pointIndex] / step) * step);
+                entity.mList[2 * pointIndex + 1] = (short)(Math.Round(entity.mList[2 * pointIndex + 1] / step) * step);
 
                 this.UpdateForm();
                 this.timer.Start();
@@ -292,7 +292,7 @@ namespace MoveTest
 
         private void buttonAddPoint_Click(object sender, EventArgs e)
         {
-            this.entityList[this.entIndex].Insert(this.pointIndex, this.entityList[this.entIndex].mListBX[this.pointIndex], this.entityList[this.entIndex].mListBY[this.pointIndex]);
+            this.entityList[this.entIndex].Insert(this.pointIndex, this.entityList[this.entIndex].mList[2 * this.pointIndex], this.entityList[this.entIndex].mList[2 * this.pointIndex + 1]);
             this.UpdateForm();
         }
 
@@ -378,13 +378,13 @@ namespace MoveTest
 
                             for (int i = 0; i < pointCount; i++)
                             {
-                                byte x = byte.Parse(entity_string.Substring(0, index));
+                                short x = short.Parse(entity_string.Substring(0, index));
                                 entity_string = entity_string.Remove(0, index + 1);
                                 index = entity_string.IndexOf('"');
                                 entity_string = entity_string.Remove(0, index + 1);
                                 index = entity_string.IndexOf('"');
 
-                                byte y = byte.Parse(entity_string.Substring(0, index));
+                                short y = short.Parse(entity_string.Substring(0, index));
                                 entity_string = entity_string.Remove(0, index + 1);
                                 index = entity_string.IndexOf('"');
                                 entity_string = entity_string.Remove(0, index + 1);
@@ -425,7 +425,7 @@ namespace MoveTest
                             entity.mListCount);
                         for (int i = 0; i < entity.mListCount; i++)
                         {
-                            sw.Write(", Point{0}X=\"{1}\", Point{0}Y=\"{2}\"", i, entity.mListBX[i], entity.mListBY[i]);
+                            sw.Write(", Point{0}X=\"{1}\", Point{0}Y=\"{2}\"", i, entity.mList[2 * i], entity.mList[2 * i + 1]);
                         }
                         sw.WriteLine("\\>");
                     }
