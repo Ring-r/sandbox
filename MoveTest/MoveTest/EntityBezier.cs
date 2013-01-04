@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System;
 
 namespace MoveTest
 {
@@ -7,10 +8,10 @@ namespace MoveTest
     {
         #region Position.
 
-        private float mX;
-        private float mY;
-        private float mWidth = 50;
-        private float mHeight = 50;
+        protected float mX;
+        protected float mY;
+        protected float mWidth = 50;
+        protected float mHeight = 50;
 
         public float getX()
         {
@@ -66,16 +67,16 @@ namespace MoveTest
 
         public float getFloatAtListX(int index)
         {
-            return Options.mX + this.mList[2 * index] / 100f * Options.mWidth;
+            return Options.mX + this.mList[2 * index] / 100f * Options.cameraWidth;
         }
         public float getFloatAtListY(int index)
         {
-            return Options.mY + this.mList[2 * index + 1] / 100f * Options.mHeight;
+            return Options.mY + this.mList[2 * index + 1] / 100f * Options.cameraHeight;
         }
         public void setFloatAtListX(int index, float pX, float pY)
         {
-            this.mList[2 * index] = (short)((pX - Options.mX) / Options.mWidth * 100);
-            this.mList[2 * index + 1] = (short)((pY - Options.mY) / Options.mHeight * 100);
+            this.mList[2 * index] = (short)((pX - Options.mX) / Options.cameraWidth * 100);
+            this.mList[2 * index + 1] = (short)((pY - Options.mY) / Options.cameraHeight * 100);
         }
 
         public void RemoveAt(int index)
@@ -120,6 +121,18 @@ namespace MoveTest
 
         #endregion Not for java code.
 
+        public void init()
+        {
+            this.mTime = 0;
+
+            this.mMinTime = 0;
+            this.mMaxTime = 1;
+            this.mSpeedTime = 0;
+            this.mOffsetTime = 0;
+            this.mIsReverseTime = true;
+            this.mListCount = 0;
+        }
+
         #endregion Time.
 
         #region Dots (path) (temp).
@@ -134,7 +147,7 @@ namespace MoveTest
             float tempTimeStep = (this.mMaxTime - this.mMinTime) / dots.Length;
             for (int i = 0; i < dots.Length; i++)
             {
-                this.update(tempTimeStep / this.mSpeedTime / EntityBezier.mKoefSpeedTime);
+                this.onManagedUpdate(tempTimeStep / this.mSpeedTime / EntityBezier.mKoefSpeedTime);
                 this.dots[i].X = this.getCenterX();
                 this.dots[i].Y = this.getCenterY();
             }
@@ -158,19 +171,21 @@ namespace MoveTest
                     mTempList[i] = mTempList[i] + (mTempList[i + 2] - mTempList[i]) * this.mTime;
                 }
             }
-            this.setCenterPosition(this.mWidth / 2 + mTempList[0] * (Options.mWidth - this.mWidth) / 100, this.mHeight / 2 + mTempList[1] * (Options.mHeight - this.mHeight) / 100);
+            this.setCenterPosition(
+                this.mWidth / 2 + mTempList[0] * (Options.cameraWidth - this.mWidth) / 100,
+                this.mHeight / 2 + mTempList[1] * (Options.cameraHeight - this.mHeight) / 100);
         }
 
-        public void reset()
+        public virtual void reset()
         {
             this.calculateDots();
             this.mTime = this.mOffsetTime;
-            this.update(0);
+            this.onManagedUpdate(0);
         }
 
-        public void update(float pdT)
+        public virtual void onManagedUpdate(float pSecondsElapsed)
         {
-            this.mTime += this.mSpeedTime * pdT * mKoefSpeedTime;
+            this.mTime += this.mSpeedTime * pSecondsElapsed * mKoefSpeedTime;
 
             #region Time correction.
             if (this.mTime < this.mMinTime)

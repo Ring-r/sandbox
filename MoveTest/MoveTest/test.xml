@@ -1,0 +1,6 @@
+<chiky name="" scale="1" minTime="0" maxTime="1" speedTime="1" offsetTime="0" isRTime="True" normalMaxTime="1" normalSpeedTime="1" unnormalMaxTime="0,5" unnormalSpeedTime="0,1" properties="2" PointCount="4">
+<ctrPoint x="100" y="20"/>
+<ctrPoint x="0" y="20"/>
+<ctrPoint x="100" y="55"/>
+<ctrPoint x="0" y="55"/>
+</chiky>

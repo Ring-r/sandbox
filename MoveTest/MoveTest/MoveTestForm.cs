@@ -19,7 +19,7 @@ namespace MoveTest
 
         #endregion Данные визуализации.
 
-        private readonly List<EntityBezier> entityList = new List<EntityBezier>();
+        private readonly List<Chiky> chikyList = new List<Chiky>();
 
         private int entIndex = 0;
         private int pointIndex = 0;
@@ -30,12 +30,12 @@ namespace MoveTest
         {
             InitializeComponent();
 
-            this.entityList.Add(new EntityBezier() { mSpeedTime = 1 });
+            this.chikyList.Add(new Chiky() { mSpeedTime = 1 });
 
-            this.entityList[this.entIndex].Add(50, 50);
+            this.chikyList[this.entIndex].Add(50, 50);
 
-            Options.mWidth = 400;
-            Options.mHeight = 600;
+            Options.cameraWidth = 400;
+            Options.cameraHeight = 600;
 
             this.stopwatch.Start();
         }
@@ -46,19 +46,25 @@ namespace MoveTest
             {
                 try
                 {
-                    Options.mWidth = float.Parse(this.textBoxWidth.Text);
-                    Options.mHeight = float.Parse(this.textBoxHeight.Text);
-                    Options.mX = this.ClientSize.Width / 2 - Options.mWidth / 2;
-                    Options.mY = this.ClientSize.Height / 2 - Options.mHeight / 2;
+                    Options.cameraWidth = float.Parse(this.textBoxWidth.Text);
+                    Options.cameraHeight = float.Parse(this.textBoxHeight.Text);
+                    Options.mX = this.ClientSize.Width / 2 - Options.cameraWidth / 2;
+                    Options.mY = this.ClientSize.Height / 2 - Options.cameraHeight / 2;
 
-                    this.entityList[this.entIndex].mMinTime = float.Parse(this.textBoxMinT.Text);
-                    this.entityList[this.entIndex].mMaxTime = float.Parse(this.textBoxMaxT.Text);
-                    this.entityList[this.entIndex].mOffsetTime = float.Parse(this.textBoxOffsetT.Text);
-                    this.entityList[this.entIndex].mSpeedTime = float.Parse(this.textBoxSpeedT.Text);
-                    this.entityList[this.entIndex].mIsReverseTime = this.checkBoxIsReverse.Checked;
+                    this.chikyList[this.entIndex].mMinTime = float.Parse(this.textBoxMinT.Text);
+                    this.chikyList[this.entIndex].mMaxTime = float.Parse(this.textBoxMaxT.Text);
+                    this.chikyList[this.entIndex].mOffsetTime = float.Parse(this.textBoxOffsetT.Text);
+                    this.chikyList[this.entIndex].mSpeedTime = float.Parse(this.textBoxSpeedT.Text);
+                    this.chikyList[this.entIndex].mIsReverseTime = this.checkBoxIsReverse.Checked;
 
-                    this.entityList[this.entIndex].mList[2 * this.pointIndex] = short.Parse(this.textBoxXP.Text);
-                    this.entityList[this.entIndex].mList[2 * this.pointIndex + 1] = short.Parse(this.textBoxYP.Text);
+                    this.chikyList[this.entIndex].mNormalMaxTime = float.Parse(this.textBoxNormalMaxTime.Text);
+                    this.chikyList[this.entIndex].mNormalSpeedTime = float.Parse(this.textBoxNormalSpeedTime.Text);
+                    this.chikyList[this.entIndex].mUnnormalMaxTime = float.Parse(this.textBoxUnnormalMaxTime.Text);
+                    this.chikyList[this.entIndex].mUnnormalSpeedTime = float.Parse(this.textBoxUnnormalSpeedTime.Text);
+                    this.chikyList[this.entIndex].mProperties = int.Parse(this.textBoxProperties.Text);
+
+                    this.chikyList[this.entIndex].mList[2 * this.pointIndex] = short.Parse(this.textBoxXP.Text);
+                    this.chikyList[this.entIndex].mList[2 * this.pointIndex + 1] = short.Parse(this.textBoxYP.Text);
 
                     this.UpdateForm();
                 }
@@ -71,22 +77,28 @@ namespace MoveTest
         {
             this.isUpdateForm = true;
 
-            this.textBoxWidth.Text = Options.mWidth.ToString();
-            this.textBoxHeight.Text = Options.mHeight.ToString();
+            this.textBoxWidth.Text = Options.cameraWidth.ToString();
+            this.textBoxHeight.Text = Options.cameraHeight.ToString();
 
-            this.textBoxMinT.Text = this.entityList[this.entIndex].mMinTime.ToString();
-            this.textBoxMaxT.Text = this.entityList[this.entIndex].mMaxTime.ToString();
-            this.textBoxOffsetT.Text = this.entityList[this.entIndex].mOffsetTime.ToString();
-            this.textBoxSpeedT.Text = Math.Abs(this.entityList[this.entIndex].mSpeedTime).ToString();
-            this.checkBoxIsReverse.Checked = this.entityList[this.entIndex].mIsReverseTime;
+            this.textBoxMinT.Text = this.chikyList[this.entIndex].mMinTime.ToString();
+            this.textBoxMaxT.Text = this.chikyList[this.entIndex].mMaxTime.ToString();
+            this.textBoxOffsetT.Text = this.chikyList[this.entIndex].mOffsetTime.ToString();
+            this.textBoxSpeedT.Text = Math.Abs(this.chikyList[this.entIndex].mSpeedTime).ToString();
+            this.checkBoxIsReverse.Checked = this.chikyList[this.entIndex].mIsReverseTime;
 
-            this.labelPointsCount.Text = string.Format("Points count: {0}", this.entityList[this.entIndex].mListCount);
-            this.textBoxXP.Text = this.entityList[this.entIndex].mList[2 * this.pointIndex].ToString();
-            this.textBoxYP.Text = this.entityList[this.entIndex].mList[2 * this.pointIndex + 1].ToString();
+            this.textBoxNormalMaxTime.Text = this.chikyList[this.entIndex].mNormalMaxTime.ToString();
+            this.textBoxNormalSpeedTime.Text = this.chikyList[this.entIndex].mNormalSpeedTime.ToString();
+            this.textBoxUnnormalMaxTime.Text = this.chikyList[this.entIndex].mUnnormalMaxTime.ToString();
+            this.textBoxUnnormalSpeedTime.Text = this.chikyList[this.entIndex].mUnnormalSpeedTime.ToString();
+            this.textBoxProperties.Text = this.chikyList[this.entIndex].mProperties.ToString();
+
+            this.labelPointsCount.Text = string.Format("Points count: {0}", this.chikyList[this.entIndex].mListCount);
+            this.textBoxXP.Text = this.chikyList[this.entIndex].mList[2 * this.pointIndex].ToString();
+            this.textBoxYP.Text = this.chikyList[this.entIndex].mList[2 * this.pointIndex + 1].ToString();
 
             this.isUpdateForm = false;
 
-            foreach (EntityBezier entity in this.entityList)
+            foreach (Chiky entity in this.chikyList)
             {
                 entity.reset();
             }
@@ -94,9 +106,9 @@ namespace MoveTest
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            foreach (EntityBezier entity in this.entityList)
+            foreach (EntityBezier entity in this.chikyList)
             {
-                entity.update(this.stopwatch.ElapsedMilliseconds / 1000f);
+                entity.onManagedUpdate(this.stopwatch.ElapsedMilliseconds / 1000f);
             }
             this.Invalidate();
             this.stopwatch.Restart();
@@ -112,7 +124,7 @@ namespace MoveTest
             float linesStep;
             float linesBegin;
 
-            linesStep = Options.mWidth / lineCount;
+            linesStep = Options.cameraWidth / lineCount;
             linesBegin = Options.mX;
             while (0 < linesBegin)
             {
@@ -126,7 +138,7 @@ namespace MoveTest
                 linesBegin += linesStep;
             }
 
-            linesStep = Options.mHeight / lineCount;
+            linesStep = Options.cameraHeight / lineCount;
             linesBegin = Options.mY;
             while (0 < linesBegin)
             {
@@ -141,12 +153,12 @@ namespace MoveTest
             }
             #endregion Draw lines.
 
-            e.Graphics.DrawRectangle(Pens.Gray, Options.mX, Options.mY, Options.mWidth, Options.mHeight);
+            e.Graphics.DrawRectangle(Pens.Gray, Options.mX, Options.mY, Options.cameraWidth, Options.cameraHeight);
 
             #region Draw dots.
             if (this.checkBoxIsShowDots.Checked)
             {
-                foreach (EntityBezier entity in this.entityList)
+                foreach (EntityBezier entity in this.chikyList)
                 {
                     for (int j = 0; j < entity.dots.Length; j++)
                     {
@@ -159,7 +171,7 @@ namespace MoveTest
             #region Draw points.
             if (this.checkBoxIsShowPoints.Checked)
             {
-                foreach (EntityBezier entity in this.entityList)
+                foreach (EntityBezier entity in this.chikyList)
                 {
                     for (int j = 0; j < entity.mListCount; j++)
                     {
@@ -173,7 +185,7 @@ namespace MoveTest
             #endregion Draw points.
 
             #region Draw entity.
-            foreach (EntityBezier entity in this.entityList)
+            foreach (EntityBezier entity in this.chikyList)
             {
                 e.Graphics.FillEllipse(Brushes.Red, Options.mX + entity.getX(), Options.mY + entity.getY(), entity.getWidth(), entity.getHeight());
             }
@@ -181,7 +193,7 @@ namespace MoveTest
 
             if (this.checkBoxIsShowPoints.Checked)
             {
-                EntityBezier entity = this.entityList[this.entIndex];
+                EntityBezier entity = this.chikyList[this.entIndex];
 
                 e.Graphics.FillEllipse(Brushes.Green, entity.getFloatAtListX(this.pointIndex) - this.pointRadius, entity.getFloatAtListY(this.pointIndex) - this.pointRadius, 2 * this.pointRadius, 2 * this.pointRadius);
             }
@@ -197,8 +209,8 @@ namespace MoveTest
 
         private void Form_Resize(object sender, EventArgs e)
         {
-            Options.mX = this.ClientSize.Width / 2 - Options.mWidth / 2;
-            Options.mY = this.ClientSize.Height / 2 - Options.mHeight / 2;
+            Options.mX = this.ClientSize.Width / 2 - Options.cameraWidth / 2;
+            Options.mY = this.ClientSize.Height / 2 - Options.cameraHeight / 2;
 
             this.UpdateForm();
         }
@@ -207,9 +219,9 @@ namespace MoveTest
         private void MoveTestForm_MouseDown(object sender, MouseEventArgs e)
         {
             bool isFind = false;
-            for (int i = 0; i < this.entityList.Count && !isFind; i++)
+            for (int i = 0; i < this.chikyList.Count && !isFind; i++)
             {
-                EntityBezier entity = this.entityList[i];
+                EntityBezier entity = this.chikyList[i];
                 for (int j = 0; j < entity.mListCount && !isFind; j++)
                 {
                     float x = entity.getFloatAtListX(j) - e.X;
@@ -231,7 +243,7 @@ namespace MoveTest
         {
             if (this.isMouseDown)
             {
-                EntityBezier entity = this.entityList[this.entIndex];
+                EntityBezier entity = this.chikyList[this.entIndex];
 
                 entity.setFloatAtListX(pointIndex, e.X, e.Y);
 
@@ -244,7 +256,7 @@ namespace MoveTest
         {
             if (this.isMouseDown)
             {
-                EntityBezier entity = this.entityList[this.entIndex];
+                EntityBezier entity = this.chikyList[this.entIndex];
 
                 float step = 100 / lineCount;
                 entity.mList[2 * pointIndex] = (short)(Math.Round(entity.mList[2 * pointIndex] / step) * step);
@@ -269,21 +281,21 @@ namespace MoveTest
 
         private void buttonAddEntity_Click(object sender, EventArgs e)
         {
-            EntityBezier entety = new EntityBezier() { mSpeedTime = 1 };
+            Chiky entety = new Chiky() { mSpeedTime = 1 };
             entety.Add(50, 50);
-            this.entityList.Insert(this.entIndex, entety);
+            this.chikyList.Insert(this.entIndex, entety);
             this.pointIndex = 0;
             this.UpdateForm();
         }
 
         private void buttonDelEntity_Click(object sender, EventArgs e)
         {
-            if (this.entityList.Count > 1)
+            if (this.chikyList.Count > 1)
             {
-                this.entityList.RemoveAt(this.entIndex);
-                if (this.entIndex >= this.entityList.Count)
+                this.chikyList.RemoveAt(this.entIndex);
+                if (this.entIndex >= this.chikyList.Count)
                 {
-                    this.entIndex = this.entityList.Count - 1;
+                    this.entIndex = this.chikyList.Count - 1;
                 }
                 this.pointIndex = 0;
                 this.UpdateForm();
@@ -292,18 +304,18 @@ namespace MoveTest
 
         private void buttonAddPoint_Click(object sender, EventArgs e)
         {
-            this.entityList[this.entIndex].Insert(this.pointIndex, this.entityList[this.entIndex].mList[2 * this.pointIndex], this.entityList[this.entIndex].mList[2 * this.pointIndex + 1]);
+            this.chikyList[this.entIndex].Insert(this.pointIndex, this.chikyList[this.entIndex].mList[2 * this.pointIndex], this.chikyList[this.entIndex].mList[2 * this.pointIndex + 1]);
             this.UpdateForm();
         }
 
         private void buttonDelPoint_Click(object sender, EventArgs e)
         {
-            if (this.entityList[this.entIndex].mListCount > 1)
+            if (this.chikyList[this.entIndex].mListCount > 1)
             {
-                this.entityList[this.entIndex].RemoveAt(this.pointIndex);
-                if (this.pointIndex >= this.entityList[this.entIndex].mListCount)
+                this.chikyList[this.entIndex].RemoveAt(this.pointIndex);
+                if (this.pointIndex >= this.chikyList[this.entIndex].mListCount)
                 {
-                    this.pointIndex = this.entityList[this.entIndex].mListCount - 1;
+                    this.pointIndex = this.chikyList[this.entIndex].mListCount - 1;
                 }
                 this.UpdateForm();
             }
@@ -326,49 +338,120 @@ namespace MoveTest
         {
             if (this.openFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                entityList.Clear();
+                chikyList.Clear();
                 using (StreamReader sr = new StreamReader(this.openFileDialog.FileName))
                 {
                     while (!sr.EndOfStream)
                     {
                         try
                         {
+                            // Example:
+                            // <chiky name="tooflya.com" scale="0.5" minTime="0.1" maxTime="1.1" speedTime="0.5" offsetTime="0.3" isRTime="true" normalMaxTime="1" normalSpeedTime="0.5" unnormalMaxTime="0.5" unnormalSpeedTime="1" properties="3" pointCount="2">
+                            // <ctrPoint x="10" y="50"/>
+                            // <ctrPoint x="90" y="50"/>
+                            // </chiky>
                             string entity_string = sr.ReadLine();
                             int index;
-                            EntityBezier entity = new EntityBezier();
+                            Chiky entity = new Chiky();
                             index = entity_string.IndexOf('"');
                             entity_string = entity_string.Remove(0, index + 1);
                             index = entity_string.IndexOf('"');
 
+                            #region name.
+                            //entity.initScale(float.Parse(entity_string.Substring(0, index)));
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            #endregion name.
+
+                            #region scale.
+                            entity.initScale(float.Parse(entity_string.Substring(0, index)));
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            #endregion scale.
+
+                            #region minTime.
                             entity.mMinTime = float.Parse(entity_string.Substring(0, index));
                             entity_string = entity_string.Remove(0, index + 1);
                             index = entity_string.IndexOf('"');
                             entity_string = entity_string.Remove(0, index + 1);
                             index = entity_string.IndexOf('"');
+                            #endregion minTime.
 
+                            #region maxTime.
                             entity.mMaxTime = float.Parse(entity_string.Substring(0, index));
                             entity_string = entity_string.Remove(0, index + 1);
                             index = entity_string.IndexOf('"');
                             entity_string = entity_string.Remove(0, index + 1);
                             index = entity_string.IndexOf('"');
+                            #endregion maxTime.
 
-                            entity.mOffsetTime = float.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-
+                            #region speedTime.
                             entity.mSpeedTime = float.Parse(entity_string.Substring(0, index));
                             entity_string = entity_string.Remove(0, index + 1);
                             index = entity_string.IndexOf('"');
                             entity_string = entity_string.Remove(0, index + 1);
                             index = entity_string.IndexOf('"');
+                            #endregion speedTime.
 
+                            #region offsetTime.
+                            entity.mOffsetTime = float.Parse(entity_string.Substring(0, index));
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            #endregion offsetTime.
+
+                            #region isRTime.
                             entity.mIsReverseTime = bool.Parse(entity_string.Substring(0, index));
                             entity_string = entity_string.Remove(0, index + 1);
                             index = entity_string.IndexOf('"');
                             entity_string = entity_string.Remove(0, index + 1);
                             index = entity_string.IndexOf('"');
+                            #endregion isRTime.
+
+                            #region normalMaxTime.
+                            entity.mNormalMaxTime = float.Parse(entity_string.Substring(0, index));
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            #endregion normalMaxTime.
+
+                            #region normalSpeedTime.
+                            entity.mNormalSpeedTime = float.Parse(entity_string.Substring(0, index));
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            #endregion normalSpeedTime.
+
+                            #region unnormalMaxTime.
+                            entity.mUnnormalMaxTime = float.Parse(entity_string.Substring(0, index));
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            #endregion unnormalMaxTime.
+
+                            #region unnormalSpeedTime.
+                            entity.mUnnormalSpeedTime = float.Parse(entity_string.Substring(0, index));
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            #endregion unnormalSpeedTime.
+
+                            #region properties.
+                            entity.mProperties = int.Parse(entity_string.Substring(0, index));
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            entity_string = entity_string.Remove(0, index + 1);
+                            index = entity_string.IndexOf('"');
+                            #endregion properties.
 
                             int pointCount = int.Parse(entity_string.Substring(0, index));
                             entity_string = entity_string.Remove(0, index + 1);
@@ -378,6 +461,11 @@ namespace MoveTest
 
                             for (int i = 0; i < pointCount; i++)
                             {
+                                entity_string = sr.ReadLine();
+                                index = entity_string.IndexOf('"');
+                                entity_string = entity_string.Remove(0, index + 1);
+                                index = entity_string.IndexOf('"');
+
                                 short x = short.Parse(entity_string.Substring(0, index));
                                 entity_string = entity_string.Remove(0, index + 1);
                                 index = entity_string.IndexOf('"');
@@ -394,15 +482,15 @@ namespace MoveTest
                             }
 
                             entity.reset();
-                            this.entityList.Add(entity);
+                            this.chikyList.Add(entity);
                         }
                         catch { }
                     }
                 }
-                if (this.entityList.Count < 1)
+                if (this.chikyList.Count < 1)
                 {
-                    this.entityList.Add(new EntityBezier());
-                    this.entityList[0].Add(50, 50);
+                    this.chikyList.Add(new Chiky());
+                    this.chikyList[0].Add(50, 50);
                 }
                 this.UpdateForm();
             }
@@ -414,20 +502,32 @@ namespace MoveTest
             {
                 using (StreamWriter sw = new StreamWriter(this.saveFileDialog.FileName))
                 {
-                    foreach (EntityBezier entity in this.entityList)
+                    foreach (Chiky entity in this.chikyList)
                     {
-                        sw.Write("<Entity MinT=\"{0}\", MaxT=\"{1}\", OffsetT=\"{2}\", SpeedT=\"{3}\", IsReturnT=\"{4}\", PointCount=\"{5}\"",
+                        // Example:
+                        // <chiky name="tooflya.com" scale="0.5" minTime="0.1" maxTime="1.1" speedTime="0.5" offsetTime="0.3" isRTime="true" normalMaxTime="1" normalSpeedTime="0.5" unnormalMaxTime="0.5" unnormalSpeedTime="1" properties="3">
+                        // <ctrPoint x="10" y="50"/>
+                        // <ctrPoint x="90" y="50"/>
+                        // </chiky>
+                        sw.WriteLine("<chiky name=\"{0}\" scale=\"{1}\" minTime=\"{2}\" maxTime=\"{3}\" speedTime=\"{4}\" offsetTime=\"{5}\" isRTime=\"{6}\" normalMaxTime=\"{7}\" normalSpeedTime=\"{8}\" unnormalMaxTime=\"{9}\" unnormalSpeedTime=\"{10}\" properties=\"{11}\" PointCount=\"{12}\">",
+                            "",
+                            1,
                             entity.mMinTime,
                             entity.mMaxTime,
-                            entity.mOffsetTime,
                             Math.Abs(entity.mSpeedTime),
+                            entity.mOffsetTime,
                             entity.mIsReverseTime,
+                            entity.mNormalMaxTime,
+                            entity.mNormalSpeedTime,
+                            entity.mUnnormalMaxTime,
+                            entity.mUnnormalSpeedTime,
+                            entity.mProperties,
                             entity.mListCount);
                         for (int i = 0; i < entity.mListCount; i++)
                         {
-                            sw.Write(", Point{0}X=\"{1}\", Point{0}Y=\"{2}\"", i, entity.mList[2 * i], entity.mList[2 * i + 1]);
+                            sw.WriteLine("<ctrPoint x=\"{0}\" y=\"{1}\"/>", entity.mList[2 * i], entity.mList[2 * i + 1]);
                         }
-                        sw.WriteLine("\\>");
+                        sw.WriteLine("</chiky>");
                     }
                 }
             }

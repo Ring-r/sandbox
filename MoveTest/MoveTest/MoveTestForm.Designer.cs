@@ -64,6 +64,16 @@
             this.textBoxMaxT = new System.Windows.Forms.TextBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.labelNormalMaxTime = new System.Windows.Forms.Label();
+            this.labelNormalSpeedTime = new System.Windows.Forms.Label();
+            this.labelUnnormalMaxTime = new System.Windows.Forms.Label();
+            this.labelUnnormalSpeedTime = new System.Windows.Forms.Label();
+            this.labelProperties = new System.Windows.Forms.Label();
+            this.textBoxNormalMaxTime = new System.Windows.Forms.TextBox();
+            this.textBoxNormalSpeedTime = new System.Windows.Forms.TextBox();
+            this.textBoxUnnormalMaxTime = new System.Windows.Forms.TextBox();
+            this.textBoxUnnormalSpeedTime = new System.Windows.Forms.TextBox();
+            this.textBoxProperties = new System.Windows.Forms.TextBox();
             this.tableLayoutPanelSettings.SuspendLayout();
             this.tableLayoutPanelAddDelEntity.SuspendLayout();
             this.tableLayoutPanelAddDelPoints.SuspendLayout();
@@ -94,37 +104,53 @@
             this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsReverse, 0, 8);
             this.tableLayoutPanelSettings.Controls.Add(this.labelOffsetT, 0, 6);
             this.tableLayoutPanelSettings.Controls.Add(this.textBoxOffsetT, 1, 6);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelXP, 0, 12);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxXP, 1, 12);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelYP, 0, 13);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxYP, 1, 13);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelPointsCount, 0, 10);
-            this.tableLayoutPanelSettings.Controls.Add(this.buttonStartStopTimer, 0, 17);
-            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsShowDots, 0, 15);
-            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsShowPoints, 0, 16);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelXP, 0, 18);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxXP, 1, 18);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelYP, 0, 19);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxYP, 1, 19);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelPointsCount, 0, 16);
+            this.tableLayoutPanelSettings.Controls.Add(this.buttonStartStopTimer, 0, 23);
+            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsShowDots, 0, 21);
+            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsShowPoints, 0, 22);
             this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelAddDelEntity, 0, 3);
-            this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelAddDelPoints, 0, 11);
-            this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelLoadSave, 0, 19);
-            this.tableLayoutPanelSettings.Controls.Add(this.trackBar, 0, 18);
+            this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelAddDelPoints, 0, 17);
+            this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelLoadSave, 0, 25);
+            this.tableLayoutPanelSettings.Controls.Add(this.trackBar, 0, 24);
             this.tableLayoutPanelSettings.Controls.Add(this.labelMinT, 0, 4);
             this.tableLayoutPanelSettings.Controls.Add(this.labelMaxT, 0, 5);
             this.tableLayoutPanelSettings.Controls.Add(this.textBoxMinT, 1, 4);
             this.tableLayoutPanelSettings.Controls.Add(this.textBoxMaxT, 1, 5);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelNormalMaxTime, 0, 10);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelNormalSpeedTime, 0, 11);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelUnnormalMaxTime, 0, 12);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelUnnormalSpeedTime, 0, 13);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelProperties, 0, 14);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxNormalMaxTime, 1, 10);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxNormalSpeedTime, 1, 11);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxUnnormalMaxTime, 1, 12);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxUnnormalSpeedTime, 1, 13);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxProperties, 1, 14);
             this.tableLayoutPanelSettings.Dock = System.Windows.Forms.DockStyle.Left;
             this.tableLayoutPanelSettings.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelSettings.Name = "tableLayoutPanelSettings";
-            this.tableLayoutPanelSettings.RowCount = 20;
+            this.tableLayoutPanelSettings.RowCount = 26;
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
-            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -134,7 +160,7 @@
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelSettings.Size = new System.Drawing.Size(206, 462);
+            this.tableLayoutPanelSettings.Size = new System.Drawing.Size(222, 673);
             this.tableLayoutPanelSettings.TabIndex = 1;
             // 
             // labelWidth
@@ -144,7 +170,7 @@
             this.labelWidth.Location = new System.Drawing.Point(5, 5);
             this.labelWidth.Margin = new System.Windows.Forms.Padding(3);
             this.labelWidth.Name = "labelWidth";
-            this.labelWidth.Size = new System.Drawing.Size(41, 20);
+            this.labelWidth.Size = new System.Drawing.Size(57, 20);
             this.labelWidth.TabIndex = 0;
             this.labelWidth.Text = "Width:";
             this.labelWidth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -152,7 +178,7 @@
             // textBoxWidth
             // 
             this.textBoxWidth.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxWidth.Location = new System.Drawing.Point(54, 5);
+            this.textBoxWidth.Location = new System.Drawing.Point(70, 5);
             this.textBoxWidth.Name = "textBoxWidth";
             this.textBoxWidth.Size = new System.Drawing.Size(147, 20);
             this.textBoxWidth.TabIndex = 1;
@@ -165,7 +191,7 @@
             this.labelHeight.Location = new System.Drawing.Point(5, 33);
             this.labelHeight.Margin = new System.Windows.Forms.Padding(3);
             this.labelHeight.Name = "labelHeight";
-            this.labelHeight.Size = new System.Drawing.Size(41, 20);
+            this.labelHeight.Size = new System.Drawing.Size(57, 20);
             this.labelHeight.TabIndex = 2;
             this.labelHeight.Text = "Height:";
             this.labelHeight.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -173,7 +199,7 @@
             // textBoxHeight
             // 
             this.textBoxHeight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxHeight.Location = new System.Drawing.Point(54, 33);
+            this.textBoxHeight.Location = new System.Drawing.Point(70, 33);
             this.textBoxHeight.Name = "textBoxHeight";
             this.textBoxHeight.Size = new System.Drawing.Size(147, 20);
             this.textBoxHeight.TabIndex = 3;
@@ -183,10 +209,10 @@
             // 
             this.labelSpeedT.AutoSize = true;
             this.labelSpeedT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelSpeedT.Location = new System.Drawing.Point(5, 177);
+            this.labelSpeedT.Location = new System.Drawing.Point(5, 189);
             this.labelSpeedT.Margin = new System.Windows.Forms.Padding(3);
             this.labelSpeedT.Name = "labelSpeedT";
-            this.labelSpeedT.Size = new System.Drawing.Size(41, 20);
+            this.labelSpeedT.Size = new System.Drawing.Size(57, 20);
             this.labelSpeedT.TabIndex = 6;
             this.labelSpeedT.Text = "Speed:";
             this.labelSpeedT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -194,7 +220,7 @@
             // textBoxSpeedT
             // 
             this.textBoxSpeedT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxSpeedT.Location = new System.Drawing.Point(54, 177);
+            this.textBoxSpeedT.Location = new System.Drawing.Point(70, 189);
             this.textBoxSpeedT.Name = "textBoxSpeedT";
             this.textBoxSpeedT.Size = new System.Drawing.Size(147, 20);
             this.textBoxSpeedT.TabIndex = 7;
@@ -205,9 +231,9 @@
             this.checkBoxIsReverse.AutoSize = true;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsReverse, 2);
             this.checkBoxIsReverse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBoxIsReverse.Location = new System.Drawing.Point(5, 205);
+            this.checkBoxIsReverse.Location = new System.Drawing.Point(5, 217);
             this.checkBoxIsReverse.Name = "checkBoxIsReverse";
-            this.checkBoxIsReverse.Size = new System.Drawing.Size(196, 17);
+            this.checkBoxIsReverse.Size = new System.Drawing.Size(212, 17);
             this.checkBoxIsReverse.TabIndex = 8;
             this.checkBoxIsReverse.Text = "Is reverse";
             this.checkBoxIsReverse.UseVisualStyleBackColor = true;
@@ -217,10 +243,10 @@
             // 
             this.labelOffsetT.AutoSize = true;
             this.labelOffsetT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelOffsetT.Location = new System.Drawing.Point(5, 149);
+            this.labelOffsetT.Location = new System.Drawing.Point(5, 161);
             this.labelOffsetT.Margin = new System.Windows.Forms.Padding(3);
             this.labelOffsetT.Name = "labelOffsetT";
-            this.labelOffsetT.Size = new System.Drawing.Size(41, 20);
+            this.labelOffsetT.Size = new System.Drawing.Size(57, 20);
             this.labelOffsetT.TabIndex = 9;
             this.labelOffsetT.Text = "Offset:";
             this.labelOffsetT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -228,7 +254,7 @@
             // textBoxOffsetT
             // 
             this.textBoxOffsetT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxOffsetT.Location = new System.Drawing.Point(54, 149);
+            this.textBoxOffsetT.Location = new System.Drawing.Point(70, 161);
             this.textBoxOffsetT.Name = "textBoxOffsetT";
             this.textBoxOffsetT.Size = new System.Drawing.Size(147, 20);
             this.textBoxOffsetT.TabIndex = 10;
@@ -238,10 +264,10 @@
             // 
             this.labelXP.AutoSize = true;
             this.labelXP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelXP.Location = new System.Drawing.Point(5, 296);
+            this.labelXP.Location = new System.Drawing.Point(5, 454);
             this.labelXP.Margin = new System.Windows.Forms.Padding(3);
             this.labelXP.Name = "labelXP";
-            this.labelXP.Size = new System.Drawing.Size(41, 20);
+            this.labelXP.Size = new System.Drawing.Size(57, 20);
             this.labelXP.TabIndex = 13;
             this.labelXP.Text = "X (%):";
             this.labelXP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -249,7 +275,7 @@
             // textBoxXP
             // 
             this.textBoxXP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxXP.Location = new System.Drawing.Point(54, 296);
+            this.textBoxXP.Location = new System.Drawing.Point(70, 454);
             this.textBoxXP.Name = "textBoxXP";
             this.textBoxXP.Size = new System.Drawing.Size(147, 20);
             this.textBoxXP.TabIndex = 14;
@@ -259,10 +285,10 @@
             // 
             this.labelYP.AutoSize = true;
             this.labelYP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelYP.Location = new System.Drawing.Point(5, 324);
+            this.labelYP.Location = new System.Drawing.Point(5, 482);
             this.labelYP.Margin = new System.Windows.Forms.Padding(3);
             this.labelYP.Name = "labelYP";
-            this.labelYP.Size = new System.Drawing.Size(41, 20);
+            this.labelYP.Size = new System.Drawing.Size(57, 20);
             this.labelYP.TabIndex = 15;
             this.labelYP.Text = "Y (%):";
             this.labelYP.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -270,7 +296,7 @@
             // textBoxYP
             // 
             this.textBoxYP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxYP.Location = new System.Drawing.Point(54, 324);
+            this.textBoxYP.Location = new System.Drawing.Point(70, 482);
             this.textBoxYP.Name = "textBoxYP";
             this.textBoxYP.Size = new System.Drawing.Size(147, 20);
             this.textBoxYP.TabIndex = 16;
@@ -281,10 +307,10 @@
             this.labelPointsCount.AutoSize = true;
             this.tableLayoutPanelSettings.SetColumnSpan(this.labelPointsCount, 2);
             this.labelPointsCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelPointsCount.Location = new System.Drawing.Point(5, 237);
+            this.labelPointsCount.Location = new System.Drawing.Point(5, 396);
             this.labelPointsCount.Margin = new System.Windows.Forms.Padding(3);
             this.labelPointsCount.Name = "labelPointsCount";
-            this.labelPointsCount.Size = new System.Drawing.Size(196, 14);
+            this.labelPointsCount.Size = new System.Drawing.Size(212, 13);
             this.labelPointsCount.TabIndex = 17;
             this.labelPointsCount.Text = "Points count:";
             this.labelPointsCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -295,9 +321,9 @@
             this.buttonStartStopTimer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelSettings.SetColumnSpan(this.buttonStartStopTimer, 2);
             this.buttonStartStopTimer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonStartStopTimer.Location = new System.Drawing.Point(5, 347);
+            this.buttonStartStopTimer.Location = new System.Drawing.Point(5, 558);
             this.buttonStartStopTimer.Name = "buttonStartStopTimer";
-            this.buttonStartStopTimer.Size = new System.Drawing.Size(196, 23);
+            this.buttonStartStopTimer.Size = new System.Drawing.Size(212, 23);
             this.buttonStartStopTimer.TabIndex = 18;
             this.buttonStartStopTimer.Text = "Stop timer";
             this.buttonStartStopTimer.UseVisualStyleBackColor = true;
@@ -310,9 +336,9 @@
             this.checkBoxIsShowDots.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsShowDots, 2);
             this.checkBoxIsShowDots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBoxIsShowDots.Location = new System.Drawing.Point(5, 297);
+            this.checkBoxIsShowDots.Location = new System.Drawing.Point(5, 508);
             this.checkBoxIsShowDots.Name = "checkBoxIsShowDots";
-            this.checkBoxIsShowDots.Size = new System.Drawing.Size(196, 17);
+            this.checkBoxIsShowDots.Size = new System.Drawing.Size(212, 17);
             this.checkBoxIsShowDots.TabIndex = 19;
             this.checkBoxIsShowDots.Text = "Is show dots";
             this.checkBoxIsShowDots.UseVisualStyleBackColor = true;
@@ -323,7 +349,7 @@
             this.checkBoxIsShowPoints.Checked = true;
             this.checkBoxIsShowPoints.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsShowPoints, 2);
-            this.checkBoxIsShowPoints.Location = new System.Drawing.Point(5, 322);
+            this.checkBoxIsShowPoints.Location = new System.Drawing.Point(5, 533);
             this.checkBoxIsShowPoints.Name = "checkBoxIsShowPoints";
             this.checkBoxIsShowPoints.Size = new System.Drawing.Size(93, 17);
             this.checkBoxIsShowPoints.TabIndex = 20;
@@ -346,7 +372,7 @@
             this.tableLayoutPanelAddDelEntity.RowCount = 1;
             this.tableLayoutPanelAddDelEntity.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelAddDelEntity.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-            this.tableLayoutPanelAddDelEntity.Size = new System.Drawing.Size(196, 29);
+            this.tableLayoutPanelAddDelEntity.Size = new System.Drawing.Size(212, 29);
             this.tableLayoutPanelAddDelEntity.TabIndex = 23;
             // 
             // buttonDelEntity
@@ -354,9 +380,9 @@
             this.buttonDelEntity.AutoSize = true;
             this.buttonDelEntity.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonDelEntity.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonDelEntity.Location = new System.Drawing.Point(101, 3);
+            this.buttonDelEntity.Location = new System.Drawing.Point(109, 3);
             this.buttonDelEntity.Name = "buttonDelEntity";
-            this.buttonDelEntity.Size = new System.Drawing.Size(92, 23);
+            this.buttonDelEntity.Size = new System.Drawing.Size(100, 23);
             this.buttonDelEntity.TabIndex = 5;
             this.buttonDelEntity.Text = "Del entity";
             this.buttonDelEntity.UseVisualStyleBackColor = true;
@@ -369,7 +395,7 @@
             this.buttonAddEntity.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonAddEntity.Location = new System.Drawing.Point(3, 3);
             this.buttonAddEntity.Name = "buttonAddEntity";
-            this.buttonAddEntity.Size = new System.Drawing.Size(92, 23);
+            this.buttonAddEntity.Size = new System.Drawing.Size(100, 23);
             this.buttonAddEntity.TabIndex = 4;
             this.buttonAddEntity.Text = "Add entity";
             this.buttonAddEntity.UseVisualStyleBackColor = true;
@@ -386,12 +412,12 @@
             this.tableLayoutPanelAddDelPoints.Controls.Add(this.buttonDelPoint, 1, 0);
             this.tableLayoutPanelAddDelPoints.Controls.Add(this.buttonAddPoint, 0, 0);
             this.tableLayoutPanelAddDelPoints.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelAddDelPoints.Location = new System.Drawing.Point(5, 259);
+            this.tableLayoutPanelAddDelPoints.Location = new System.Drawing.Point(5, 417);
             this.tableLayoutPanelAddDelPoints.Name = "tableLayoutPanelAddDelPoints";
             this.tableLayoutPanelAddDelPoints.RowCount = 1;
             this.tableLayoutPanelAddDelPoints.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelAddDelPoints.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-            this.tableLayoutPanelAddDelPoints.Size = new System.Drawing.Size(196, 29);
+            this.tableLayoutPanelAddDelPoints.Size = new System.Drawing.Size(212, 29);
             this.tableLayoutPanelAddDelPoints.TabIndex = 24;
             // 
             // buttonDelPoint
@@ -399,9 +425,9 @@
             this.buttonDelPoint.AutoSize = true;
             this.buttonDelPoint.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonDelPoint.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonDelPoint.Location = new System.Drawing.Point(101, 3);
+            this.buttonDelPoint.Location = new System.Drawing.Point(109, 3);
             this.buttonDelPoint.Name = "buttonDelPoint";
-            this.buttonDelPoint.Size = new System.Drawing.Size(92, 23);
+            this.buttonDelPoint.Size = new System.Drawing.Size(100, 23);
             this.buttonDelPoint.TabIndex = 12;
             this.buttonDelPoint.Text = "Del point";
             this.buttonDelPoint.UseVisualStyleBackColor = true;
@@ -414,7 +440,7 @@
             this.buttonAddPoint.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonAddPoint.Location = new System.Drawing.Point(3, 3);
             this.buttonAddPoint.Name = "buttonAddPoint";
-            this.buttonAddPoint.Size = new System.Drawing.Size(92, 23);
+            this.buttonAddPoint.Size = new System.Drawing.Size(100, 23);
             this.buttonAddPoint.TabIndex = 11;
             this.buttonAddPoint.Text = "Add point";
             this.buttonAddPoint.UseVisualStyleBackColor = true;
@@ -431,12 +457,12 @@
             this.tableLayoutPanelLoadSave.Controls.Add(this.buttonSave, 1, 0);
             this.tableLayoutPanelLoadSave.Controls.Add(this.buttonLoad, 0, 0);
             this.tableLayoutPanelLoadSave.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelLoadSave.Location = new System.Drawing.Point(5, 428);
+            this.tableLayoutPanelLoadSave.Location = new System.Drawing.Point(5, 639);
             this.tableLayoutPanelLoadSave.Name = "tableLayoutPanelLoadSave";
             this.tableLayoutPanelLoadSave.RowCount = 1;
             this.tableLayoutPanelLoadSave.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelLoadSave.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 29F));
-            this.tableLayoutPanelLoadSave.Size = new System.Drawing.Size(196, 29);
+            this.tableLayoutPanelLoadSave.Size = new System.Drawing.Size(212, 29);
             this.tableLayoutPanelLoadSave.TabIndex = 25;
             // 
             // buttonSave
@@ -444,9 +470,9 @@
             this.buttonSave.AutoSize = true;
             this.buttonSave.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonSave.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonSave.Location = new System.Drawing.Point(101, 3);
+            this.buttonSave.Location = new System.Drawing.Point(109, 3);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(92, 23);
+            this.buttonSave.Size = new System.Drawing.Size(100, 23);
             this.buttonSave.TabIndex = 22;
             this.buttonSave.Text = "Save...";
             this.buttonSave.UseVisualStyleBackColor = true;
@@ -459,7 +485,7 @@
             this.buttonLoad.Dock = System.Windows.Forms.DockStyle.Fill;
             this.buttonLoad.Location = new System.Drawing.Point(3, 3);
             this.buttonLoad.Name = "buttonLoad";
-            this.buttonLoad.Size = new System.Drawing.Size(92, 23);
+            this.buttonLoad.Size = new System.Drawing.Size(100, 23);
             this.buttonLoad.TabIndex = 21;
             this.buttonLoad.Text = "Load...";
             this.buttonLoad.UseVisualStyleBackColor = true;
@@ -469,10 +495,10 @@
             // 
             this.tableLayoutPanelSettings.SetColumnSpan(this.trackBar, 2);
             this.trackBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBar.Location = new System.Drawing.Point(5, 378);
+            this.trackBar.Location = new System.Drawing.Point(5, 589);
             this.trackBar.Maximum = 5000;
             this.trackBar.Name = "trackBar";
-            this.trackBar.Size = new System.Drawing.Size(196, 42);
+            this.trackBar.Size = new System.Drawing.Size(212, 42);
             this.trackBar.TabIndex = 26;
             this.trackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar.Value = 1000;
@@ -485,7 +511,7 @@
             this.labelMinT.Location = new System.Drawing.Point(5, 105);
             this.labelMinT.Margin = new System.Windows.Forms.Padding(3);
             this.labelMinT.Name = "labelMinT";
-            this.labelMinT.Size = new System.Drawing.Size(41, 14);
+            this.labelMinT.Size = new System.Drawing.Size(57, 20);
             this.labelMinT.TabIndex = 27;
             this.labelMinT.Text = "Min:";
             this.labelMinT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -494,10 +520,10 @@
             // 
             this.labelMaxT.AutoSize = true;
             this.labelMaxT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelMaxT.Location = new System.Drawing.Point(5, 127);
+            this.labelMaxT.Location = new System.Drawing.Point(5, 133);
             this.labelMaxT.Margin = new System.Windows.Forms.Padding(3);
             this.labelMaxT.Name = "labelMaxT";
-            this.labelMaxT.Size = new System.Drawing.Size(41, 14);
+            this.labelMaxT.Size = new System.Drawing.Size(57, 20);
             this.labelMaxT.TabIndex = 28;
             this.labelMaxT.Text = "Max:";
             this.labelMaxT.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -505,7 +531,7 @@
             // textBoxMinT
             // 
             this.textBoxMinT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxMinT.Location = new System.Drawing.Point(54, 105);
+            this.textBoxMinT.Location = new System.Drawing.Point(70, 105);
             this.textBoxMinT.Name = "textBoxMinT";
             this.textBoxMinT.Size = new System.Drawing.Size(147, 20);
             this.textBoxMinT.TabIndex = 29;
@@ -514,7 +540,7 @@
             // textBoxMaxT
             // 
             this.textBoxMaxT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxMaxT.Location = new System.Drawing.Point(54, 127);
+            this.textBoxMaxT.Location = new System.Drawing.Point(70, 133);
             this.textBoxMaxT.Name = "textBoxMaxT";
             this.textBoxMaxT.Size = new System.Drawing.Size(147, 20);
             this.textBoxMaxT.TabIndex = 30;
@@ -524,11 +550,101 @@
             // 
             this.openFileDialog.FileName = "enteties.txml";
             // 
+            // labelNormalMaxTime
+            // 
+            this.labelNormalMaxTime.AutoSize = true;
+            this.labelNormalMaxTime.Location = new System.Drawing.Point(5, 246);
+            this.labelNormalMaxTime.Name = "labelNormalMaxTime";
+            this.labelNormalMaxTime.Size = new System.Drawing.Size(41, 13);
+            this.labelNormalMaxTime.TabIndex = 31;
+            this.labelNormalMaxTime.Text = "NTime:";
+            // 
+            // labelNormalSpeedTime
+            // 
+            this.labelNormalSpeedTime.AutoSize = true;
+            this.labelNormalSpeedTime.Location = new System.Drawing.Point(5, 274);
+            this.labelNormalSpeedTime.Name = "labelNormalSpeedTime";
+            this.labelNormalSpeedTime.Size = new System.Drawing.Size(49, 13);
+            this.labelNormalSpeedTime.TabIndex = 32;
+            this.labelNormalSpeedTime.Text = "NSpeed:";
+            // 
+            // labelUnnormalMaxTime
+            // 
+            this.labelUnnormalMaxTime.AutoSize = true;
+            this.labelUnnormalMaxTime.Location = new System.Drawing.Point(5, 302);
+            this.labelUnnormalMaxTime.Name = "labelUnnormalMaxTime";
+            this.labelUnnormalMaxTime.Size = new System.Drawing.Size(41, 13);
+            this.labelUnnormalMaxTime.TabIndex = 33;
+            this.labelUnnormalMaxTime.Text = "UTime:";
+            // 
+            // labelUnnormalSpeedTime
+            // 
+            this.labelUnnormalSpeedTime.AutoSize = true;
+            this.labelUnnormalSpeedTime.Location = new System.Drawing.Point(5, 330);
+            this.labelUnnormalSpeedTime.Name = "labelUnnormalSpeedTime";
+            this.labelUnnormalSpeedTime.Size = new System.Drawing.Size(49, 13);
+            this.labelUnnormalSpeedTime.TabIndex = 34;
+            this.labelUnnormalSpeedTime.Text = "USpeed:";
+            // 
+            // labelProperties
+            // 
+            this.labelProperties.AutoSize = true;
+            this.labelProperties.Location = new System.Drawing.Point(5, 358);
+            this.labelProperties.Name = "labelProperties";
+            this.labelProperties.Size = new System.Drawing.Size(57, 13);
+            this.labelProperties.TabIndex = 35;
+            this.labelProperties.Text = "Properties:";
+            // 
+            // textBoxNormalMaxTime
+            // 
+            this.textBoxNormalMaxTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxNormalMaxTime.Location = new System.Drawing.Point(70, 249);
+            this.textBoxNormalMaxTime.Name = "textBoxNormalMaxTime";
+            this.textBoxNormalMaxTime.Size = new System.Drawing.Size(147, 20);
+            this.textBoxNormalMaxTime.TabIndex = 36;
+            this.textBoxNormalMaxTime.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            // 
+            // textBoxNormalSpeedTime
+            // 
+            this.textBoxNormalSpeedTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxNormalSpeedTime.Location = new System.Drawing.Point(70, 277);
+            this.textBoxNormalSpeedTime.Name = "textBoxNormalSpeedTime";
+            this.textBoxNormalSpeedTime.Size = new System.Drawing.Size(147, 20);
+            this.textBoxNormalSpeedTime.TabIndex = 37;
+            this.textBoxNormalSpeedTime.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            // 
+            // textBoxUnnormalMaxTime
+            // 
+            this.textBoxUnnormalMaxTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxUnnormalMaxTime.Location = new System.Drawing.Point(70, 305);
+            this.textBoxUnnormalMaxTime.Name = "textBoxUnnormalMaxTime";
+            this.textBoxUnnormalMaxTime.Size = new System.Drawing.Size(147, 20);
+            this.textBoxUnnormalMaxTime.TabIndex = 38;
+            this.textBoxUnnormalMaxTime.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            // 
+            // textBoxUnnormalSpeedTime
+            // 
+            this.textBoxUnnormalSpeedTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxUnnormalSpeedTime.Location = new System.Drawing.Point(70, 333);
+            this.textBoxUnnormalSpeedTime.Name = "textBoxUnnormalSpeedTime";
+            this.textBoxUnnormalSpeedTime.Size = new System.Drawing.Size(147, 20);
+            this.textBoxUnnormalSpeedTime.TabIndex = 39;
+            this.textBoxUnnormalSpeedTime.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            // 
+            // textBoxProperties
+            // 
+            this.textBoxProperties.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxProperties.Location = new System.Drawing.Point(70, 361);
+            this.textBoxProperties.Name = "textBoxProperties";
+            this.textBoxProperties.Size = new System.Drawing.Size(147, 20);
+            this.textBoxProperties.TabIndex = 40;
+            this.textBoxProperties.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            // 
             // MoveTestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 462);
+            this.ClientSize = new System.Drawing.Size(492, 673);
             this.Controls.Add(this.tableLayoutPanelSettings);
             this.DoubleBuffered = true;
             this.Name = "MoveTestForm";
@@ -591,6 +707,16 @@
         private System.Windows.Forms.Label labelMaxT;
         private System.Windows.Forms.TextBox textBoxMinT;
         private System.Windows.Forms.TextBox textBoxMaxT;
+        private System.Windows.Forms.Label labelNormalMaxTime;
+        private System.Windows.Forms.Label labelNormalSpeedTime;
+        private System.Windows.Forms.Label labelUnnormalMaxTime;
+        private System.Windows.Forms.Label labelUnnormalSpeedTime;
+        private System.Windows.Forms.Label labelProperties;
+        private System.Windows.Forms.TextBox textBoxNormalMaxTime;
+        private System.Windows.Forms.TextBox textBoxNormalSpeedTime;
+        private System.Windows.Forms.TextBox textBoxUnnormalMaxTime;
+        private System.Windows.Forms.TextBox textBoxUnnormalSpeedTime;
+        private System.Windows.Forms.TextBox textBoxProperties;
     }
 }
 
