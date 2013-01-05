@@ -341,148 +341,76 @@ namespace MoveTest
                 chikyList.Clear();
                 using (StreamReader sr = new StreamReader(this.openFileDialog.FileName))
                 {
+                    Chiky entity = null;
                     while (!sr.EndOfStream)
                     {
                         try
                         {
                             // Example:
-                            // <chiky name="tooflya.com" scale="0.5" minTime="0.1" maxTime="1.1" speedTime="0.5" offsetTime="0.3" isRTime="true" normalMaxTime="1" normalSpeedTime="0.5" unnormalMaxTime="0.5" unnormalSpeedTime="1" properties="3" pointCount="2">
+                            // <chiky scale="0.5" minTime="0.1" maxTime="1.1" speedTime="0.5" offsetTime="0.3" isRTime="true" normalMaxTime="1" normalSpeedTime="0.5" unnormalMaxTime="0.5" unnormalSpeedTime="1" properties="3">
                             // <ctrPoint x="10" y="50"/>
                             // <ctrPoint x="90" y="50"/>
                             // </chiky>
                             string entity_string = sr.ReadLine();
+                            Dictionary<string, string> entity_dictionary = new Dictionary<string, string>();
                             int index;
-                            Chiky entity = new Chiky();
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
 
-                            #region name.
-                            //entity.initScale(float.Parse(entity_string.Substring(0, index)));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion name.
-
-                            #region scale.
-                            entity.initScale(float.Parse(entity_string.Substring(0, index)));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion scale.
-
-                            #region minTime.
-                            entity.mMinTime = float.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion minTime.
-
-                            #region maxTime.
-                            entity.mMaxTime = float.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion maxTime.
-
-                            #region speedTime.
-                            entity.mSpeedTime = float.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion speedTime.
-
-                            #region offsetTime.
-                            entity.mOffsetTime = float.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion offsetTime.
-
-                            #region isRTime.
-                            entity.mIsReverseTime = bool.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion isRTime.
-
-                            #region normalMaxTime.
-                            entity.mNormalMaxTime = float.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion normalMaxTime.
-
-                            #region normalSpeedTime.
-                            entity.mNormalSpeedTime = float.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion normalSpeedTime.
-
-                            #region unnormalMaxTime.
-                            entity.mUnnormalMaxTime = float.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion unnormalMaxTime.
-
-                            #region unnormalSpeedTime.
-                            entity.mUnnormalSpeedTime = float.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion unnormalSpeedTime.
-
-                            #region properties.
-                            entity.mProperties = int.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            #endregion properties.
-
-                            int pointCount = int.Parse(entity_string.Substring(0, index));
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-                            entity_string = entity_string.Remove(0, index + 1);
-                            index = entity_string.IndexOf('"');
-
-                            for (int i = 0; i < pointCount; i++)
+                            entity_string = entity_string.Trim();
+                            index = entity_string.IndexOf(' ');
+                            if (index < 0)
                             {
-                                entity_string = sr.ReadLine();
-                                index = entity_string.IndexOf('"');
+                                index = entity_string.IndexOf('>');
+                            }
+                            if (index > 0)
+                            {
+                                entity_dictionary.Add("type", entity_string.Substring(1, index - 1));
                                 entity_string = entity_string.Remove(0, index + 1);
-                                index = entity_string.IndexOf('"');
 
-                                short x = short.Parse(entity_string.Substring(0, index));
-                                entity_string = entity_string.Remove(0, index + 1);
-                                index = entity_string.IndexOf('"');
-                                entity_string = entity_string.Remove(0, index + 1);
-                                index = entity_string.IndexOf('"');
-
-                                short y = short.Parse(entity_string.Substring(0, index));
-                                entity_string = entity_string.Remove(0, index + 1);
-                                index = entity_string.IndexOf('"');
-                                entity_string = entity_string.Remove(0, index + 1);
-                                index = entity_string.IndexOf('"');
-
-                                entity.Add(x, y);
+                                while (entity_string.Length > 2)
+                                {
+                                    entity_string = entity_string.TrimStart();
+                                    index = entity_string.IndexOf('=');
+                                    string key = entity_string.Substring(0, index);
+                                    entity_string = entity_string.Remove(0, index + 1);
+                                    entity_string = entity_string.Remove(0, entity_string.IndexOf('"') + 1);
+                                    index = entity_string.IndexOf('"');
+                                    string value = entity_string.Substring(0, index);
+                                    entity_string = entity_string.Remove(0, index + 1);
+                                    entity_dictionary.Add(key, value);
+                                    entity_string = entity_string.TrimStart();
+                                }
                             }
 
-                            entity.reset();
-                            this.chikyList.Add(entity);
+                            switch (entity_dictionary["type"])
+                            {
+                                case "chiky":
+                                    entity = new Chiky();
+
+                                    // TODO: entity.mScale = float.Parse(entity_dictionary["scale"]);
+                                    entity.mMinTime = float.Parse(entity_dictionary["minTime"]);
+                                    entity.mMaxTime = float.Parse(entity_dictionary["maxTime"]);
+                                    entity.mSpeedTime = float.Parse(entity_dictionary["speedTime"]);
+                                    entity.mOffsetTime = float.Parse(entity_dictionary["offsetTime"]);
+                                    entity.mIsReverseTime = bool.Parse(entity_dictionary["isRTime"]);
+                                    entity.mNormalMaxTime = float.Parse(entity_dictionary["normalMaxTime"]);
+                                    entity.mNormalSpeedTime = float.Parse(entity_dictionary["normalSpeedTime"]);
+                                    entity.mUnnormalMaxTime = float.Parse(entity_dictionary["unnormalMaxTime"]);
+                                    entity.mUnnormalSpeedTime = float.Parse(entity_dictionary["unnormalSpeedTime"]);
+                                    entity.mProperties = int.Parse(entity_dictionary["properties"]);
+                                    break;
+                                case "ctrPoint":
+                                    short x = short.Parse(entity_dictionary["x"]);
+                                    short y = short.Parse(entity_dictionary["y"]);
+                                    if (entity != null)
+                                    {
+                                        entity.Add(x, y);
+                                    }
+                                    break;
+                                case "/chiky":
+                                    entity.reset();
+                                    this.chikyList.Add(entity);
+                                    break;
+                            }
                         }
                         catch { }
                     }

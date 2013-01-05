@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chiky.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="EntityBezier.cs" />
     <Compile Include="MoveTestForm.cs">
       <SubType>Form</SubType>

@@ -1,54 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System;
+﻿using System.Drawing;
 
 namespace MoveTest
 {
-    class EntityBezier
+    class EntityBezier : Entity
     {
-        #region Position.
-
-        protected float mX;
-        protected float mY;
-        protected float mWidth = 50;
-        protected float mHeight = 50;
-
-        public float getX()
-        {
-            return this.mX;
-        }
-        public float getY()
-        {
-            return this.mY;
-        }
-        public float getCenterX()
-        {
-            return this.mX + this.mWidth / 2;
-        }
-        public float getCenterY()
-        {
-            return this.mY + this.mHeight / 2;
-        }
-        public void setCenterPosition(float pX, float pY)
-        {
-            this.mX = pX - this.mWidth / 2;
-            this.mY = pY - this.mHeight / 2;
-        }
-        public float getWidth()
-        {
-            return this.mWidth;
-        }
-        public float getHeight()
-        {
-            return this.mHeight;
-        }
-
-        #endregion Position.
-
         #region Time.
 
         private static readonly byte mListCapacity = 10;
         private static readonly float[] mTempList = new float[2 * mListCapacity];
+
+        public static float mKoefSpeedTime = 1;
 
         private float mTime = 0;
 
@@ -57,8 +18,6 @@ namespace MoveTest
         public float mSpeedTime = 0;
         public float mOffsetTime = 0;
         public bool mIsReverseTime = true;
-
-        public static float mKoefSpeedTime = 1;
 
         public short[] mList = new short[2 * mListCapacity];
         public byte mListCount = 0;
