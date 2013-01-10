@@ -142,7 +142,7 @@ namespace MoveTest
             this.onManagedUpdate(0);
         }
 
-        public virtual void onManagedUpdate(float pSecondsElapsed)
+        public override void onManagedUpdate(float pSecondsElapsed)
         {
             this.mTime += this.mSpeedTime * pSecondsElapsed * mKoefSpeedTime;
 

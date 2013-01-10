@@ -1,7 +1,10 @@
-﻿namespace MoveTest
+﻿using System.Drawing;
+namespace MoveTest
 {
     class Entity
     {
+        private const int mSize = 32;
+
         protected float mX = 0;
         public float getX()
         {
@@ -36,15 +39,15 @@
             this.mY = pY - this.mHeight / 2;
         }
 
-        protected float mBaseWidth = Options.mSize;
-        protected float mWidth = Options.mSize;
+        protected float mBaseWidth = mSize;
+        protected float mWidth = mSize;
         public float getWidth()
         {
             return this.mWidth;
         }
 
-        protected float mBaseHeight = Options.mSize;
-        protected float mHeight = Options.mSize;
+        protected float mBaseHeight = mSize;
+        protected float mHeight = mSize;
         public float getHeight()
         {
             return this.mHeight;
@@ -64,11 +67,17 @@
         {
             this.mX = 0;
             this.mY = 0;
-            this.mBaseWidth = Options.mSize;
-            this.mWidth = Options.mSize;
-            this.mBaseHeight = Options.mSize;
-            this.mHeight = Options.mSize;
+            this.mWidth = mBaseWidth;
+            this.mHeight = mBaseHeight;
             this.mScale = 1;
+        }
+
+        public virtual void onManagedDraw(Graphics graphics)
+        {
+        }
+
+        public virtual void onManagedUpdate(float pSecondsElapsed)
+        {
         }
     }
 }
