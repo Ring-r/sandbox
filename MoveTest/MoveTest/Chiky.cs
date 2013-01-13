@@ -4,6 +4,8 @@ namespace MoveTest
 {
     class Chiky : EntityBezier
     {
+        private const int mSize = 40;
+
         private enum States { NormalMove, UnnormalMove };
 
         public static readonly int isPauseUpdateFlag = 1;
@@ -15,7 +17,7 @@ namespace MoveTest
 
         #region NormalMove state.
         private float mNormalTime = 0; // Seconds.
-        public float mNormalMaxTime = float.MaxValue; // Seconds.
+        public float mNormalMaxTime = 10000; // Seconds.
         public float mNormalSpeedTime = 0; // Seconds.
         #endregion NormalMove state.
 
@@ -24,12 +26,6 @@ namespace MoveTest
         public float mUnnormalMaxTime = 0; // Seconds.
         public float mUnnormalSpeedTime = 0; // Seconds.
         #endregion UnnormalMove state.
-
-        public void initScale(float scale)
-        {
-            this.mWidth = Options.mSize * scale;
-            this.mHeight = Options.mSize * scale;
-        }
 
         private bool IsProperty(int flag)
         {
@@ -70,7 +66,7 @@ namespace MoveTest
 
             // > NormalMove state.
             this.mNormalTime = 0; // Seconds.
-            this.mNormalMaxTime = float.MaxValue; // Seconds.
+            this.mNormalMaxTime = 10000; // Seconds.
             this.mNormalSpeedTime = 0; // Seconds.
             // < NormalMove state.
 
@@ -86,6 +82,14 @@ namespace MoveTest
             base.reset();
             this.mNormalTime = 0; // Seconds.
             this.mUnnormalTime = 0; // Seconds.
+        }
+
+        public Chiky()
+        {
+            this.mBaseWidth = mSize;
+            this.mWidth = mSize;
+            this.mBaseHeight = mSize;
+            this.mHeight = mSize;
         }
 
         public override void onManagedUpdate(float pSecondsElapsed)

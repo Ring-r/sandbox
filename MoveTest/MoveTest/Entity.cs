@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+
 namespace MoveTest
 {
     class Entity
@@ -40,17 +41,33 @@ namespace MoveTest
         }
 
         protected float mBaseWidth = mSize;
+        public float getBaseWidth()
+        {
+            return this.mBaseWidth;
+        }
         protected float mWidth = mSize;
         public float getWidth()
         {
             return this.mWidth;
         }
+        public void setWidth(float pWidth)
+        {
+            this.mWidth = pWidth;
+        }
 
         protected float mBaseHeight = mSize;
+        public float getBaseHeight()
+        {
+            return this.mBaseHeight;
+        }
         protected float mHeight = mSize;
         public float getHeight()
         {
             return this.mHeight;
+        }
+        public void setHeight(float pHeight)
+        {
+            this.mHeight = pHeight;
         }
 
         protected float mScale = 1;
@@ -61,15 +78,6 @@ namespace MoveTest
         public float getScaledHeight()
         {
             return this.mWidth * this.mScale;
-        }
-
-        public void init()
-        {
-            this.mX = 0;
-            this.mY = 0;
-            this.mWidth = mBaseWidth;
-            this.mHeight = mBaseHeight;
-            this.mScale = 1;
         }
 
         public virtual void onManagedDraw(Graphics graphics)

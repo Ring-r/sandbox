@@ -16,6 +16,7 @@ namespace MoveTest
         private readonly int pointRadius = 5;
 
         private readonly int lineCount = 20;
+        private readonly Brush unsableAreaBrush = new SolidBrush(Color.FromArgb(100, 0, 0, 0));
 
         #endregion Данные визуализации.
 
@@ -34,9 +35,6 @@ namespace MoveTest
 
             this.entityList[this.entIndex].Add(50, 50);
 
-            Options.cameraWidth = 400;
-            Options.cameraHeight = 600;
-
             this.stopwatch.Start();
         }
 
@@ -46,10 +44,13 @@ namespace MoveTest
             {
                 try
                 {
-                    Options.cameraWidth = float.Parse(this.textBoxWidth.Text);
-                    Options.cameraHeight = float.Parse(this.textBoxHeight.Text);
-                    Options.mX = this.ClientSize.Width / 2 - Options.cameraWidth / 2;
-                    Options.mY = this.ClientSize.Height / 2 - Options.cameraHeight / 2;
+                    Options.CameraWidth = float.Parse(this.textBoxWidth.Text);
+                    Options.CameraHeight = float.Parse(this.textBoxHeight.Text);
+                    Options.mX = this.ClientSize.Width / 2 - Options.CameraWidth / 2;
+                    Options.mY = this.ClientSize.Height / 2 - Options.CameraHeight / 2;
+
+                    this.entityList[this.entIndex].setWidth(float.Parse(this.textBoxSize.Text));
+                    this.entityList[this.entIndex].setHeight(float.Parse(this.textBoxSize.Text));
 
                     this.entityList[this.entIndex].mMinTime = float.Parse(this.textBoxMinT.Text);
                     this.entityList[this.entIndex].mMaxTime = float.Parse(this.textBoxMaxT.Text);
@@ -77,8 +78,10 @@ namespace MoveTest
         {
             this.isUpdateForm = true;
 
-            this.textBoxWidth.Text = Options.cameraWidth.ToString();
-            this.textBoxHeight.Text = Options.cameraHeight.ToString();
+            this.textBoxWidth.Text = Options.CameraWidth.ToString();
+            this.textBoxHeight.Text = Options.CameraHeight.ToString();
+
+            this.textBoxSize.Text = this.entityList[this.entIndex].getWidth().ToString();
 
             this.textBoxMinT.Text = this.entityList[this.entIndex].mMinTime.ToString();
             this.textBoxMaxT.Text = this.entityList[this.entIndex].mMaxTime.ToString();
@@ -116,12 +119,15 @@ namespace MoveTest
             graphics.Clear(Color.White);
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
+            graphics.FillRectangle(this.unsableAreaBrush, Options.mX, Options.mY, Options.CameraWidth, Options.MenuHeight);
+            graphics.FillRectangle(this.unsableAreaBrush, Options.mX, Options.mY + Options.CameraHeight - Options.TouchHeight, Options.CameraWidth, Options.TouchHeight);
+
             #region Draw lines.
 
             float linesStep;
             float linesBegin;
 
-            linesStep = Options.cameraWidth / lineCount;
+            linesStep = Options.CameraWidth / lineCount;
             linesBegin = Options.mX;
             while (0 < linesBegin)
             {
@@ -135,7 +141,7 @@ namespace MoveTest
                 linesBegin += linesStep;
             }
 
-            linesStep = Options.cameraHeight / lineCount;
+            linesStep = Options.CameraHeight / lineCount;
             linesBegin = Options.mY;
             while (0 < linesBegin)
             {
@@ -150,7 +156,9 @@ namespace MoveTest
             }
             #endregion Draw lines.
 
-            graphics.DrawRectangle(Pens.Gray, Options.mX, Options.mY, Options.cameraWidth, Options.cameraHeight);
+            graphics.DrawRectangle(Pens.Gray, Options.mX, Options.mY, Options.CameraWidth, Options.MenuHeight);
+            graphics.DrawRectangle(Pens.Gray, Options.mX, Options.mY + Options.CameraHeight - Options.TouchHeight, Options.CameraWidth, Options.TouchHeight);
+            graphics.DrawRectangle(Pens.Gray, Options.mX, Options.mY, Options.CameraWidth, Options.CameraHeight);
 
             #region Draw dots.
             if (this.checkBoxIsShowDots.Checked)
@@ -219,8 +227,8 @@ namespace MoveTest
 
         private void Form_Resize(object sender, EventArgs e)
         {
-            Options.mX = this.ClientSize.Width / 2 - Options.cameraWidth / 2;
-            Options.mY = this.ClientSize.Height / 2 - Options.cameraHeight / 2;
+            Options.mX = this.ClientSize.Width / 2 - Options.CameraWidth / 2;
+            Options.mY = this.ClientSize.Height / 2 - Options.CameraHeight / 2;
 
             this.UpdateForm();
         }
@@ -396,7 +404,10 @@ namespace MoveTest
                                 case "chiky":
                                     entity = new Chiky();
 
-                                    // TODO: entity.mScale = float.Parse(entity_dictionary["scale"]);
+                                    float scale = float.Parse(entity_dictionary["scale"]);
+                                    entity.setWidth(scale * entity.getBaseWidth());
+                                    entity.setHeight(scale * entity.getBaseWidth());
+
                                     entity.mMinTime = float.Parse(entity_dictionary["minTime"]);
                                     entity.mMaxTime = float.Parse(entity_dictionary["maxTime"]);
                                     entity.mSpeedTime = float.Parse(entity_dictionary["speedTime"]);
@@ -447,9 +458,8 @@ namespace MoveTest
                         // <ctrPoint x="10" y="50"/>
                         // <ctrPoint x="90" y="50"/>
                         // </chiky>
-                        sw.WriteLine("<chiky name=\"{0}\" scale=\"{1}\" minTime=\"{2}\" maxTime=\"{3}\" speedTime=\"{4}\" offsetTime=\"{5}\" isRTime=\"{6}\" normalMaxTime=\"{7}\" normalSpeedTime=\"{8}\" unnormalMaxTime=\"{9}\" unnormalSpeedTime=\"{10}\" properties=\"{11}\"\">",
-                            "",
-                            1,
+                        sw.WriteLine("<chiky scale=\"{0}\" minTime=\"{1}\" maxTime=\"{2}\" speedTime=\"{3}\" offsetTime=\"{4}\" isRTime=\"{5}\" normalMaxTime=\"{6}\" normalSpeedTime=\"{7}\" unnormalMaxTime=\"{8}\" unnormalSpeedTime=\"{9}\" properties=\"{10}\"\">",
+                            entity.getWidth() / entity.getBaseWidth(),
                             entity.mMinTime,
                             entity.mMaxTime,
                             Math.Abs(entity.mSpeedTime),

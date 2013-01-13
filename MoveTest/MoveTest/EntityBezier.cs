@@ -26,16 +26,16 @@ namespace MoveTest
 
         public float getFloatAtListX(int index)
         {
-            return Options.mX + this.mList[2 * index] / 100f * Options.cameraWidth;
+            return Options.mX + this.mList[2 * index] / 100f * Options.CameraWidth;
         }
         public float getFloatAtListY(int index)
         {
-            return Options.mY + this.mList[2 * index + 1] / 100f * Options.cameraHeight;
+            return Options.mY + this.mList[2 * index + 1] / 100f * Options.CameraHeight;
         }
         public void setFloatAtListX(int index, float pX, float pY)
         {
-            this.mList[2 * index] = (short)((pX - Options.mX) / Options.cameraWidth * 100);
-            this.mList[2 * index + 1] = (short)((pY - Options.mY) / Options.cameraHeight * 100);
+            this.mList[2 * index] = (short)((pX - Options.mX) / Options.CameraWidth * 100);
+            this.mList[2 * index + 1] = (short)((pY - Options.mY) / Options.CameraHeight * 100);
         }
 
         public void RemoveAt(int index)
@@ -131,8 +131,8 @@ namespace MoveTest
                 }
             }
             this.setCenterPosition(
-                this.mWidth / 2 + mTempList[0] * (Options.cameraWidth - this.mWidth) / 100,
-                this.mHeight / 2 + mTempList[1] * (Options.cameraHeight - this.mHeight) / 100);
+                this.mWidth / 2 + mTempList[0] * (Options.CameraWidth - this.mWidth) / 100,
+                this.mHeight / 2 + mTempList[1] * (Options.CameraHeight - this.mHeight) / 100);
         }
 
         public virtual void reset()

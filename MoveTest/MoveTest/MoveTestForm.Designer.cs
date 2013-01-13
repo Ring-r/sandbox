@@ -74,6 +74,8 @@
             this.textBoxProperties = new System.Windows.Forms.TextBox();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.labelSize = new System.Windows.Forms.Label();
+            this.textBoxSize = new System.Windows.Forms.TextBox();
             this.tableLayoutPanelSettings.SuspendLayout();
             this.tableLayoutPanelAddDelEntity.SuspendLayout();
             this.tableLayoutPanelAddDelPoints.SuspendLayout();
@@ -99,44 +101,47 @@
             this.tableLayoutPanelSettings.Controls.Add(this.textBoxWidth, 1, 0);
             this.tableLayoutPanelSettings.Controls.Add(this.labelHeight, 0, 1);
             this.tableLayoutPanelSettings.Controls.Add(this.textBoxHeight, 1, 1);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelSpeedT, 0, 7);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxSpeedT, 1, 7);
-            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsReverse, 0, 8);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelOffsetT, 0, 6);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxOffsetT, 1, 6);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelXP, 0, 18);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxXP, 1, 18);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelYP, 0, 19);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxYP, 1, 19);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelPointsCount, 0, 16);
-            this.tableLayoutPanelSettings.Controls.Add(this.buttonStartStopTimer, 0, 23);
-            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsShowDots, 0, 21);
-            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsShowPoints, 0, 22);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelSpeedT, 0, 8);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxSpeedT, 1, 8);
+            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsReverse, 0, 9);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelOffsetT, 0, 7);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxOffsetT, 1, 7);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelXP, 0, 19);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxXP, 1, 19);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelYP, 0, 20);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxYP, 1, 20);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelPointsCount, 0, 17);
+            this.tableLayoutPanelSettings.Controls.Add(this.buttonStartStopTimer, 0, 24);
+            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsShowDots, 0, 22);
+            this.tableLayoutPanelSettings.Controls.Add(this.checkBoxIsShowPoints, 0, 23);
             this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelAddDelEntity, 0, 3);
-            this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelAddDelPoints, 0, 17);
-            this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelLoadSave, 0, 25);
-            this.tableLayoutPanelSettings.Controls.Add(this.trackBar, 0, 24);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelMinT, 0, 4);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelMaxT, 0, 5);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxMinT, 1, 4);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxMaxT, 1, 5);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelNormalMaxTime, 0, 10);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelNormalSpeedTime, 0, 11);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelUnnormalMaxTime, 0, 12);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelUnnormalSpeedTime, 0, 13);
-            this.tableLayoutPanelSettings.Controls.Add(this.labelProperties, 0, 14);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxNormalMaxTime, 1, 10);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxNormalSpeedTime, 1, 11);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxUnnormalMaxTime, 1, 12);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxUnnormalSpeedTime, 1, 13);
-            this.tableLayoutPanelSettings.Controls.Add(this.textBoxProperties, 1, 14);
+            this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelAddDelPoints, 0, 18);
+            this.tableLayoutPanelSettings.Controls.Add(this.tableLayoutPanelLoadSave, 0, 26);
+            this.tableLayoutPanelSettings.Controls.Add(this.trackBar, 0, 25);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelMinT, 0, 5);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelMaxT, 0, 6);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxMinT, 1, 5);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxMaxT, 1, 6);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelNormalMaxTime, 0, 11);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelNormalSpeedTime, 0, 12);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelUnnormalMaxTime, 0, 13);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelUnnormalSpeedTime, 0, 14);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelProperties, 0, 15);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxNormalMaxTime, 1, 11);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxNormalSpeedTime, 1, 12);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxUnnormalMaxTime, 1, 13);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxUnnormalSpeedTime, 1, 14);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxProperties, 1, 15);
+            this.tableLayoutPanelSettings.Controls.Add(this.labelSize, 0, 4);
+            this.tableLayoutPanelSettings.Controls.Add(this.textBoxSize, 1, 4);
             this.tableLayoutPanelSettings.Dock = System.Windows.Forms.DockStyle.Left;
             this.tableLayoutPanelSettings.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanelSettings.Name = "tableLayoutPanelSettings";
-            this.tableLayoutPanelSettings.RowCount = 26;
+            this.tableLayoutPanelSettings.RowCount = 27;
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -209,7 +214,7 @@
             // 
             this.labelSpeedT.AutoSize = true;
             this.labelSpeedT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelSpeedT.Location = new System.Drawing.Point(5, 189);
+            this.labelSpeedT.Location = new System.Drawing.Point(5, 217);
             this.labelSpeedT.Margin = new System.Windows.Forms.Padding(3);
             this.labelSpeedT.Name = "labelSpeedT";
             this.labelSpeedT.Size = new System.Drawing.Size(57, 20);
@@ -220,7 +225,7 @@
             // textBoxSpeedT
             // 
             this.textBoxSpeedT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxSpeedT.Location = new System.Drawing.Point(70, 189);
+            this.textBoxSpeedT.Location = new System.Drawing.Point(70, 217);
             this.textBoxSpeedT.Name = "textBoxSpeedT";
             this.textBoxSpeedT.Size = new System.Drawing.Size(147, 20);
             this.textBoxSpeedT.TabIndex = 7;
@@ -231,7 +236,7 @@
             this.checkBoxIsReverse.AutoSize = true;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsReverse, 2);
             this.checkBoxIsReverse.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBoxIsReverse.Location = new System.Drawing.Point(5, 217);
+            this.checkBoxIsReverse.Location = new System.Drawing.Point(5, 245);
             this.checkBoxIsReverse.Name = "checkBoxIsReverse";
             this.checkBoxIsReverse.Size = new System.Drawing.Size(212, 17);
             this.checkBoxIsReverse.TabIndex = 8;
@@ -243,7 +248,7 @@
             // 
             this.labelOffsetT.AutoSize = true;
             this.labelOffsetT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelOffsetT.Location = new System.Drawing.Point(5, 161);
+            this.labelOffsetT.Location = new System.Drawing.Point(5, 189);
             this.labelOffsetT.Margin = new System.Windows.Forms.Padding(3);
             this.labelOffsetT.Name = "labelOffsetT";
             this.labelOffsetT.Size = new System.Drawing.Size(57, 20);
@@ -254,7 +259,7 @@
             // textBoxOffsetT
             // 
             this.textBoxOffsetT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxOffsetT.Location = new System.Drawing.Point(70, 161);
+            this.textBoxOffsetT.Location = new System.Drawing.Point(70, 189);
             this.textBoxOffsetT.Name = "textBoxOffsetT";
             this.textBoxOffsetT.Size = new System.Drawing.Size(147, 20);
             this.textBoxOffsetT.TabIndex = 10;
@@ -264,7 +269,7 @@
             // 
             this.labelXP.AutoSize = true;
             this.labelXP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelXP.Location = new System.Drawing.Point(5, 454);
+            this.labelXP.Location = new System.Drawing.Point(5, 482);
             this.labelXP.Margin = new System.Windows.Forms.Padding(3);
             this.labelXP.Name = "labelXP";
             this.labelXP.Size = new System.Drawing.Size(57, 20);
@@ -275,7 +280,7 @@
             // textBoxXP
             // 
             this.textBoxXP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxXP.Location = new System.Drawing.Point(70, 454);
+            this.textBoxXP.Location = new System.Drawing.Point(70, 482);
             this.textBoxXP.Name = "textBoxXP";
             this.textBoxXP.Size = new System.Drawing.Size(147, 20);
             this.textBoxXP.TabIndex = 14;
@@ -285,7 +290,7 @@
             // 
             this.labelYP.AutoSize = true;
             this.labelYP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelYP.Location = new System.Drawing.Point(5, 482);
+            this.labelYP.Location = new System.Drawing.Point(5, 510);
             this.labelYP.Margin = new System.Windows.Forms.Padding(3);
             this.labelYP.Name = "labelYP";
             this.labelYP.Size = new System.Drawing.Size(57, 20);
@@ -296,7 +301,7 @@
             // textBoxYP
             // 
             this.textBoxYP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxYP.Location = new System.Drawing.Point(70, 482);
+            this.textBoxYP.Location = new System.Drawing.Point(70, 510);
             this.textBoxYP.Name = "textBoxYP";
             this.textBoxYP.Size = new System.Drawing.Size(147, 20);
             this.textBoxYP.TabIndex = 16;
@@ -307,7 +312,7 @@
             this.labelPointsCount.AutoSize = true;
             this.tableLayoutPanelSettings.SetColumnSpan(this.labelPointsCount, 2);
             this.labelPointsCount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelPointsCount.Location = new System.Drawing.Point(5, 396);
+            this.labelPointsCount.Location = new System.Drawing.Point(5, 424);
             this.labelPointsCount.Margin = new System.Windows.Forms.Padding(3);
             this.labelPointsCount.Name = "labelPointsCount";
             this.labelPointsCount.Size = new System.Drawing.Size(212, 13);
@@ -321,7 +326,7 @@
             this.buttonStartStopTimer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelSettings.SetColumnSpan(this.buttonStartStopTimer, 2);
             this.buttonStartStopTimer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonStartStopTimer.Location = new System.Drawing.Point(5, 555);
+            this.buttonStartStopTimer.Location = new System.Drawing.Point(5, 558);
             this.buttonStartStopTimer.Name = "buttonStartStopTimer";
             this.buttonStartStopTimer.Size = new System.Drawing.Size(212, 23);
             this.buttonStartStopTimer.TabIndex = 18;
@@ -336,7 +341,7 @@
             this.checkBoxIsShowDots.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsShowDots, 2);
             this.checkBoxIsShowDots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBoxIsShowDots.Location = new System.Drawing.Point(5, 505);
+            this.checkBoxIsShowDots.Location = new System.Drawing.Point(5, 508);
             this.checkBoxIsShowDots.Name = "checkBoxIsShowDots";
             this.checkBoxIsShowDots.Size = new System.Drawing.Size(212, 17);
             this.checkBoxIsShowDots.TabIndex = 19;
@@ -349,7 +354,7 @@
             this.checkBoxIsShowPoints.Checked = true;
             this.checkBoxIsShowPoints.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsShowPoints, 2);
-            this.checkBoxIsShowPoints.Location = new System.Drawing.Point(5, 530);
+            this.checkBoxIsShowPoints.Location = new System.Drawing.Point(5, 533);
             this.checkBoxIsShowPoints.Name = "checkBoxIsShowPoints";
             this.checkBoxIsShowPoints.Size = new System.Drawing.Size(93, 17);
             this.checkBoxIsShowPoints.TabIndex = 20;
@@ -412,7 +417,7 @@
             this.tableLayoutPanelAddDelPoints.Controls.Add(this.buttonDelPoint, 1, 0);
             this.tableLayoutPanelAddDelPoints.Controls.Add(this.buttonAddPoint, 0, 0);
             this.tableLayoutPanelAddDelPoints.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelAddDelPoints.Location = new System.Drawing.Point(5, 417);
+            this.tableLayoutPanelAddDelPoints.Location = new System.Drawing.Point(5, 445);
             this.tableLayoutPanelAddDelPoints.Name = "tableLayoutPanelAddDelPoints";
             this.tableLayoutPanelAddDelPoints.RowCount = 1;
             this.tableLayoutPanelAddDelPoints.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -495,10 +500,10 @@
             // 
             this.tableLayoutPanelSettings.SetColumnSpan(this.trackBar, 2);
             this.trackBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBar.Location = new System.Drawing.Point(5, 586);
+            this.trackBar.Location = new System.Drawing.Point(5, 589);
             this.trackBar.Maximum = 5000;
             this.trackBar.Name = "trackBar";
-            this.trackBar.Size = new System.Drawing.Size(212, 45);
+            this.trackBar.Size = new System.Drawing.Size(212, 42);
             this.trackBar.TabIndex = 26;
             this.trackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar.Value = 1000;
@@ -508,7 +513,7 @@
             // 
             this.labelMinT.AutoSize = true;
             this.labelMinT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelMinT.Location = new System.Drawing.Point(5, 105);
+            this.labelMinT.Location = new System.Drawing.Point(5, 133);
             this.labelMinT.Margin = new System.Windows.Forms.Padding(3);
             this.labelMinT.Name = "labelMinT";
             this.labelMinT.Size = new System.Drawing.Size(57, 20);
@@ -520,7 +525,7 @@
             // 
             this.labelMaxT.AutoSize = true;
             this.labelMaxT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.labelMaxT.Location = new System.Drawing.Point(5, 133);
+            this.labelMaxT.Location = new System.Drawing.Point(5, 161);
             this.labelMaxT.Margin = new System.Windows.Forms.Padding(3);
             this.labelMaxT.Name = "labelMaxT";
             this.labelMaxT.Size = new System.Drawing.Size(57, 20);
@@ -531,7 +536,7 @@
             // textBoxMinT
             // 
             this.textBoxMinT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxMinT.Location = new System.Drawing.Point(70, 105);
+            this.textBoxMinT.Location = new System.Drawing.Point(70, 133);
             this.textBoxMinT.Name = "textBoxMinT";
             this.textBoxMinT.Size = new System.Drawing.Size(147, 20);
             this.textBoxMinT.TabIndex = 29;
@@ -540,7 +545,7 @@
             // textBoxMaxT
             // 
             this.textBoxMaxT.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxMaxT.Location = new System.Drawing.Point(70, 133);
+            this.textBoxMaxT.Location = new System.Drawing.Point(70, 161);
             this.textBoxMaxT.Name = "textBoxMaxT";
             this.textBoxMaxT.Size = new System.Drawing.Size(147, 20);
             this.textBoxMaxT.TabIndex = 30;
@@ -549,7 +554,7 @@
             // labelNormalMaxTime
             // 
             this.labelNormalMaxTime.AutoSize = true;
-            this.labelNormalMaxTime.Location = new System.Drawing.Point(5, 246);
+            this.labelNormalMaxTime.Location = new System.Drawing.Point(5, 274);
             this.labelNormalMaxTime.Name = "labelNormalMaxTime";
             this.labelNormalMaxTime.Size = new System.Drawing.Size(41, 13);
             this.labelNormalMaxTime.TabIndex = 31;
@@ -558,7 +563,7 @@
             // labelNormalSpeedTime
             // 
             this.labelNormalSpeedTime.AutoSize = true;
-            this.labelNormalSpeedTime.Location = new System.Drawing.Point(5, 274);
+            this.labelNormalSpeedTime.Location = new System.Drawing.Point(5, 302);
             this.labelNormalSpeedTime.Name = "labelNormalSpeedTime";
             this.labelNormalSpeedTime.Size = new System.Drawing.Size(49, 13);
             this.labelNormalSpeedTime.TabIndex = 32;
@@ -567,7 +572,7 @@
             // labelUnnormalMaxTime
             // 
             this.labelUnnormalMaxTime.AutoSize = true;
-            this.labelUnnormalMaxTime.Location = new System.Drawing.Point(5, 302);
+            this.labelUnnormalMaxTime.Location = new System.Drawing.Point(5, 330);
             this.labelUnnormalMaxTime.Name = "labelUnnormalMaxTime";
             this.labelUnnormalMaxTime.Size = new System.Drawing.Size(41, 13);
             this.labelUnnormalMaxTime.TabIndex = 33;
@@ -576,7 +581,7 @@
             // labelUnnormalSpeedTime
             // 
             this.labelUnnormalSpeedTime.AutoSize = true;
-            this.labelUnnormalSpeedTime.Location = new System.Drawing.Point(5, 330);
+            this.labelUnnormalSpeedTime.Location = new System.Drawing.Point(5, 358);
             this.labelUnnormalSpeedTime.Name = "labelUnnormalSpeedTime";
             this.labelUnnormalSpeedTime.Size = new System.Drawing.Size(49, 13);
             this.labelUnnormalSpeedTime.TabIndex = 34;
@@ -585,7 +590,7 @@
             // labelProperties
             // 
             this.labelProperties.AutoSize = true;
-            this.labelProperties.Location = new System.Drawing.Point(5, 358);
+            this.labelProperties.Location = new System.Drawing.Point(5, 386);
             this.labelProperties.Name = "labelProperties";
             this.labelProperties.Size = new System.Drawing.Size(57, 13);
             this.labelProperties.TabIndex = 35;
@@ -594,7 +599,7 @@
             // textBoxNormalMaxTime
             // 
             this.textBoxNormalMaxTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxNormalMaxTime.Location = new System.Drawing.Point(70, 249);
+            this.textBoxNormalMaxTime.Location = new System.Drawing.Point(70, 277);
             this.textBoxNormalMaxTime.Name = "textBoxNormalMaxTime";
             this.textBoxNormalMaxTime.Size = new System.Drawing.Size(147, 20);
             this.textBoxNormalMaxTime.TabIndex = 36;
@@ -603,7 +608,7 @@
             // textBoxNormalSpeedTime
             // 
             this.textBoxNormalSpeedTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxNormalSpeedTime.Location = new System.Drawing.Point(70, 277);
+            this.textBoxNormalSpeedTime.Location = new System.Drawing.Point(70, 305);
             this.textBoxNormalSpeedTime.Name = "textBoxNormalSpeedTime";
             this.textBoxNormalSpeedTime.Size = new System.Drawing.Size(147, 20);
             this.textBoxNormalSpeedTime.TabIndex = 37;
@@ -612,7 +617,7 @@
             // textBoxUnnormalMaxTime
             // 
             this.textBoxUnnormalMaxTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxUnnormalMaxTime.Location = new System.Drawing.Point(70, 305);
+            this.textBoxUnnormalMaxTime.Location = new System.Drawing.Point(70, 333);
             this.textBoxUnnormalMaxTime.Name = "textBoxUnnormalMaxTime";
             this.textBoxUnnormalMaxTime.Size = new System.Drawing.Size(147, 20);
             this.textBoxUnnormalMaxTime.TabIndex = 38;
@@ -621,7 +626,7 @@
             // textBoxUnnormalSpeedTime
             // 
             this.textBoxUnnormalSpeedTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxUnnormalSpeedTime.Location = new System.Drawing.Point(70, 333);
+            this.textBoxUnnormalSpeedTime.Location = new System.Drawing.Point(70, 361);
             this.textBoxUnnormalSpeedTime.Name = "textBoxUnnormalSpeedTime";
             this.textBoxUnnormalSpeedTime.Size = new System.Drawing.Size(147, 20);
             this.textBoxUnnormalSpeedTime.TabIndex = 39;
@@ -630,7 +635,7 @@
             // textBoxProperties
             // 
             this.textBoxProperties.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxProperties.Location = new System.Drawing.Point(70, 361);
+            this.textBoxProperties.Location = new System.Drawing.Point(70, 389);
             this.textBoxProperties.Name = "textBoxProperties";
             this.textBoxProperties.Size = new System.Drawing.Size(147, 20);
             this.textBoxProperties.TabIndex = 40;
@@ -639,6 +644,26 @@
             // openFileDialog
             // 
             this.openFileDialog.FileName = "enteties.txml";
+            // 
+            // labelSize
+            // 
+            this.labelSize.AutoSize = true;
+            this.labelSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelSize.Location = new System.Drawing.Point(5, 102);
+            this.labelSize.Name = "labelSize";
+            this.labelSize.Size = new System.Drawing.Size(57, 26);
+            this.labelSize.TabIndex = 41;
+            this.labelSize.Text = "Size:";
+            this.labelSize.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // textBoxSize
+            // 
+            this.textBoxSize.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxSize.Location = new System.Drawing.Point(70, 105);
+            this.textBoxSize.Name = "textBoxSize";
+            this.textBoxSize.Size = new System.Drawing.Size(147, 20);
+            this.textBoxSize.TabIndex = 42;
+            this.textBoxSize.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
             // MoveTestForm
             // 
@@ -717,6 +742,8 @@
         private System.Windows.Forms.TextBox textBoxUnnormalMaxTime;
         private System.Windows.Forms.TextBox textBoxUnnormalSpeedTime;
         private System.Windows.Forms.TextBox textBoxProperties;
+        private System.Windows.Forms.Label labelSize;
+        private System.Windows.Forms.TextBox textBoxSize;
     }
 }
 
