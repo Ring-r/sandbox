@@ -10,6 +10,8 @@ namespace MoveTest
 {
     public partial class MoveTestForm : Form
     {
+        private readonly Random rand = new Random();
+
         #region Данные визуализации.
 
         private readonly int dotRadius = 2;
@@ -219,9 +221,47 @@ namespace MoveTest
 
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
+            int pointCount;
+            switch (e.KeyCode)
             {
-                this.Close();
+                case Keys.Escape:
+                    this.Close();
+                    break;
+                case Keys.D1:
+                    Chiky chiky = new Chiky()
+                    {
+                        mOffsetTime = (float)this.rand.NextDouble(),
+                        mSpeedTime = (float)this.rand.NextDouble(),
+                    };
+                    pointCount = this.rand.Next(5);
+                    for (int i = 0; i < pointCount; ++i)
+                    {
+                        chiky.Add((short)this.rand.Next(100), (short)this.rand.Next(100));
+                    }
+                    this.entityList.Add(chiky);
+                    this.entIndex = this.entityList.Count - 1;
+                    break;
+                case Keys.D2:
+                    pointCount = this.entityList[this.entIndex].mListCount;
+                    for (int i = 0; i < pointCount; ++i)
+                    {
+                        this.entityList[this.entIndex].Add((short)(100 - this.entityList[this.entIndex].mList[2 * (pointCount - i - 1)]), this.entityList[this.entIndex].mList[2 * (pointCount - i - 1) + 1]);
+                    }
+                    break;
+                case Keys.D3:
+                    pointCount = this.entityList[this.entIndex].mListCount;
+                    for (int i = 0; i < pointCount; ++i)
+                    {
+                        this.entityList[this.entIndex].Add((short)(100 - this.entityList[this.entIndex].mList[2 * (pointCount - i - 1)]), (short)(100 - this.entityList[this.entIndex].mList[2 * (pointCount - i - 1) + 1]));
+                    }
+                    break;
+                case Keys.D4:
+                    pointCount = this.entityList[this.entIndex].mListCount;
+                    for (int i = 0; i < pointCount; ++i)
+                    {
+                        this.entityList[this.entIndex].Add(this.entityList[this.entIndex].mList[2 * (pointCount - i - 1)], (short)(100 - this.entityList[this.entIndex].mList[2 * (pointCount - i - 1) + 1]));
+                    }
+                    break;
             }
         }
 
@@ -352,6 +392,14 @@ namespace MoveTest
             }
         }
 
+        // Example:
+        // <?xml version="1.0" encoding="UTF-8"?>
+        // <level r1="0" g1="138" b1="255" r2="0" g2="255" b2="255" bluebird="false">
+        // <chiky name="tooflya.com" scale="0.5" minTime="0.1" maxTime="1.1" speedTime="0.5" offsetTime="0.3" isRTime="true" normalMaxTime="1" normalSpeedTime="0.5" unnormalMaxTime="0.5" unnormalSpeedTime="1" properties="3">
+        // <ctrPoint x="10" y="50"/>
+        // <ctrPoint x="90" y="50"/>
+        // </chiky>
+        // </level>
         private void buttonLoad_Click(object sender, EventArgs e)
         {
             if (this.openFileDialog.ShowDialog(this) == DialogResult.OK)
@@ -364,11 +412,6 @@ namespace MoveTest
                     {
                         try
                         {
-                            // Example:
-                            // <chiky scale="0.5" minTime="0.1" maxTime="1.1" speedTime="0.5" offsetTime="0.3" isRTime="true" normalMaxTime="1" normalSpeedTime="0.5" unnormalMaxTime="0.5" unnormalSpeedTime="1" properties="3">
-                            // <ctrPoint x="10" y="50"/>
-                            // <ctrPoint x="90" y="50"/>
-                            // </chiky>
                             string entity_string = sr.ReadLine();
                             Dictionary<string, string> entity_dictionary = new Dictionary<string, string>();
                             int index;
@@ -451,14 +494,11 @@ namespace MoveTest
             {
                 using (StreamWriter sw = new StreamWriter(this.saveFileDialog.FileName))
                 {
+                    sw.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                    sw.WriteLine("<level r1=\"255\" g1=\"255\" b1=\"255\" r2=\"255\" g2=\"255\" b2=\"255\" bluebird=\"true\">");
                     foreach (Chiky entity in this.entityList)
                     {
-                        // Example:
-                        // <chiky name="tooflya.com" scale="0.5" minTime="0.1" maxTime="1.1" speedTime="0.5" offsetTime="0.3" isRTime="true" normalMaxTime="1" normalSpeedTime="0.5" unnormalMaxTime="0.5" unnormalSpeedTime="1" properties="3">
-                        // <ctrPoint x="10" y="50"/>
-                        // <ctrPoint x="90" y="50"/>
-                        // </chiky>
-                        sw.WriteLine("<chiky scale=\"{0}\" minTime=\"{1}\" maxTime=\"{2}\" speedTime=\"{3}\" offsetTime=\"{4}\" isRTime=\"{5}\" normalMaxTime=\"{6}\" normalSpeedTime=\"{7}\" unnormalMaxTime=\"{8}\" unnormalSpeedTime=\"{9}\" properties=\"{10}\"\">",
+                        sw.WriteLine("<chiky scale=\"{0}\" minTime=\"{1}\" maxTime=\"{2}\" speedTime=\"{3}\" offsetTime=\"{4}\" isRTime=\"{5}\" normalMaxTime=\"{6}\" normalSpeedTime=\"{7}\" unnormalMaxTime=\"{8}\" unnormalSpeedTime=\"{9}\" properties=\"{10}\">",
                             entity.getWidth() / entity.getBaseWidth(),
                             entity.mMinTime,
                             entity.mMaxTime,
@@ -476,6 +516,7 @@ namespace MoveTest
                         }
                         sw.WriteLine("</chiky>");
                     }
+                    sw.WriteLine("</level>");
                 }
             }
         }

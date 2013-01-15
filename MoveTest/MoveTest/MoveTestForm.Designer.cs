@@ -72,10 +72,10 @@
             this.textBoxUnnormalMaxTime = new System.Windows.Forms.TextBox();
             this.textBoxUnnormalSpeedTime = new System.Windows.Forms.TextBox();
             this.textBoxProperties = new System.Windows.Forms.TextBox();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.labelSize = new System.Windows.Forms.Label();
             this.textBoxSize = new System.Windows.Forms.TextBox();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.tableLayoutPanelSettings.SuspendLayout();
             this.tableLayoutPanelAddDelEntity.SuspendLayout();
             this.tableLayoutPanelAddDelPoints.SuspendLayout();
@@ -243,6 +243,7 @@
             this.checkBoxIsReverse.Text = "Is reverse";
             this.checkBoxIsReverse.UseVisualStyleBackColor = true;
             this.checkBoxIsReverse.CheckedChanged += new System.EventHandler(this.checkBox_CheckedChanged);
+            this.checkBoxIsReverse.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_KeyDown);
             // 
             // labelOffsetT
             // 
@@ -326,7 +327,7 @@
             this.buttonStartStopTimer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelSettings.SetColumnSpan(this.buttonStartStopTimer, 2);
             this.buttonStartStopTimer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonStartStopTimer.Location = new System.Drawing.Point(5, 558);
+            this.buttonStartStopTimer.Location = new System.Drawing.Point(5, 555);
             this.buttonStartStopTimer.Name = "buttonStartStopTimer";
             this.buttonStartStopTimer.Size = new System.Drawing.Size(212, 23);
             this.buttonStartStopTimer.TabIndex = 18;
@@ -341,7 +342,7 @@
             this.checkBoxIsShowDots.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsShowDots, 2);
             this.checkBoxIsShowDots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBoxIsShowDots.Location = new System.Drawing.Point(5, 508);
+            this.checkBoxIsShowDots.Location = new System.Drawing.Point(5, 505);
             this.checkBoxIsShowDots.Name = "checkBoxIsShowDots";
             this.checkBoxIsShowDots.Size = new System.Drawing.Size(212, 17);
             this.checkBoxIsShowDots.TabIndex = 19;
@@ -354,7 +355,7 @@
             this.checkBoxIsShowPoints.Checked = true;
             this.checkBoxIsShowPoints.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsShowPoints, 2);
-            this.checkBoxIsShowPoints.Location = new System.Drawing.Point(5, 533);
+            this.checkBoxIsShowPoints.Location = new System.Drawing.Point(5, 530);
             this.checkBoxIsShowPoints.Name = "checkBoxIsShowPoints";
             this.checkBoxIsShowPoints.Size = new System.Drawing.Size(93, 17);
             this.checkBoxIsShowPoints.TabIndex = 20;
@@ -500,10 +501,10 @@
             // 
             this.tableLayoutPanelSettings.SetColumnSpan(this.trackBar, 2);
             this.trackBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBar.Location = new System.Drawing.Point(5, 589);
+            this.trackBar.Location = new System.Drawing.Point(5, 586);
             this.trackBar.Maximum = 5000;
             this.trackBar.Name = "trackBar";
-            this.trackBar.Size = new System.Drawing.Size(212, 42);
+            this.trackBar.Size = new System.Drawing.Size(212, 45);
             this.trackBar.TabIndex = 26;
             this.trackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar.Value = 1000;
@@ -641,10 +642,6 @@
             this.textBoxProperties.TabIndex = 40;
             this.textBoxProperties.TextChanged += new System.EventHandler(this.textBox_TextChanged);
             // 
-            // openFileDialog
-            // 
-            this.openFileDialog.FileName = "enteties.txml";
-            // 
             // labelSize
             // 
             this.labelSize.AutoSize = true;
@@ -664,6 +661,10 @@
             this.textBoxSize.Size = new System.Drawing.Size(147, 20);
             this.textBoxSize.TabIndex = 42;
             this.textBoxSize.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "enteties.txml";
             // 
             // MoveTestForm
             // 
