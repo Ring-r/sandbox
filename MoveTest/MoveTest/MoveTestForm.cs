@@ -48,8 +48,8 @@ namespace MoveTest
                 {
                     Options.CameraWidth = float.Parse(this.textBoxWidth.Text);
                     Options.CameraHeight = float.Parse(this.textBoxHeight.Text);
-                    Options.mX = this.ClientSize.Width / 2 - Options.CameraWidth / 2;
-                    Options.mY = this.ClientSize.Height / 2 - Options.CameraHeight / 2;
+                    Options.CameraX = this.ClientSize.Width / 2 - Options.CameraWidth / 2;
+                    Options.CameraY = this.ClientSize.Height / 2 - Options.CameraHeight / 2;
 
                     this.entityList[this.entIndex].setWidth(float.Parse(this.textBoxSize.Text));
                     this.entityList[this.entIndex].setHeight(float.Parse(this.textBoxSize.Text));
@@ -121,8 +121,8 @@ namespace MoveTest
             graphics.Clear(Color.White);
             graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-            graphics.FillRectangle(this.unsableAreaBrush, Options.mX, Options.mY, Options.CameraWidth, Options.MenuHeight);
-            graphics.FillRectangle(this.unsableAreaBrush, Options.mX, Options.mY + Options.CameraHeight - Options.TouchHeight, Options.CameraWidth, Options.TouchHeight);
+            graphics.FillRectangle(this.unsableAreaBrush, Options.CameraX, Options.CameraY, Options.CameraWidth, Options.MenuHeight);
+            graphics.FillRectangle(this.unsableAreaBrush, Options.CameraX, Options.CameraY + Options.CameraHeight - Options.TouchHeight, Options.CameraWidth, Options.TouchHeight);
 
             #region Draw lines.
 
@@ -130,13 +130,13 @@ namespace MoveTest
             float linesBegin;
 
             linesStep = Options.CameraWidth / lineCount;
-            linesBegin = Options.mX;
+            linesBegin = Options.CameraX;
             while (0 < linesBegin)
             {
                 linesBegin -= linesStep;
                 graphics.DrawLine(Pens.Silver, linesBegin, 0, linesBegin, this.ClientSize.Height);
             }
-            linesBegin = Options.mX;
+            linesBegin = Options.CameraX;
             while (linesBegin < this.ClientSize.Width)
             {
                 graphics.DrawLine(Pens.Silver, linesBegin, 0, linesBegin, this.ClientSize.Height);
@@ -144,13 +144,13 @@ namespace MoveTest
             }
 
             linesStep = Options.CameraHeight / lineCount;
-            linesBegin = Options.mY;
+            linesBegin = Options.CameraY;
             while (0 < linesBegin)
             {
                 linesBegin -= linesStep;
                 graphics.DrawLine(Pens.Silver, 0, linesBegin, this.ClientSize.Width, linesBegin);
             }
-            linesBegin = Options.mY;
+            linesBegin = Options.CameraY;
             while (linesBegin < this.ClientSize.Width)
             {
                 graphics.DrawLine(Pens.Silver, 0, linesBegin, this.ClientSize.Width, linesBegin);
@@ -158,9 +158,9 @@ namespace MoveTest
             }
             #endregion Draw lines.
 
-            graphics.DrawRectangle(Pens.Gray, Options.mX, Options.mY, Options.CameraWidth, Options.MenuHeight);
-            graphics.DrawRectangle(Pens.Gray, Options.mX, Options.mY + Options.CameraHeight - Options.TouchHeight, Options.CameraWidth, Options.TouchHeight);
-            graphics.DrawRectangle(Pens.Gray, Options.mX, Options.mY, Options.CameraWidth, Options.CameraHeight);
+            graphics.DrawRectangle(Pens.Gray, Options.CameraX, Options.CameraY, Options.CameraWidth, Options.MenuHeight);
+            graphics.DrawRectangle(Pens.Gray, Options.CameraX, Options.CameraY + Options.CameraHeight - Options.TouchHeight, Options.CameraWidth, Options.TouchHeight);
+            graphics.DrawRectangle(Pens.Gray, Options.CameraX, Options.CameraY, Options.CameraWidth, Options.CameraHeight);
 
             #region Draw dots.
             if (this.checkBoxIsShowDots.Checked)
@@ -169,7 +169,7 @@ namespace MoveTest
                 {
                     for (int j = 0; j < entity.dots.Length; j++)
                     {
-                        graphics.FillEllipse(Brushes.Silver, Options.mX + entity.dots[j].X - this.dotRadius, Options.mY + entity.dots[j].Y - this.dotRadius, 2 * this.dotRadius, 2 * this.dotRadius);
+                        graphics.FillEllipse(Brushes.Silver, Options.CameraX + entity.dots[j].X - this.dotRadius, Options.CameraY + entity.dots[j].Y - this.dotRadius, 2 * this.dotRadius, 2 * this.dotRadius);
                     }
                 }
             }
@@ -194,7 +194,7 @@ namespace MoveTest
             #region Draw entity.
             foreach (EntityBezier entity in this.entityList)
             {
-                graphics.FillEllipse(Brushes.Red, Options.mX + entity.getX(), Options.mY + entity.getY(), entity.getWidth(), entity.getHeight());
+                graphics.FillEllipse(Brushes.Red, Options.CameraX + entity.getX(), Options.CameraY + entity.getY(), entity.getWidth(), entity.getHeight());
             }
             #endregion Draw entity.
 
@@ -222,53 +222,69 @@ namespace MoveTest
         private void Form_KeyDown(object sender, KeyEventArgs e)
         {
             int pointCount;
+            Chiky chiky = this.entityList[this.entIndex];
             switch (e.KeyCode)
             {
                 case Keys.Escape:
                     this.Close();
                     break;
                 case Keys.D1:
-                    Chiky chiky = new Chiky()
-                    {
-                        mOffsetTime = (float)this.rand.NextDouble(),
-                        mSpeedTime = (float)this.rand.NextDouble(),
-                    };
-                    pointCount = this.rand.Next(5);
+                    chiky.mOffsetTime = (float)this.rand.NextDouble();
+                    chiky.mSpeedTime = (float)this.rand.NextDouble();
+                    chiky.mNormalMaxTime = 3 * (float)this.rand.NextDouble();
+                    chiky.mNormalSpeedTime = (float)this.rand.NextDouble();
+                    chiky.mUnnormalMaxTime = 3 * (float)this.rand.NextDouble();
+                    chiky.mUnnormalSpeedTime = 2 * (float)this.rand.NextDouble();
+                    chiky.mProperties = Chiky.isUnnormalMoveFlag;
+                    chiky.mListCount = 0;
+                    pointCount = this.rand.Next(4) + 1;
                     for (int i = 0; i < pointCount; ++i)
                     {
                         chiky.Add((short)this.rand.Next(100), (short)this.rand.Next(100));
                     }
-                    this.entityList.Add(chiky);
-                    this.entIndex = this.entityList.Count - 1;
+                    this.UpdateForm();
                     break;
                 case Keys.D2:
-                    pointCount = this.entityList[this.entIndex].mListCount;
+                    pointCount = chiky.mListCount;
                     for (int i = 0; i < pointCount; ++i)
                     {
-                        this.entityList[this.entIndex].Add((short)(100 - this.entityList[this.entIndex].mList[2 * (pointCount - i - 1)]), this.entityList[this.entIndex].mList[2 * (pointCount - i - 1) + 1]);
+                        chiky.Add((short)(100 - chiky.mList[2 * (pointCount - i - 1)]), chiky.mList[2 * (pointCount - i - 1) + 1]);
                     }
+                    this.UpdateForm();
                     break;
                 case Keys.D3:
-                    pointCount = this.entityList[this.entIndex].mListCount;
+                    pointCount = chiky.mListCount;
                     for (int i = 0; i < pointCount; ++i)
                     {
-                        this.entityList[this.entIndex].Add((short)(100 - this.entityList[this.entIndex].mList[2 * (pointCount - i - 1)]), (short)(100 - this.entityList[this.entIndex].mList[2 * (pointCount - i - 1) + 1]));
+                        chiky.Add((short)(100 - chiky.mList[2 * (pointCount - i - 1)]), (short)(100 - chiky.mList[2 * (pointCount - i - 1) + 1]));
                     }
+                    this.UpdateForm();
                     break;
                 case Keys.D4:
-                    pointCount = this.entityList[this.entIndex].mListCount;
+                    pointCount = chiky.mListCount;
                     for (int i = 0; i < pointCount; ++i)
                     {
-                        this.entityList[this.entIndex].Add(this.entityList[this.entIndex].mList[2 * (pointCount - i - 1)], (short)(100 - this.entityList[this.entIndex].mList[2 * (pointCount - i - 1) + 1]));
+                        chiky.Add(chiky.mList[2 * (pointCount - i - 1)], (short)(100 - chiky.mList[2 * (pointCount - i - 1) + 1]));
                     }
+                    this.UpdateForm();
+                    break;
+                case Keys.D5:
+                    pointCount = chiky.mListCount;
+                    for (int i = 0; i < pointCount; ++i)
+                    {
+                        short t = chiky.mList[2 * (pointCount - i - 1)];
+                        chiky.mList[2 * (pointCount - i - 1)] = chiky.mList[2 * (pointCount - i - 1) + 1];
+                        chiky.mList[2 * (pointCount - i - 1) + 1] = t;
+                    }
+                    this.UpdateForm();
                     break;
             }
         }
 
         private void Form_Resize(object sender, EventArgs e)
         {
-            Options.mX = this.ClientSize.Width / 2 - Options.CameraWidth / 2;
-            Options.mY = this.ClientSize.Height / 2 - Options.CameraHeight / 2;
+            Options.CameraX = this.ClientSize.Width / 2 - Options.CameraWidth / 2;
+            Options.CameraY = this.ClientSize.Height / 2 - Options.CameraHeight / 2;
 
             this.UpdateForm();
         }

@@ -165,7 +165,7 @@
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanelSettings.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelSettings.Size = new System.Drawing.Size(222, 673);
+            this.tableLayoutPanelSettings.Size = new System.Drawing.Size(222, 712);
             this.tableLayoutPanelSettings.TabIndex = 1;
             // 
             // labelWidth
@@ -327,7 +327,7 @@
             this.buttonStartStopTimer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanelSettings.SetColumnSpan(this.buttonStartStopTimer, 2);
             this.buttonStartStopTimer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonStartStopTimer.Location = new System.Drawing.Point(5, 555);
+            this.buttonStartStopTimer.Location = new System.Drawing.Point(5, 594);
             this.buttonStartStopTimer.Name = "buttonStartStopTimer";
             this.buttonStartStopTimer.Size = new System.Drawing.Size(212, 23);
             this.buttonStartStopTimer.TabIndex = 18;
@@ -342,7 +342,7 @@
             this.checkBoxIsShowDots.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsShowDots, 2);
             this.checkBoxIsShowDots.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBoxIsShowDots.Location = new System.Drawing.Point(5, 505);
+            this.checkBoxIsShowDots.Location = new System.Drawing.Point(5, 544);
             this.checkBoxIsShowDots.Name = "checkBoxIsShowDots";
             this.checkBoxIsShowDots.Size = new System.Drawing.Size(212, 17);
             this.checkBoxIsShowDots.TabIndex = 19;
@@ -355,7 +355,7 @@
             this.checkBoxIsShowPoints.Checked = true;
             this.checkBoxIsShowPoints.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tableLayoutPanelSettings.SetColumnSpan(this.checkBoxIsShowPoints, 2);
-            this.checkBoxIsShowPoints.Location = new System.Drawing.Point(5, 530);
+            this.checkBoxIsShowPoints.Location = new System.Drawing.Point(5, 569);
             this.checkBoxIsShowPoints.Name = "checkBoxIsShowPoints";
             this.checkBoxIsShowPoints.Size = new System.Drawing.Size(93, 17);
             this.checkBoxIsShowPoints.TabIndex = 20;
@@ -463,7 +463,7 @@
             this.tableLayoutPanelLoadSave.Controls.Add(this.buttonSave, 1, 0);
             this.tableLayoutPanelLoadSave.Controls.Add(this.buttonLoad, 0, 0);
             this.tableLayoutPanelLoadSave.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanelLoadSave.Location = new System.Drawing.Point(5, 639);
+            this.tableLayoutPanelLoadSave.Location = new System.Drawing.Point(5, 678);
             this.tableLayoutPanelLoadSave.Name = "tableLayoutPanelLoadSave";
             this.tableLayoutPanelLoadSave.RowCount = 1;
             this.tableLayoutPanelLoadSave.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -501,7 +501,7 @@
             // 
             this.tableLayoutPanelSettings.SetColumnSpan(this.trackBar, 2);
             this.trackBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.trackBar.Location = new System.Drawing.Point(5, 586);
+            this.trackBar.Location = new System.Drawing.Point(5, 625);
             this.trackBar.Maximum = 5000;
             this.trackBar.Name = "trackBar";
             this.trackBar.Size = new System.Drawing.Size(212, 45);
@@ -670,7 +670,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(492, 673);
+            this.ClientSize = new System.Drawing.Size(484, 712);
             this.Controls.Add(this.tableLayoutPanelSettings);
             this.DoubleBuffered = true;
             this.Name = "MoveTestForm";

@@ -2,8 +2,30 @@
 {
     class Options
     {
-        public static float mX = 0;
-        public static float mY = 0;
+        private static float cameraX = 0;
+        public static float CameraX
+        {
+            get
+            {
+                return cameraX;
+            }
+            set
+            {
+                cameraX = value;
+            }
+        }
+        private static float cameraY = 0;
+        public static float CameraY
+        {
+            get
+            {
+                return cameraY;
+            }
+            set
+            {
+                cameraY = value;
+            }
+        }
 
         private static float cameraWidth = 380;
         public static float CameraWidth
@@ -19,8 +41,6 @@
         }
 
         private static float cameraHeight = 610;
-        private static float menuHeight = cameraHeight / 10;
-        private static float touchHeight = cameraHeight / 3;
         public static float CameraHeight
         {
             get
@@ -34,6 +54,7 @@
                 touchHeight = cameraHeight / 3;
             }
         }
+        private static float menuHeight = cameraHeight / 10;
         public static float MenuHeight
         {
             get
@@ -41,6 +62,7 @@
                 return menuHeight;
             }
         }
+        private static float touchHeight = cameraHeight / 3;
         public static float TouchHeight
         {
             get

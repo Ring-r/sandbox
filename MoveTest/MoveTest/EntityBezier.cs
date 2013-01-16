@@ -6,7 +6,7 @@ namespace MoveTest
     {
         #region Time.
 
-        private static readonly byte mListCapacity = 10;
+        private static readonly byte mListCapacity = 100;
         private static readonly float[] mTempList = new float[2 * mListCapacity];
 
         public static float mKoefSpeedTime = 1;
@@ -26,16 +26,16 @@ namespace MoveTest
 
         public float getFloatAtListX(int index)
         {
-            return Options.mX + this.mList[2 * index] / 100f * Options.CameraWidth;
+            return Options.CameraX + this.mList[2 * index] / 100f * Options.CameraWidth;
         }
         public float getFloatAtListY(int index)
         {
-            return Options.mY + this.mList[2 * index + 1] / 100f * Options.CameraHeight;
+            return Options.CameraY + this.mList[2 * index + 1] / 100f * Options.CameraHeight;
         }
         public void setFloatAtListX(int index, float pX, float pY)
         {
-            this.mList[2 * index] = (short)((pX - Options.mX) / Options.CameraWidth * 100);
-            this.mList[2 * index + 1] = (short)((pY - Options.mY) / Options.CameraHeight * 100);
+            this.mList[2 * index] = (short)((pX - Options.CameraX) / Options.CameraWidth * 100);
+            this.mList[2 * index + 1] = (short)((pY - Options.CameraY) / Options.CameraHeight * 100);
         }
 
         public void RemoveAt(int index)
