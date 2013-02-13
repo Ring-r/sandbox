@@ -123,6 +123,8 @@ namespace DotWayTest
                 }
                 e.Graphics.FillEllipse(Brushes.Green, this.dots[0].X - Options.DotsRadius, this.dots[0].Y - Options.DotsRadius, 2 * Options.DotsRadius, 2 * Options.DotsRadius);
                 e.Graphics.FillEllipse(Brushes.Red, this.dots[Options.DotsCount - 1].X - Options.DotsRadius, this.dots[Options.DotsCount - 1].Y - Options.DotsRadius, 2 * Options.DotsRadius, 2 * Options.DotsRadius);
+                this.milkyMan.onManagedDraw(e.Graphics);
+                this.milkyManOpponent.onManagedDraw(e.Graphics);
             }
         }
 
@@ -174,12 +176,21 @@ namespace DotWayTest
                     for (int i = 0; i < this.dotsChecker.Length; ++i)
                     {
                         Options.IsFinish = Options.IsFinish && this.dotsChecker[i] > 0;
-                        ind = 0;
-                        this.x = this.dots[this.dotsStack[0]].X;
-                        this.y = this.dots[this.dotsStack[0]].Y;
-                        indOp = 0;
-                        this.xOp = this.dots[Options.DotsStackOpponent[0]].X;
-                        this.yOp = this.dots[Options.DotsStackOpponent[0]].Y;
+                    }
+                    if (Options.IsFinish)
+                    {
+                        this.milkyMan.Dots.Clear();
+                        for (int i = 0; i < Options.DotsCount; ++i)
+                        {
+                            this.milkyMan.Dots.Add(this.dots[this.dotsStack[i]]);
+                        }
+                        this.milkyMan.index = -1;
+                        this.milkyManOpponent.Dots.Clear();
+                        for (int i = 0; i < Options.DotsCount; ++i)
+                        {
+                            this.milkyManOpponent.Dots.Add(this.dots[Options.DotsStackOpponent[i]]);
+                        }
+                        this.milkyManOpponent.index = -1;
                         this.timer.Start();
                     }
                 }
@@ -200,15 +211,13 @@ namespace DotWayTest
             this.Invalidate();
         }
 
-        private int ind = 0;
-        private float x;
-        private float y;
-        private int indOp = 0;
-        private float xOp;
-        private float yOp;
+        private MilkyMan milkyMan = new MilkyMan() { Speed = 500, Radius = 3 };
+        private MilkyMan milkyManOpponent = new MilkyMan() { Speed = 600, Radius = 3 };
         private void timer_Tick(object sender, EventArgs e)
         {
-            //
+            this.milkyMan.onManagedUpdate(this.timer.Interval / 1000f);
+            this.milkyManOpponent.onManagedUpdate(this.timer.Interval / 1000f);
+            this.Invalidate();
         }
     }
 }
