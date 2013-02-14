@@ -1,9 +1,8 @@
 ﻿using System.Drawing;
-using System;
 
 namespace Entities
 {
-    class EntityRectangle : IEntity
+    class EntityRectangle : Entity
     {
         private float mX;
         public float X
@@ -123,28 +122,13 @@ namespace Entities
             this.mHeight = pHeight;
         }
 
-        public float Angle { get; set; }
-        public float VectorX
+        public override void onManagedDraw(Graphics graphics)
         {
-            get
-            {
-                return (float)Math.Cos(this.Angle);
-            }
-        }
-        public float VectorY
-        {
-            get
-            {
-                return (float)Math.Sin(this.Angle);
-            }
-        }
-        public float Speed { get; set; }
-
-        public void onManagedDraw(Graphics graphics)
-        {
+            graphics.FillRectangle(this.Brush, this.X, this.Y, this.Width, this.Height);
+            graphics.DrawRectangle(this.Pen, this.X, this.Y, this.Width, this.Height);
         }
 
-        public void onManagedUpdate(float pSecondsElapsed)
+        public override void onManagedUpdate(float pSecondsElapsed)
         {
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Entities
 {
-    class EntityCircle : IEntity
+    class EntityCircle : Entity
     {
         public float X
         {
@@ -154,11 +154,13 @@ namespace Entities
             }
         }
 
-        public void onManagedDraw(Graphics graphics)
+        public override void onManagedDraw(Graphics graphics)
         {
+            graphics.FillEllipse(this.Brush, this.X, this.Y, this.Size, this.Size);
+            graphics.DrawEllipse(this.Pen, this.X, this.Y, this.Size, this.Size);
         }
 
-        public void onManagedUpdate(float pSecondsElapsed)
+        public override void onManagedUpdate(float pSecondsElapsed)
         {
         }
     }
