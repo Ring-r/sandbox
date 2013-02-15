@@ -1,6 +1,6 @@
 ﻿namespace WeaponTest
 {
-    public static class Options
+    static class Options
     {
         public static int CameraWidth = 300;
         public static float CursorY = 0;

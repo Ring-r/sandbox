@@ -27,6 +27,5 @@ namespace Entities
 
         public abstract void onManagedDraw(Graphics graphics);
         public abstract void onManagedUpdate(float pSecondsElapsed);
-
     }
 }
