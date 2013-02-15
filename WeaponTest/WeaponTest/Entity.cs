@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Entities
 {
-    abstract class Entity : IEntity
+    abstract class Entity
     {
         public float Angle { get; set; }
         public float VectorX
