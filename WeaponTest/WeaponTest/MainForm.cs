@@ -11,6 +11,7 @@ namespace WeaponTest
 	{
 		private readonly List<Weapon> weapons = new List<Weapon> ();
 		private readonly Stopwatch stopwatch = new Stopwatch ();
+        private readonly Evil evil = new Evil();
 
 		public MainForm ()
 		{
@@ -21,15 +22,20 @@ namespace WeaponTest
 
 		private void timer_Tick (object sender, EventArgs e)
 		{
-			this.weapons.ForEach ((weapon) => weapon.onManagedUpdate (this.stopwatch.ElapsedMilliseconds / 1000f));
-			this.stopwatch.Restart ();
+            this.evil.onManagedUpdate(this.stopwatch.ElapsedMilliseconds / 1000f);
+            this.weapons.ForEach ((weapon) => weapon.onManagedUpdate (this.stopwatch.ElapsedMilliseconds / 1000f));
+			this.stopwatch.Stop();
+            this.stopwatch.Reset();
+            this.stopwatch.Start();
 			this.Invalidate ();
+            ColideHelper.Check(this.evil, this.weapons[0]);
 		}
 
 		private void MainForm_Paint (object sender, PaintEventArgs e)
 		{
 			e.Graphics.Clear (Color.White);
 			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            this.evil.onManagedDraw(e.Graphics);
 			this.weapons.ForEach ((weapon) => weapon.onManagedDraw (e.Graphics));
 		}
 

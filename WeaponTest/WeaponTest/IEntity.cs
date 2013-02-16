@@ -23,6 +23,9 @@ namespace Entities
         float VectorY { get; }
         float Speed { get; set; }
 
+
+        float Health { get; set; }
+
         void onManagedDraw(Graphics graphics);
 
         void onManagedUpdate(float pSecondsElapsed);

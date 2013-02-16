@@ -20,6 +20,9 @@ namespace Entities
 
         private float mY;
 
+
+       public float Health { get; set; }
+
         public float Y
         {
             get

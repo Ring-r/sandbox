@@ -6,7 +6,7 @@ namespace WeaponTest
 {
 	class Enemy : EntityCircle
 	{
-		public override void onManagedDraw (Graphics graphics)
+        public override void onManagedDraw (Graphics graphics)
 		{
 			graphics.TranslateTransform (this.CenterX, this.CenterY);
 			graphics.RotateTransform (90 + this.Angle / (float)Math.PI * 180);
@@ -20,9 +20,9 @@ namespace WeaponTest
 			this.CenterX += this.VectorX * this.Speed * pSecondsElapsed;
 			this.CenterY += this.VectorY * this.Speed * pSecondsElapsed;
 
-			if (this.Y > Options.CameraHeight || this.Y + this.Height < 0) {
-				this.Clear ();
-			}
+            //if (this.Y > Options.CameraHeight || this.Y + this.Height < 0) {
+            //    this.Clear ();
+            //}
 		}
 
 	}
