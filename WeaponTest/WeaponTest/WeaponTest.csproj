@@ -76,6 +76,8 @@
     <Compile Include="Evil.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Pool.cs" />
+    <Compile Include="IPoolable.cs" />
+    <Compile Include="IPool.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
