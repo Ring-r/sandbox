@@ -28,6 +28,9 @@ namespace Entities
             }
         }
 
+
+        public float Health { get; set; }
+
         public void setPosition(float pX, float pY)
         {
             this.mCenterX = pX + this.mRadius;

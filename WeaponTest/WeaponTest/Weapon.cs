@@ -8,7 +8,7 @@ namespace WeaponTest
 	class Weapon
 	{
 		private float secondsElapsed = 0;
-		private readonly List<IEntity> bullets = new List<IEntity> ();
+		internal readonly List<IEntity> bullets = new List<IEntity> ();
 		//
 		private int startCursorX = 0;
 		private int startCursorY = 0;
@@ -21,13 +21,15 @@ namespace WeaponTest
 		//
 		public float BulletsWidth = 5f;
 		public float BulletsHeight = 5f;
-		public float BulletsSpeed = 50f; // points in second;
+		public float BulletsSpeed = 500f; // points in second;
 		//
-		public float ShotTime = 1f; // time (seconds) for one shot;
+		public float ShotTime = 0.1f; // time (seconds) for one shot;
 		private int shotCount = 0;
 		public int ShotCount = 10;
 		//
-		public float RechargeTime = 5f; // time (seconds) for one recharge;
+		public float RechargeTime = 0f; // time (seconds) for one recharge;
+
+
 
 		public void onManagedDraw (Graphics graphics)
 		{
@@ -76,12 +78,23 @@ namespace WeaponTest
                     	Height = this.BulletsHeight,
                     	Angle = (float)Math.Atan2(this.cursorY - this.startCursorY, this.cursorX - this.startCursorX) + this.Angle,
                     	Speed = this.BulletsSpeed,
+                        Health = (float)Options.Random.NextDouble() * 100,
                 	};
 					bullet.onManagedUpdate (this.secondsElapsed);
 					this.bullets.Add (bullet);
 					++this.shotCount;
 				}
 			}
+            
+            for (int i = 0; i < this.bullets.Count; ++i)
+            {
+                if (this.bullets[i].Y > Options.CameraHeight || this.bullets[i].Y + this.bullets[i].Height < 0)
+                {
+                    this.bullets.RemoveAt(i);
+                    --i;
+                }
+
+            }
 		}
 
 		public void Aim (int cursorX, int cursorY)
