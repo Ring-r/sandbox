@@ -11,7 +11,6 @@
     <RootNamespace>WeaponTest</RootNamespace>
     <AssemblyName>WeaponTest</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -47,10 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColideHelper.cs" />
-    <Compile Include="Entity.cs" />
-    <Compile Include="EntityCircle.cs" />
-    <Compile Include="EntityRectangle.cs" />
-    <Compile Include="IEntity.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,9 +80,14 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="Evil.cs" />
     <Compile Include="Enemy.cs" />
-    <Compile Include="Pool.cs" />
-    <Compile Include="IPoolable.cs" />
-    <Compile Include="IPool.cs" />
+    <Compile Include="Pools\Pool.cs" />
+    <Compile Include="Pools\IPool.cs" />
+    <Compile Include="Pools\IPoolable.cs" />
+    <Compile Include="Enteties\Entity.cs" />
+    <Compile Include="Enteties\EntityCircle.cs" />
+    <Compile Include="Enteties\EntityRectangle.cs" />
+    <Compile Include="Enteties\IEntity.cs" />
+    <Compile Include="WeaponBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -97,4 +97,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Pools\" />
+    <Folder Include="Enteties\" />
+  </ItemGroup>
 </Project>

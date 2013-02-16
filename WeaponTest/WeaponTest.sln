@@ -1,5 +1,5 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeaponTest", "WeaponTest\WeaponTest.csproj", "{744A0D23-3D48-4455-B245-93F50F34C093}"
 EndProject
@@ -13,6 +13,9 @@ Global
 		{744A0D23-3D48-4455-B245-93F50F34C093}.Debug|x86.Build.0 = Debug|x86
 		{744A0D23-3D48-4455-B245-93F50F34C093}.Release|x86.ActiveCfg = Release|x86
 		{744A0D23-3D48-4455-B245-93F50F34C093}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = WeaponTest\WeaponTest.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

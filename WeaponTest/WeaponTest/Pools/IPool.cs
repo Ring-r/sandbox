@@ -1,6 +1,6 @@
 using System;
 
-namespace Entities
+namespace Pools
 {
 	public interface IPool
 	{

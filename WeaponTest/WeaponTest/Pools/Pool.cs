@@ -1,9 +1,9 @@
 using System;
 
-namespace Entities
+namespace Pools
 {
 	public class Pool<DataType> : IPool
-		where DataType : IPoolable
+		where DataType : class, IPoolable
 	{
 		public int Count{ get; private set; }
 
@@ -17,7 +17,7 @@ namespace Entities
 			this.Capacity = capacity;
 			this.elements = new DataType[capacity];
 			for (int i = this.elements.Length - 1; i > 0; --i) {
-				this.elements [i] = element.DeepCopy ();
+				this.elements [i] = (DataType)element.DeepCopy ();
 				this.elements [i].Parent = this;
 				this.elements [i].Id = i;
 			}
