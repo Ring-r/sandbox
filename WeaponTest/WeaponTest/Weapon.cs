@@ -5,125 +5,119 @@ using Entities;
 
 namespace WeaponTest
 {
-    class Weapon
-    {
-        private float mSecondsElapsed = 0;
-        private readonly List<IEntity> balls = new List<IEntity>();
+	class Weapon
+	{
+		private float secondsElapsed = 0;
+		private readonly List<IEntity> bullets = new List<IEntity> ();
+		//
+		private int startCursorX = 0;
+		private int startCursorY = 0;
+		private DateTime startTime;
+		private int cursorX = 0;
+		private int cursorY = 0;
+		//
+		public float Angle = 0;
+		public bool AutoShots = false;
+		//
+		public float BulletsWidth = 5f;
+		public float BulletsHeight = 5f;
+		public float BulletsSpeed = 50f; // points in second;
+		//
+		public float ShotTime = 1f; // time (seconds) for one shot;
+		private int shotCount = 0;
+		public int ShotCount = 10;
+		//
+		public float RechargeTime = 5f; // time (seconds) for one recharge;
 
-        public float BallsWidth = 5f;
-        public float BallsHeight = 5f;
-        public float BallsSpeed = 500f; // points in second;
-        public float ShootTime = 1f; // time (seconds) for one shoot;
-        public int ShootCount = 0;
-        public int ShootCountMax = 5;
-        public float RechargeTime = 2f;
-        public bool ShootAuto = false;
-        public float Angle = 0;
+		public void onManagedDraw (Graphics graphics)
+		{
+			float angle;
+			if (this.shotCount < this.ShotCount) {
+				angle = this.secondsElapsed >= this.ShotTime ? 360 : 360 * this.secondsElapsed / this.ShotTime;
+				graphics.FillPie (Brushes.Silver, Options.CameraWidth / 2 - 100, 0, 200, 200, 0, angle);
+			} else {
+				if (this.RechargeTime != 0) {
+					angle = 360 * this.secondsElapsed / this.RechargeTime;
+					graphics.FillPie (Brushes.Black, Options.CameraWidth / 2 - 100, 0, 200, 200, 0, angle);
+				}
+			}
 
-        private int startCursorX = 0;
-        private int startCursorY = 0;
-        private DateTime startTime;
-        private int cursorY = 0;
-        private int cursorX = 0;
+			graphics.DrawEllipse (Pens.Black, Options.CameraWidth / 2 - 100, 0, 200, 200);
 
+			for (int i = 0; i < this.bullets.Count; ++i) {
+				this.bullets [i].onManagedDraw (graphics);
+			}
+		}
 
-        public void onManagedDraw(Graphics graphics)
-        {
-            float angle;
-            if (this.ShootCount < this.ShootCountMax)
-            {
-                angle = this.mSecondsElapsed >= this.ShootTime ? 360 : 360 * this.mSecondsElapsed / this.ShootTime;
-                graphics.FillPie(Brushes.Silver, Options.CameraWidth / 2 - 100, 0, 200, 200, 0, angle);
-            }
-            else
-            {
-                angle = 360 * this.mSecondsElapsed / this.RechargeTime;
-                graphics.FillPie(Brushes.Black, Options.CameraWidth / 2 - 100, 0, 200, 200, 0, angle);
-            }
+		public void onManagedUpdate (float secondsElapsed)
+		{
+			for (int i = 0; i < this.bullets.Count; ++i) {
+				this.bullets [i].onManagedUpdate (secondsElapsed);
+			}
 
-            for (int i = 0; i < this.balls.Count; ++i)
-            {
-                this.balls[i].onManagedDraw(graphics);
-            }
-        }
+			this.secondsElapsed += secondsElapsed;
 
-        public void onManagedUpdate(float pSecondsElapsed)
-        {
-            for (int i = 0; i < this.balls.Count; ++i)
-            {
-                this.balls[i].onManagedUpdate(pSecondsElapsed);
-            }
+			if (this.shotCount >= this.ShotCount) {
+				if (this.secondsElapsed > this.RechargeTime) {
+					this.secondsElapsed -= this.RechargeTime;
+					this.shotCount = 0;
+				}
+			}
 
-            this.mSecondsElapsed += pSecondsElapsed;
+			if (this.AutoShots) {
+				while (this.secondsElapsed >= this.ShotTime && this.shotCount < this.ShotCount) {
+					this.secondsElapsed -= this.ShotTime;
 
-            if (this.ShootCount >= this.ShootCountMax)
-            {
-                if (this.mSecondsElapsed > this.RechargeTime)
-                {
-                    this.mSecondsElapsed -= this.RechargeTime;
-                    this.ShootCount = 0;
-                }
-            }
+					Bullet bullet = new Bullet ()
+                	{
+                    	CenterX = this.startCursorX,
+                    	CenterY = this.startCursorY,
+                    	Width = this.BulletsWidth,
+                    	Height = this.BulletsHeight,
+                    	Angle = (float)Math.Atan2(this.cursorY - this.startCursorY, this.cursorX - this.startCursorX) + this.Angle,
+                    	Speed = this.BulletsSpeed,
+                	};
+					bullet.onManagedUpdate (this.secondsElapsed);
+					this.bullets.Add (bullet);
+					++this.shotCount;
+				}
+			}
+		}
 
-            if (this.ShootAuto)
-            {
-                while (this.mSecondsElapsed >= this.ShootTime && this.ShootCount < this.ShootCountMax)
-                {
-                    Ball ball = new Ball()
-                    {
-                        CenterX = Options.CameraWidth / 2,
-                        CenterY = Options.CameraHeight,
-                        Width = this.BallsWidth,
-                        Height = this.BallsHeight,
-                        Angle = (float)Math.Atan2(this.cursorY - Options.CameraHeight, this.cursorX - Options.CameraWidth / 2) + this.Angle,
-                        Speed = this.BallsSpeed,
-                    };
-                    ball.onManagedUpdate(this.mSecondsElapsed);
-                    this.balls.Add(ball);
-                    this.mSecondsElapsed -= this.ShootTime;
-                    ++this.ShootCount;
-                }
-            }
+		public void Aim (int cursorX, int cursorY)
+		{
+			this.startCursorX = cursorX;
+			this.startCursorY = cursorY;
+			this.startTime = DateTime.Now;
+		}
 
-            for (int i = 0; i < this.balls.Count; ++i)
-            {
-                if (this.balls[i].Y > Options.CameraHeight || this.balls[i].Y + this.balls[i].Height < 0)
-                {
-                    this.balls.RemoveAt(i);
-                    --i;
-                }
-            }
-        }
+		public void AimUpdate (int cursorX, int cursorY)
+		{
+			this.cursorX = cursorX;
+			this.cursorY = cursorY;
+		}
 
-        public void Aim(int cursorX, int cursorY)
-        {
-            this.startCursorX = cursorX;
-            this.startCursorY = cursorY;
-            this.startTime = DateTime.Now;
-        }
-
-        public void Shoot(int cursorX, int cursorY)
-        {
-            this.cursorX = cursorX;
-            this.cursorY = cursorY;
-            if (this.mSecondsElapsed > this.ShootTime && this.ShootCount < this.ShootCountMax)
-            {
-                float x = this.cursorX - this.startCursorX;
-                float y = this.cursorY - this.startCursorY;
-                float dist = (float)Math.Sqrt(x * x + y * y);
-                Ball ball = new Ball()
+		public void Shoot (int cursorX, int cursorY)
+		{
+			this.cursorX = cursorX;
+			this.cursorY = cursorY;
+			if (this.secondsElapsed > this.ShotTime && this.shotCount < this.ShotCount) {
+				this.secondsElapsed = 0;
+				float x = this.cursorX - this.startCursorX;
+				float y = this.cursorY - this.startCursorY;
+				float dist = (float)Math.Sqrt (x * x + y * y);
+				Bullet bullet = new Bullet ()
                 {
                     CenterX = this.startCursorX,
                     CenterY = this.startCursorY,
-                    Width = this.BallsWidth,
-                    Height = this.BallsHeight,
+                    Width = this.BulletsWidth,
+                    Height = this.BulletsHeight,
                     Angle = (float)Math.Atan2(y, x) + this.Angle,
-                    Speed = Math.Min(this.BallsSpeed, dist / (float)(DateTime.Now - this.startTime).TotalMilliseconds * 1000),
+                    Speed = Math.Min(this.BulletsSpeed, dist / (float)(DateTime.Now - this.startTime).TotalMilliseconds * 1000),
                 };
-                this.balls.Add(ball);
-                this.mSecondsElapsed = 0;
-                ++this.ShootCount;
-            }
-        }
-    }
+				this.bullets.Add (bullet);
+				++this.shotCount;
+			}
+		}
+	}
 }

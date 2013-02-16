@@ -37,7 +37,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ball.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityCircle.cs" />
     <Compile Include="EntityRectangle.cs" />
@@ -73,6 +72,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Bullet.cs" />
+    <Compile Include="Evil.cs" />
+    <Compile Include="Enemy.cs" />
+    <Compile Include="Pool.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

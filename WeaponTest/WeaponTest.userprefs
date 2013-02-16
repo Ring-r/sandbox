@@ -1,17 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="WeaponTest/Weapon.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="WeaponTest/Bullet.cs">
     <Files>
-      <File FileName="WeaponTest/Weapon.cs" Line="15" Column="31" />
-      <File FileName="WeaponTest/MainForm.cs" Line="14" Column="50" />
-      <File FileName="WeaponTest/Ball.cs" Line="10" Column="59" />
+      <File FileName="WeaponTest/Weapon.cs" Line="52" Column="53" />
+      <File FileName="WeaponTest/MainForm.cs" Line="40" Column="64" />
+      <File FileName="WeaponTest/Bullet.cs" Line="24" Column="19" />
+      <File FileName="WeaponTest/Evil.cs" Line="5" Column="2" />
+      <File FileName="WeaponTest/Enemy.cs" Line="9" Column="44" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="WeaponTest" expanded="True">
-            <Node name="MainForm.cs" expanded="True" />
-            <Node name="Weapon.cs" selected="True" />
+            <Node name="Bullet.cs" selected="True" />
           </Node>
         </State>
       </Pad>
