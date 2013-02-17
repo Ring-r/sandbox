@@ -55,7 +55,6 @@
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Weapon.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -77,9 +76,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Bullet.cs" />
-    <Compile Include="Evil.cs" />
-    <Compile Include="Enemy.cs" />
     <Compile Include="Pools\Pool.cs" />
     <Compile Include="Pools\IPool.cs" />
     <Compile Include="Pools\IPoolable.cs" />
@@ -87,7 +83,10 @@
     <Compile Include="Enteties\EntityCircle.cs" />
     <Compile Include="Enteties\EntityRectangle.cs" />
     <Compile Include="Enteties\IEntity.cs" />
-    <Compile Include="WeaponBase.cs" />
+    <Compile Include="Evil\Evil.cs" />
+    <Compile Include="Evil\Enemy.cs" />
+    <Compile Include="Weapon\Bullet.cs" />
+    <Compile Include="Weapon\Weapon.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -100,5 +99,7 @@
   <ItemGroup>
     <Folder Include="Pools\" />
     <Folder Include="Enteties\" />
+    <Folder Include="Evil\" />
+    <Folder Include="Weapon\" />
   </ItemGroup>
 </Project>

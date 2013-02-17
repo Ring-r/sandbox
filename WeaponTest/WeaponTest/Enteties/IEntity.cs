@@ -2,32 +2,42 @@
 
 namespace Entities
 {
-    interface IEntity
-    {
-        float X { get; set; }
-        float Y { get; set; }
-        void setPosition(float pX, float pY);
+	interface IEntity
+	{
+		float X { get; set; }
 
-        float CenterX { get; set; }
-        float CenterY { get; set; }
-        void setCenterPosition(float pCenterX, float pCenterY);
+		float Y { get; set; }
 
-        float BaseWidth { get; set; }
-        float BaseHeight { get; set; }
+		void setPosition (float pX, float pY);
 
-        float Width { get; set; }
-        float Height { get; set; }
+		float CenterX { get; set; }
 
-        float Angle { get; set; }
-        float VectorX { get; }
-        float VectorY { get; }
-        float Speed { get; set; }
+		float CenterY { get; set; }
 
+		void setCenterPosition (float pCenterX, float pCenterY);
 
-        float Health { get; set; }
+		float BaseWidth { get; set; }
 
-        void onManagedDraw(Graphics graphics);
+		float BaseHeight { get; set; }
 
-        void onManagedUpdate(float pSecondsElapsed);
-    }
+		float Width { get; set; }
+
+		float Height { get; set; }
+
+		float Angle { get; set; }
+
+		float VectorX { get; }
+
+		float VectorY { get; }
+
+		float Speed { get; set; }
+
+		float LifeTime { get; set; }
+
+		float Health { get; set; }
+
+		void onManagedDraw (Graphics graphics);
+
+		void onManagedUpdate (float pSecondsElapsed);
+	}
 }

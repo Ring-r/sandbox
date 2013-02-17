@@ -10,40 +10,27 @@ namespace WeaponTest
     {
         public static void Check(Evil evil, Weapon weapon)
         {
-//            for (int i = 0; i < evil.bullets.Count; ++i)
-//            {
-//                for (int j = 0; j < weapon.bullets.Count; ++j)
-//                {
-//                    if (Check(evil.bullets[i], weapon.bullets[j]))
-//                    {
-//                        float h = evil.bullets[i].Health;
-//                        evil.bullets[i].Health -= weapon.bullets[j].Health;
-//                        weapon.bullets[j].Health -= h;
-//                        bool b = false;
-//                        if (evil.bullets[i].Health <= 0)
-//                        {
-//                            evil.bullets.RemoveAt(i);
-//                            --i;
-//                            b = true;
-//                        }
-//                        if (weapon.bullets[j].Health <= 0)
-//                        {
-//                            weapon.bullets.RemoveAt(j);
-//                            j = !b ? j - 1 : weapon.bullets.Count;
-//                        }
-//                    }
-//                }
-//
-//            }
+            for (int i = 0; i < evil.enemies.Count; ++i)
+            {
+                for (int j = 0; j < weapon.bullets.Count; ++j)
+                {
+                    if (Check(evil.enemies[i], weapon.bullets[j]))
+                    {
+                        evil.enemies[i].Health -= weapon.bullets[j].Health;
+                        weapon.bullets[j].Health -= evil.enemies[i].Health + weapon.bullets[j].Health;
+                    }
+                }
+
+            }
         }
 
         private static bool Check(IEntity enemy, IEntity bullet)
         {
             bool isNotColide =
                 (enemy.X + enemy.Width <= bullet.X ||
-            bullet.X + bullet.Width <= enemy.X ||
-            enemy.Y + enemy.Height <= bullet.Y ||
-            bullet.Y + bullet.Height <= enemy.Y);
+            	bullet.X + bullet.Width <= enemy.X ||
+            	enemy.Y + enemy.Height <= bullet.Y ||
+            	bullet.Y + bullet.Height <= enemy.Y);
             return !isNotColide;
         }
     }
