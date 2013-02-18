@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockBitsTest", "LockBitsTest\LockBitsTest.csproj", "{BC3EAAA0-F49B-4589-B144-538F0F85F75A}"
 EndProject
 Global
