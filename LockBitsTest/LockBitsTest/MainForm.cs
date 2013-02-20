@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace LockBitsTest
@@ -9,19 +10,41 @@ namespace LockBitsTest
     public partial class MainForm : Form
     {
         private readonly Random rand = new Random();
-        private int count = 500000;
+        private int count = 1000000;
         private readonly List<Particle> particles = new List<Particle>();
         private FastBitmap bitmap = null;
+
+        private readonly Graphics graphics;
+        private readonly HandleRef handleRef;
 
         public MainForm()
         {
             InitializeComponent();
+
+            //SetStyle(ControlStyles.DoubleBuffer, false);
+            //SetStyle(ControlStyles.UserPaint, true);
+            //SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            //SetStyle(ControlStyles.Opaque, true);
+
+            this.graphics = this.CreateGraphics();
+            this.handleRef = new HandleRef(this.graphics, this.graphics.GetHdc());
         }
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
         {
-            Stopwatch stopwatch = new Stopwatch();
+            if (this.bitmap != null)
+            {
+                using (Bitmap image = bitmap.Image)
+                {
+                    e.Graphics.DrawImage(image, 0, 0);
+                }
+            }
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
             Stopwatch stopwatch_render = new Stopwatch();
+            Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             if (this.bitmap != null)
@@ -55,27 +78,22 @@ namespace LockBitsTest
                         }
                     }
 
-                    bitmap.Clear();
+                    this.bitmap.Clear();
                     foreach (Particle particle in this.particles)
                     {
-                        bitmap.SetPixel((int)particle.x, (int)particle.y, particle.c);
+                        this.bitmap.SetPixel((int)particle.x, (int)particle.y, particle.c);
                     }
 
-                    using (Bitmap image = bitmap.Image)
-                    {
-                        e.Graphics.DrawImage(image, 0, 0);
-                    }
+                    stopwatch_render.Start();
+                    this.bitmap.Paint(this.handleRef);
+                    this.Invalidate();
+                    //stopwatch_render.Stop();
                 }
                 catch { }
             }
 
             stopwatch.Stop();
-            this.Text = string.Format("Points count: {0}. Update time: {1}.", this.count, stopwatch.ElapsedMilliseconds);
-        }
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            this.Invalidate();
+            this.Text = string.Format("Points count: {0}. Update time: {1}. Render time: {2}.", this.count, stopwatch.ElapsedMilliseconds, stopwatch_render.ElapsedMilliseconds);
         }
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
@@ -116,6 +134,11 @@ namespace LockBitsTest
                     particle.vy = speed * y;
                 }
             }
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
         }
     }
 }
