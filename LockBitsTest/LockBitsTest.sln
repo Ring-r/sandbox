@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockBitsTest", "LockBitsTest\LockBitsTest.csproj", "{BC3EAAA0-F49B-4589-B144-538F0F85F75A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorPainterTest", "RazorPainterTest\RazorPainterTest.csproj", "{E3B89362-7B4E-4B5B-8211-9AB641A7963F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{BC3EAAA0-F49B-4589-B144-538F0F85F75A}.Debug|x86.Build.0 = Debug|x86
 		{BC3EAAA0-F49B-4589-B144-538F0F85F75A}.Release|x86.ActiveCfg = Release|x86
 		{BC3EAAA0-F49B-4589-B144-538F0F85F75A}.Release|x86.Build.0 = Release|x86
+		{E3B89362-7B4E-4B5B-8211-9AB641A7963F}.Debug|x86.ActiveCfg = Debug|x86
+		{E3B89362-7B4E-4B5B-8211-9AB641A7963F}.Debug|x86.Build.0 = Debug|x86
+		{E3B89362-7B4E-4B5B-8211-9AB641A7963F}.Release|x86.ActiveCfg = Release|x86
+		{E3B89362-7B4E-4B5B-8211-9AB641A7963F}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

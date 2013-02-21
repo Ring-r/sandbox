@@ -1,6 +1,6 @@
-﻿namespace LockBitsTest
+﻿namespace RazorPainterTest
 {
-    partial class MainForm
+    partial class FormMain
     {
         /// <summary>
         /// Required designer variable.
@@ -28,38 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
-            // timer
-            // 
-            this.timer.Enabled = true;
-            this.timer.Interval = 10;
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
-            // MainForm
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(284, 262);
-            this.DoubleBuffered = true;
-            this.Name = "MainForm";
+            this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Click mouse right button!";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainForm_Paint);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseUp);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FormMain_FormClosed);
+            this.Load += new System.EventHandler(this.FormMain_Load);
+            this.SizeChanged += new System.EventHandler(this.FormMain_SizeChanged);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FormMain_KeyUp);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.FormMain_MouseUp);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Timer timer;
     }
 }
 

@@ -9,7 +9,6 @@ namespace LockBitsTest
     /// Bitmap with using LockBits.
     /// </summary>
     /// <remarks>Some part get from <a href="http://www.cyberforum.ru/post1858797.html">Killster</a>.</remarks>
-    /// <remarks>Some part get from <a href="http://razorgdipainter.codeplex.com/">Mokrov Ivan</a>.</remarks>
     class FastBitmap
     {
         private const int BitsPerPixel = 4;
@@ -17,22 +16,10 @@ namespace LockBitsTest
         private Size _imageSize;
         private byte[] _store;
 
-        BITMAPINFO _BI = new BITMAPINFO
-        {
-            biHeader =
-            {
-                bihBitCount = 32,
-                bihPlanes = 1,
-                bihSize = 40,
-                bihWidth = 1,
-                bihHeight = 1,
-                bihSizeImage = 2
-            }
-        };
 
         public FastBitmap()
         {
-            _imageSize = new Size(1, 1); // 1 пиксел.
+            _imageSize = new Size(1, 1);
             _store = new byte[BitsPerPixel];
         }
 
@@ -43,10 +30,6 @@ namespace LockBitsTest
             BitmapData imageData = original.LockBits(new Rectangle(0, 0, original.Width, original.Height), ImageLockMode.ReadWrite, original.PixelFormat);
             Marshal.Copy(imageData.Scan0, _store, 0, imageData.Stride * imageData.Height);
             original.UnlockBits(imageData);
-            // TODO: Check.
-            _BI.biHeader.bihWidth = _imageSize.Width;
-            _BI.biHeader.bihWidth = _imageSize.Height;
-            _BI.biHeader.bihSizeImage = _imageSize.Width * _imageSize.Height << 2;
         }
 
         public FastBitmap(int width, int height)
@@ -73,10 +56,6 @@ namespace LockBitsTest
                 _imageSize = new Size(value.Width, value.Height);
                 Marshal.Copy(imageData.Scan0, _store, 0, imageByteCount);
                 value.UnlockBits(imageData);
-                // TODO: Check.
-                _BI.biHeader.bihWidth = _imageSize.Width;
-                _BI.biHeader.bihWidth = _imageSize.Height;
-                _BI.biHeader.bihSizeImage = _imageSize.Width * _imageSize.Height << 2;
             }
         }
 
@@ -124,35 +103,6 @@ namespace LockBitsTest
         public void Clear()
         {
             Array.Clear(_store, 0, _store.Length);
-        }
-
-        [DllImport("gdi32")]
-        private extern static int SetDIBitsToDevice(HandleRef hDC, int xDest, int yDest, int dwWidth, int dwHeight, int XSrc, int YSrc, int uStartScan, int cScanLines, ref byte lpvBits, ref BITMAPINFO lpbmi, uint fuColorUse);
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct BITMAPINFOHEADER
-        {
-            public int bihSize;
-            public int bihWidth;
-            public int bihHeight;
-            public short bihPlanes;
-            public short bihBitCount;
-            public int bihCompression;
-            public int bihSizeImage;
-            public double bihXPelsPerMeter;
-            public double bihClrUsed;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct BITMAPINFO
-        {
-            public BITMAPINFOHEADER biHeader;
-            public int biColors;
-        }
-
-        public void Paint(HandleRef handleRef)
-        {
-            SetDIBitsToDevice(handleRef, 0, 0, _imageSize.Width, _imageSize.Height, 0, 0, 0, _imageSize.Height, ref _store[0], ref _BI, 0);
         }
     }
 }

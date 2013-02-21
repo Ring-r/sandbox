@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace LockBitsTest
@@ -14,20 +13,9 @@ namespace LockBitsTest
         private readonly List<Particle> particles = new List<Particle>();
         private FastBitmap bitmap = null;
 
-        private readonly Graphics graphics;
-        private readonly HandleRef handleRef;
-
         public MainForm()
         {
             InitializeComponent();
-
-            //SetStyle(ControlStyles.DoubleBuffer, false);
-            //SetStyle(ControlStyles.UserPaint, true);
-            //SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            //SetStyle(ControlStyles.Opaque, true);
-
-            this.graphics = this.CreateGraphics();
-            this.handleRef = new HandleRef(this.graphics, this.graphics.GetHdc());
         }
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
@@ -85,7 +73,6 @@ namespace LockBitsTest
                     }
 
                     stopwatch_render.Start();
-                    this.bitmap.Paint(this.handleRef);
                     this.Invalidate();
                     //stopwatch_render.Stop();
                 }
@@ -136,9 +123,14 @@ namespace LockBitsTest
             }
         }
 
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
-
+            switch (e.KeyData)
+            {
+                case Keys.Escape:
+                    this.Close();
+                    break;
+            }
         }
     }
 }
