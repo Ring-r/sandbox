@@ -1,6 +1,6 @@
-﻿namespace RazorPainterTest
+﻿namespace LockBitsTest
 {
-    class Particle
+    class SimpleParticle
     {
         public float x;
         public float y;

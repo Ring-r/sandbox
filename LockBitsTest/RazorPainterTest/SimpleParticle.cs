@@ -1,14 +1,12 @@
-﻿using System.Drawing;
-
-namespace LockBitsTest
+﻿namespace RazorPainterTest
 {
-    class Particle
+    class SimpleParticle
     {
         public float x;
         public float y;
         public float vx;
         public float vy;
 
-        public Color c;
+        public int c;
     }
 }

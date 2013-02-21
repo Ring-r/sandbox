@@ -34,7 +34,10 @@ namespace RazorPainterTest
             public int biColors;
         }
 
-        private readonly ParticlesWorld particleWord = new ParticlesWorld();
+        Stopwatch renderStopwatch = new Stopwatch();
+        long renderTime = 0;
+        Stopwatch updateStopwatch = new Stopwatch();
+        long updateTime = 0;
 
         private Size size = new Size(1, 1);
         private int[] array = new int[1];
@@ -76,8 +79,8 @@ namespace RazorPainterTest
                      graphics = this.CreateGraphics();
                      HandleRef handleRef = new HandleRef(graphics, graphics.GetHdc());
 
-                     this.particleWord.Count = 500000;
-                     this.particleWord.Init();
+                     SimpleParticlesWorld.Count = 500000;
+                     SimpleParticlesWorld.Init();
 
                      while (!IsTaskTerminate)
                      {
@@ -87,10 +90,10 @@ namespace RazorPainterTest
 
                          if (this.array != null)
                          {
-                             this.particleWord.Update();
+                             SimpleParticlesWorld.Update();
 
                              Array.Clear(this.array, 0, this.array.Length);
-                             foreach (Particle particle in this.particleWord.Particles)
+                             foreach (SimpleParticle particle in SimpleParticlesWorld.Particles)
                              {
                                  int pointBase = (int)particle.y * this.size.Width + (int)particle.x;
                                  if (pointBase < this.array.Length)
@@ -109,7 +112,7 @@ namespace RazorPainterTest
                          {
                              this.Invoke((Action)(() =>
                              {
-                                 this.Text = string.Format("Points count: {0}. Update time: {1}. Render time: {2}.", this.particleWord.Count, stopwatch.ElapsedMilliseconds, stopwatch_render.ElapsedMilliseconds);
+                                 this.Text = string.Format("Points count: {0}. Update time: {1}. Render time: {2}.", SimpleParticlesWorld.Count, stopwatch.ElapsedMilliseconds, stopwatch_render.ElapsedMilliseconds);
                              }));
                          }
                      }
@@ -129,7 +132,7 @@ namespace RazorPainterTest
             this.size = (sender as Control).ClientSize;
             this.array = new int[this.size.Width * this.size.Height];
 
-            this.particleWord.Size = this.size;
+            SimpleParticlesWorld.Size = this.size;
 
             this._BI.biHeader.bihWidth = this.size.Width;
             this._BI.biHeader.bihHeight = this.size.Height;
@@ -140,11 +143,11 @@ namespace RazorPainterTest
         {
             if (e.Button == MouseButtons.Right)
             {
-                this.particleWord.Init();
+                SimpleParticlesWorld.Init();
             }
             else
             {
-                this.particleWord.ActionIn(e.X, this.ClientSize.Height - e.Y);
+                SimpleParticlesWorld.ActionIn(e.X, this.ClientSize.Height - e.Y);
             }
         }
 

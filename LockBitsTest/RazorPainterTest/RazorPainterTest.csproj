@@ -46,8 +46,8 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Particle.cs" />
-    <Compile Include="ParticlesWorld.cs" />
+    <Compile Include="SimpleParticle.cs" />
+    <Compile Include="SimpleParticlesWorld.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">

@@ -4,24 +4,22 @@ using System.Drawing;
 
 namespace RazorPainterTest
 {
-    class ParticlesWorld
+    class SimpleParticlesWorld
     {
         public static readonly Random Rand = new Random();
+        public static int Count = 0;
+        public static readonly List<SimpleParticle> Particles = new List<SimpleParticle>();
+        public static Size Size = new Size(1, 1);
 
-        public int Count = 0;
-        public readonly List<Particle> Particles = new List<Particle>();
-
-        public Size Size = new Size(1, 1);
-
-        public void Init()
+        public static void Init()
         {
-            this.Particles.Clear();
-            for (int i = 0; i < this.Count; i++)
+            Particles.Clear();
+            for (int i = 0; i < Count; i++)
             {
-                this.Particles.Add(new Particle()
+                Particles.Add(new SimpleParticle()
                 {
-                    x = Rand.Next(this.Size.Width),
-                    y = Rand.Next(this.Size.Height),
+                    x = Rand.Next(Size.Width),
+                    y = Rand.Next(Size.Height),
                     vx = 2 * (float)Rand.NextDouble() - 1,
                     vy = 2 * (float)Rand.NextDouble() - 1,
                     c = Rand.Next(),
@@ -29,9 +27,9 @@ namespace RazorPainterTest
             }
         }
 
-        public void Update()
+        public static void Update()
         {
-            foreach (Particle particle in this.Particles)
+            foreach (SimpleParticle particle in Particles)
             {
                 particle.x += particle.vx;
                 particle.y += particle.vy;
@@ -41,9 +39,9 @@ namespace RazorPainterTest
                     particle.x = 0;
                     particle.vx = Math.Abs(particle.vx);
                 }
-                else if (this.Size.Width <= particle.x)
+                else if (Size.Width <= particle.x)
                 {
-                    particle.x = this.Size.Width - 1;
+                    particle.x = Size.Width - 1;
                     particle.vx = -Math.Abs(particle.vx);
                 }
                 if (particle.y < 0)
@@ -51,17 +49,17 @@ namespace RazorPainterTest
                     particle.y = 0;
                     particle.vy = Math.Abs(particle.vy);
                 }
-                else if (this.Size.Height <= particle.y)
+                else if (Size.Height <= particle.y)
                 {
-                    particle.y = this.Size.Height - 1;
+                    particle.y = Size.Height - 1;
                     particle.vy = -Math.Abs(particle.vy);
                 }
             }
         }
 
-        public void ActionIn(int eX, int eY)
+        public static void ActionIn(int eX, int eY)
         {
-            foreach (Particle particle in this.Particles)
+            foreach (SimpleParticle particle in Particles)
             {
                 float x = particle.x - eX;
                 float y = particle.y - eY;

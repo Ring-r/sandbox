@@ -1,125 +1,129 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace LockBitsTest
 {
     public partial class MainForm : Form
     {
-        private readonly Random rand = new Random();
-        private int count = 1000000;
-        private readonly List<Particle> particles = new List<Particle>();
-        private FastBitmap bitmap = null;
+        Stopwatch renderStopwatch = new Stopwatch();
+        long renderTime = 0;
+        Stopwatch updateStopwatch = new Stopwatch();
+        long updateTime = 0;
+
+        private Size size = new Size(1, 1);
+        private int[] array = new int[1];
+
+        Task task = null;
+        private bool IsTaskTerminate = false;
 
         public MainForm()
         {
             InitializeComponent();
+
+            SetStyle(ControlStyles.DoubleBuffer, false);
+            SetStyle(ControlStyles.UserPaint, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.Opaque, true);
         }
 
-        private void MainForm_Paint(object sender, PaintEventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
-            if (this.bitmap != null)
+            task = Task.Factory.StartNew(() =>
             {
-                using (Bitmap image = bitmap.Image)
-                {
-                    e.Graphics.DrawImage(image, 0, 0);
-                }
-            }
-        }
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            Stopwatch stopwatch_render = new Stopwatch();
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            if (this.bitmap != null)
-            {
+                Graphics graphics = null;
                 try
                 {
-                    foreach (Particle particle in particles)
-                    {
-                        particle.x += particle.vx;
-                        particle.y += particle.vy;
+                    graphics = this.CreateGraphics();
 
-                        if (particle.x < 0)
+                    SimpleParticlesWorld.Count = 500000;
+                    SimpleParticlesWorld.Init();
+
+                    while (!IsTaskTerminate)
+                    {
+                        Stopwatch stopwatch_render = new Stopwatch();
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
+                        if (this.array != null)
                         {
-                            particle.x = 0;
-                            particle.vx = Math.Abs(particle.vx);
-                        }
-                        else if (this.ClientSize.Width <= particle.x)
-                        {
-                            particle.x = this.ClientSize.Width - 1;
-                            particle.vx = -Math.Abs(particle.vx);
-                        }
-                        if (particle.y < 0)
-                        {
-                            particle.y = 0;
-                            particle.vy = Math.Abs(particle.vy);
-                        }
-                        else if (this.ClientSize.Height <= particle.y)
-                        {
-                            particle.y = this.ClientSize.Height - 1;
-                            particle.vy = -Math.Abs(particle.vy);
+                            SimpleParticlesWorld.Update();
+
+                            Array.Clear(this.array, 0, this.array.Length);
+                            foreach (SimpleParticle particle in SimpleParticlesWorld.Particles)
+                            {
+                                int pointBase = (int)particle.y * this.size.Width + (int)particle.x;
+                                if (pointBase < this.array.Length)
+                                {
+                                    this.array[pointBase] = particle.c;
+                                }
+                            }
+
+                            stopwatch.Stop();
+                            if (!this.IsTaskTerminate)
+                            {
+                                this.Invoke((Action)(() =>
+                                {
+                                    this.renderStopwatch.Restart();
+                                    Array.Clear(this.array, 0, this.array.Length);
+                                    int pointBase;
+                                    foreach (SimpleParticle particle in SimpleParticlesWorld.Particles)
+                                    {
+                                        pointBase = (int)particle.y * this.size.Width + (int)particle.x;
+                                        if (pointBase < this.array.Length)
+                                        {
+                                            this.array[pointBase] = particle.c;
+                                        }
+                                    }
+
+                                    using (Bitmap image = new Bitmap(this.size.Width, this.size.Height))// TODO:
+                                    {
+                                        BitmapData imageData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadWrite, image.PixelFormat);
+                                        Marshal.Copy(this.array, 0, imageData.Scan0, this.array.Length);
+                                        image.UnlockBits(imageData);
+
+                                        graphics.Clear(Color.White);
+                                        graphics.DrawImage(image, 0, 0);
+                                    }
+                                    this.renderStopwatch.Stop();
+                                    this.renderTime = this.renderStopwatch.ElapsedMilliseconds;
+                                    this.Text = string.Format("Points count: {0}. Update time: {1}. Render time: {2}.", SimpleParticlesWorld.Count, stopwatch.ElapsedMilliseconds, stopwatch_render.ElapsedMilliseconds);
+                                }));
+                            }
                         }
                     }
-
-                    this.bitmap.Clear();
-                    foreach (Particle particle in this.particles)
-                    {
-                        this.bitmap.SetPixel((int)particle.x, (int)particle.y, particle.c);
-                    }
-
-                    stopwatch_render.Start();
-                    this.Invalidate();
-                    //stopwatch_render.Stop();
                 }
-                catch { }
-            }
-
-            stopwatch.Stop();
-            this.Text = string.Format("Points count: {0}. Update time: {1}. Render time: {2}.", this.count, stopwatch.ElapsedMilliseconds, stopwatch_render.ElapsedMilliseconds);
+                finally
+                {
+                    if (graphics != null)
+                    {
+                        graphics.Dispose();
+                    }
+                }
+            });
         }
 
         private void MainForm_SizeChanged(object sender, EventArgs e)
         {
-            this.bitmap = new FastBitmap(this.ClientSize.Width, this.ClientSize.Height);
+            this.size = (sender as Control).ClientSize;
+            this.array = new int[this.size.Width * this.size.Height];
+
+            SimpleParticlesWorld.Size = this.ClientSize;
         }
 
         private void MainForm_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
-                this.particles.Clear();
-                for (int i = 0; i < this.count; i++)
-                {
-                    this.particles.Add(new Particle()
-                    {
-                        x = rand.Next(this.ClientSize.Width),
-                        y = rand.Next(this.ClientSize.Height),
-                        vx = 2 * (float)rand.NextDouble() - 1,
-                        vy = 2 * (float)rand.NextDouble() - 1,
-                        c = Color.FromArgb(rand.Next(255), rand.Next(255), rand.Next(255))
-                    });
-                }
+                SimpleParticlesWorld.Init();
             }
             else
             {
-                foreach (Particle particle in particles)
-                {
-                    float x = particle.x - e.X;
-                    float y = particle.y - e.Y;
-                    float distance = (float)Math.Sqrt(x * x + y * y);
-                    if (distance == 0)
-                    {
-                        distance = 1;
-                    }
-                    float speed = -(10 * (float)rand.NextDouble() + 1) / distance;
-                    particle.vx = speed * x;
-                    particle.vy = speed * y;
-                }
+                SimpleParticlesWorld.ActionIn(e.X, e.Y);
             }
         }
 
@@ -130,6 +134,15 @@ namespace LockBitsTest
                 case Keys.Escape:
                     this.Close();
                     break;
+            }
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (this.task != null)
+            {
+                this.IsTaskTerminate = true;
+                this.task.Wait();
             }
         }
     }
