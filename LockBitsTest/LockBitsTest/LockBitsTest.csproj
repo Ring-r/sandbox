@@ -36,10 +36,13 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayBitmap.cs" />
     <Compile Include="FastBitmap.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -49,6 +52,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RazorBitmap.cs" />
     <Compile Include="SimpleParticle.cs" />
     <Compile Include="SimpleParticlesWorld.cs" />
     <EmbeddedResource Include="MainForm.resx">

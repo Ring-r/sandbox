@@ -9,74 +9,54 @@ namespace LockBitsTest
     /// Bitmap with using LockBits.
     /// </summary>
     /// <remarks>Some part get from <a href="http://www.cyberforum.ru/post1858797.html">Killster</a>.</remarks>
-    class FastBitmap
+    public class FastBitmap : ArrayBitmap
     {
-        private Size _imageSize;
-        private int[] _store;
+        private Bitmap bitmap;
 
-        public FastBitmap()
+        public Size Size
         {
-            _imageSize = new Size(1, 1);
-            _store = new int[1];
-        }
-
-        public FastBitmap(Bitmap original)
-        {
-            _imageSize = new Size(original.Width, original.Height);
-            _store = new int[_imageSize.Width * _imageSize.Height];
-            BitmapData imageData = original.LockBits(new Rectangle(0, 0, original.Width, original.Height), ImageLockMode.ReadWrite, original.PixelFormat);
-            Marshal.Copy(imageData.Scan0, _store, 0, _store.Length);
-            original.UnlockBits(imageData);
-        }
-
-        public FastBitmap(int width, int height)
-        {
-            _imageSize = new Size(width, height);
-            _store = new int[width * height];
+            get
+            {
+                return this.size;
+            }
+            set
+            {
+                this.size = new Size(Math.Max(1, value.Width), Math.Max(1, value.Height));
+                this.array = new int[this.size.Width * this.size.Height];
+                this.bitmap = new Bitmap(this.size.Width, this.size.Height);
+            }
         }
 
         public Bitmap Image
         {
             get
             {
-                Bitmap im = new Bitmap(_imageSize.Width, _imageSize.Height);
-                BitmapData imageData = im.LockBits(new Rectangle(0, 0, im.Width, im.Height), ImageLockMode.ReadWrite, im.PixelFormat);
-                Marshal.Copy(_store, 0, imageData.Scan0, _store.Length);
-                im.UnlockBits(imageData);
-                return im;
+                return this.bitmap;
             }
             set
             {
-                BitmapData imageData = value.LockBits(new Rectangle(0, 0, value.Width, value.Height), ImageLockMode.ReadWrite, value.PixelFormat);
-                _store = new int[imageData.Width * imageData.Height];
-                _imageSize = new Size(value.Width, value.Height);
-                Marshal.Copy(imageData.Scan0, _store, 0, _store.Length);
+                if (this.size.Width != value.Width || this.size.Height != value.Height)
+                {
+                    this.size = new Size(value.Width, value.Height);
+                    this.array = new int[value.Width * value.Height];
+                }
+                BitmapData imageData = this.bitmap.LockBits(new Rectangle(0, 0, value.Width, value.Height), ImageLockMode.ReadWrite, value.PixelFormat);
+                Marshal.Copy(imageData.Scan0, this.array, 0, this.array.Length);
                 value.UnlockBits(imageData);
+                this.bitmap = value;
             }
         }
 
-        public int GetPixel(int x, int y)
+        public FastBitmap()
         {
-            int pointBase = y * _imageSize.Width + x;
-            if (pointBase < _store.Length)
-            {
-                return _store[pointBase];
-            }
-            return 0;
+            this.bitmap = new Bitmap(1, 1);
         }
 
-        public void SetPixel(int x, int y, int color)
+        public void RefreshImage()
         {
-            int pointBase = y * _imageSize.Width + x;
-            if (pointBase < _store.Length)
-            {
-                _store[pointBase] = color;
-            }
-        }
-
-        public void Clear()
-        {
-            Array.Clear(_store, 0, _store.Length);
+            BitmapData imageData = this.bitmap.LockBits(new Rectangle(0, 0, this.bitmap.Width, this.bitmap.Height), ImageLockMode.ReadWrite, this.bitmap.PixelFormat);
+            Marshal.Copy(this.array, 0, imageData.Scan0, this.array.Length);
+            this.bitmap.UnlockBits(imageData);
         }
     }
 }
