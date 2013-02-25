@@ -29,8 +29,12 @@ namespace LockBitsTest
 
         public static void Update()
         {
-            foreach (SimpleParticle particle in Particles)
+            SimpleParticle particle;
+            for (int i = Particles.Count - 1; i >= 0; --i)
             {
+                particle = Particles[i];
+                //foreach (SimpleParticle particle in Particles)
+                //{
                 particle.x += particle.vx;
                 particle.y += particle.vy;
 

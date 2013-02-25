@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace LockBitsTest
@@ -26,6 +25,8 @@ namespace LockBitsTest
 
             this.razorBitmap = new RazorBitmap(this.CreateGraphics()) { Size = this.ClientSize };
             this.Disposed += (sender, e) => this.razorBitmap.Dispose();
+
+            new MainFormAntiparents().Show();
         }
 
         private void SetRazorStyle(bool isRazor)
@@ -64,6 +65,15 @@ namespace LockBitsTest
 
             if (this.isRazor)
             {
+                this.razorBitmap.Clear();
+                foreach (SimpleParticle particle in SimpleParticlesWorld.Particles)
+                {
+                    this.razorBitmap.SetPixel((int)particle.x, this.razorBitmap.Size.Height - (int)particle.y, particle.c);
+                }
+                this.razorBitmap.Draw();
+            }
+            else
+            {
                 this.fastBitmap.Clear();
                 foreach (SimpleParticle particle in SimpleParticlesWorld.Particles)
                 {
@@ -71,15 +81,6 @@ namespace LockBitsTest
                 }
                 this.Invalidate();
                 this.Update();
-            }
-            else
-            {
-                this.razorBitmap.Clear();
-                foreach (SimpleParticle particle in SimpleParticlesWorld.Particles)
-                {
-                    this.razorBitmap.SetPixel((int)particle.x, this.razorBitmap.Size.Height - (int)particle.y, particle.c);
-                }
-                this.razorBitmap.Draw();
             }
 
             this.renderTime = this.renderStopwatch.ElapsedMilliseconds;

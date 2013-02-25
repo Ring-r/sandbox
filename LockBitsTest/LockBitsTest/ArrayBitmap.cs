@@ -3,10 +3,10 @@ using System.Drawing;
 
 namespace LockBitsTest
 {
-    public abstract class ArrayBitmap
+    public class ArrayBitmap
     {
-        protected Size size;
-        protected int[] array;
+        public Size size;
+        public int[] array;
 
         public ArrayBitmap()
         {
@@ -27,7 +27,7 @@ namespace LockBitsTest
         public void SetPixel(int x, int y, int color)
         {
             int pointBase = y * this.size.Width + x;
-            if (pointBase < this.array.Length)
+            if (0 <= pointBase && pointBase < this.array.Length)
             {
                 this.array[pointBase] = color;
             }
@@ -36,7 +36,7 @@ namespace LockBitsTest
         public void SetPixel(int x, int y, Color color)
         {
             int pointBase = y * this.size.Width + x;
-            if (pointBase < this.array.Length)
+            if (0 <= pointBase && pointBase < this.array.Length)
             {
                 this.array[pointBase] = color.ToArgb();
             }
@@ -45,7 +45,7 @@ namespace LockBitsTest
         public void SetPixel(int x, int y, byte a, byte r, byte g, byte b)
         {
             int pointBase = y * this.size.Width + x;
-            if (pointBase < this.array.Length)
+            if (0 <= pointBase && pointBase < this.array.Length)
             {
                 this.array[pointBase] = b << 6 + g << 4 + b << 2 + a;
             }
