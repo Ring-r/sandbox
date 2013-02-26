@@ -13,7 +13,9 @@ namespace LockBitsTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new FastBitmapForm());
+            Application.Run(new RazorBitmapForm());
+            Application.Run(new RazorBitmapFormAntiparents());
         }
     }
 }

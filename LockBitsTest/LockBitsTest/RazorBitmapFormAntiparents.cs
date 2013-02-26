@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace LockBitsTest
 {
-    public partial class MainFormAntiparents : Form
+    public partial class RazorBitmapFormAntiparents : Form
     {
         [DllImport("gdi32")]
         private extern static int SetDIBitsToDevice(HandleRef hDC, int xDest, int yDest, int dwWidth, int dwHeight, int XSrc, int YSrc, int uStartScan, int cScanLines, ref int lpvBits, ref BITMAPINFO lpbmi, uint fuColorUse);
@@ -59,11 +59,9 @@ namespace LockBitsTest
         private Task task = null;
         private bool IsTerminate = false;
 
-        public MainFormAntiparents()
+        public RazorBitmapFormAntiparents()
         {
             InitializeComponent();
-
-            SimpleParticlesWorld.Count = 1000000;
 
             this.SetStyle(ControlStyles.DoubleBuffer, false);
             this.SetStyle(ControlStyles.UserPaint, true);
@@ -71,7 +69,6 @@ namespace LockBitsTest
             this.SetStyle(ControlStyles.Opaque, true);
 
             SimpleParticlesWorld.Size = this.ClientSize;
-            SimpleParticlesWorld.Init();
 
             this.task = Task.Factory.StartNew(() =>
                 {
@@ -88,15 +85,11 @@ namespace LockBitsTest
                                 this.commonStopwatch.Restart();
 
                                 this.updateStopwatch.Restart();
-
                                 SimpleParticlesWorld.Update();
-
                                 this.updateTime = this.updateStopwatch.ElapsedMilliseconds;
 
                                 this.renderStopwatch.Restart();
-
                                 Array.Clear(this.array, 0, this.array.Length);
-
                                 SimpleParticle particle;
                                 int pointBase;
                                 for (int i = SimpleParticlesWorld.Particles.Count - 1; i >= 0; --i)
@@ -110,14 +103,10 @@ namespace LockBitsTest
                                         this.array[pointBase] = particle.c;
                                     }
                                 }
-
                                 SetDIBitsToDevice(handleRef, 0, 0, this.size.Width, this.size.Height, 0, 0, 0, this.size.Height, ref this.array[0], ref this.bitmapInfo, 0);
-
                                 this.renderTime = this.renderStopwatch.ElapsedMilliseconds;
 
                                 this.commonTime = this.commonStopwatch.ElapsedMilliseconds;
-
-                                //System.Threading.Thread.Sleep(Math.Max(0, 1000 / 60 - (int)this.commonTime));
                             }
                         }
                         finally
@@ -131,24 +120,7 @@ namespace LockBitsTest
                 });
         }
 
-        private void MainForm_SizeChanged(object sender, EventArgs e)
-        {
-            Control control = sender as Control;
-            this.size = new Size(Math.Max(1, control.ClientSize.Width), Math.Max(1, control.ClientSize.Height));
-            this.array = new int[this.size.Width * this.size.Height];
-            this.bitmapInfo.biHeader.bihWidth = this.size.Width;
-            this.bitmapInfo.biHeader.bihHeight = this.size.Height;
-            this.bitmapInfo.biHeader.bihSizeImage = this.size.Width * this.size.Height;
-
-            SimpleParticlesWorld.Size = control.ClientSize;
-        }
-
-        private void MainForm_MouseUp(object sender, MouseEventArgs e)
-        {
-            SimpleParticlesWorld.ActionIn(e.X, e.Y);
-        }
-
-        private void MainForm_KeyUp(object sender, KeyEventArgs e)
+        private void Form_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.KeyData)
             {
@@ -159,9 +131,26 @@ namespace LockBitsTest
             }
         }
 
+        private void Form_MouseUp(object sender, MouseEventArgs e)
+        {
+            SimpleParticlesWorld.ActionIn(e.X, e.Y);
+        }
+
+        private void Form_SizeChanged(object sender, EventArgs e)
+        {
+            Control control = sender as Control;
+            this.size = new Size(Math.Max(1, control.ClientSize.Width), Math.Max(1, control.ClientSize.Height));
+            this.array = new int[this.size.Width * this.size.Height];
+            this.bitmapInfo.biHeader.bihWidth = this.size.Width;
+            this.bitmapInfo.biHeader.bihHeight = this.size.Height;
+            this.bitmapInfo.biHeader.bihSizeImage = this.size.Width * this.size.Height;
+
+            SimpleParticlesWorld.Size = this.size;
+        }
+
         private void timer_Tick(object sender, EventArgs e)
         {
-            this.Text = string.Format("Points count: {0}. Update time: {1}. Render time: {2}. Common time: {3}.", SimpleParticlesWorld.Count, this.updateTime, this.renderTime, this.commonTime);
+            this.Text = string.Format("Razor Bitmap Antiparent. Points count: {0}. Update time: {1}. Render time: {2}. Common time: {3}.", SimpleParticlesWorld.Count, this.updateTime, this.renderTime, this.commonTime);
         }
     }
 }

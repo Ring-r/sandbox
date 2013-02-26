@@ -7,13 +7,12 @@ namespace LockBitsTest
     class SimpleParticlesWorld
     {
         public static readonly Random Rand = new Random();
-        public static int Count = 0;
-        public static readonly List<SimpleParticle> Particles = new List<SimpleParticle>();
+        public const int Count = 1000000;
+        public static readonly List<SimpleParticle> Particles = new List<SimpleParticle>(Count);
         public static Size Size = new Size(1, 1);
 
-        public static void Init()
+        static SimpleParticlesWorld()
         {
-            Particles.Clear();
             for (int i = 0; i < Count; i++)
             {
                 Particles.Add(new SimpleParticle()

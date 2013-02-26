@@ -1,6 +1,6 @@
 ﻿namespace LockBitsTest
 {
-    partial class MainFormAntiparents
+    partial class RazorBitmapForm
     {
         /// <summary>
         /// Required designer variable.
@@ -35,20 +35,21 @@
             // timer
             // 
             this.timer.Enabled = true;
+            this.timer.Interval = 1;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
-            // MainFormAntiparents
+            // RazorBitmapForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
-            this.Name = "MainFormAntiparents";
+            this.Name = "RazorBitmapForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MainFormAntiparents";
+            this.Text = "Razor Bitmap Form";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseUp);
+            this.SizeChanged += new System.EventHandler(this.Form_SizeChanged);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form_KeyUp);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_MouseUp);
             this.ResumeLayout(false);
 
         }
@@ -56,6 +57,5 @@
         #endregion
 
         private System.Windows.Forms.Timer timer;
-
     }
 }

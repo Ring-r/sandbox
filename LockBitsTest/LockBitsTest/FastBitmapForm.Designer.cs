@@ -1,6 +1,6 @@
 ﻿namespace LockBitsTest
 {
-    partial class MainForm
+    partial class FastBitmapForm
     {
         /// <summary>
         /// Required designer variable.
@@ -49,10 +49,10 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Click mouse right button!";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainForm_Paint);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyUp);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainForm_MouseUp);
+            this.SizeChanged += new System.EventHandler(this.Form_SizeChanged);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form_Paint);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form_KeyUp);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_MouseUp);
             this.ResumeLayout(false);
 
         }
