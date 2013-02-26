@@ -18,6 +18,14 @@ namespace ClientServerTest
             {
                 case Keys.Enter:
                     this.client.CommandRun(textBox.Text);
+
+                    switch (textBox.Text)
+                    {
+                        case "exit":
+                            this.Close();
+                            break;
+                    }
+
                     textBox.Text = "";
                     break;
             }
