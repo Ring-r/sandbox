@@ -1,23 +1,29 @@
 ﻿using System.Drawing;
+using System.Collections.Generic;
 
 namespace DotWayTest
 {
     class Server
     {
-        private int currentDotsIndex = 0;
+        public readonly List<Client> clientList = new List<Client>();
+        public Map map = null;
 
-        public void DotsInit()
+        public void GetMilkyMan(MilkyMan milkyMan)
         {
-            // TODO: if(dots.Length < Options.DotsCount) ...
-            Options.Dots = new Point[Options.DotsCount];
-            for (int i = 0; i < Options.DotsCount; ++i)
+            this.map.milkyManList.Add(milkyMan);
+        }
+
+        public void SendMap(Map map)
+        {
+            foreach (Client client in this.clientList)
             {
-                Options.Dots[i] = new Point(
-                    Options.random.Next((int)(Options.MapWidth * Options.BorderSize), (int)(Options.MapWidth * (1 - Options.BorderSize))),
-                    Options.random.Next((int)(Options.MapHeight * Options.BorderSize), (int)(Options.MapHeight * (1 - Options.BorderSize))));
+                client.GetMap(map);
             }
-            this.currentDotsIndex = 0;
-            Options.IsFinish = false;
+        }
+
+        public void GetConnect(Client client)
+        {
+            this.clientList.Add(client);
         }
     }
 }
