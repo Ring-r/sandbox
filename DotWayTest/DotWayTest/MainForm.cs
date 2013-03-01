@@ -9,11 +9,11 @@ namespace DotWayTest
 {
     public partial class MainForm : Form
     {
-        private readonly Client client = new Client();
-        private readonly Server server = new Server();
-
         private readonly Map map = new Map();
         private readonly MilkyMan milkyMan = new MilkyMan();
+
+        private readonly Client client = new Client();
+        private readonly Server server = new Server();
 
         private Point mouseMovePoint = new Point();
 
@@ -21,20 +21,12 @@ namespace DotWayTest
         {
             InitializeComponent();
 
+            this.FillMilkyManData();
+            this.map.milkyMan = this.milkyMan;
+
             this.server.map = this.map;
 
             this.client.SendConnect(this.server);
-            this.milkyMan.Speed = 500;
-            this.milkyMan.Radius = 3;
-            this.milkyMan.map = this.map;
-            this.milkyMan.IsDrawWay = true;
-            this.map.milkyMan = this.milkyMan;
-
-            //this.map.milkyManList.Add(this.map.milkyMan);
-            //for (int i = 5; i >= 0; --i)
-            //{
-            //    this.map.milkyManList.Add(new MilkyMan() { Speed = 1000, Radius = 3, map = this.map, IsDrawWay = true, Brush = new SolidBrush(Color.FromArgb(255, Options.random.Next(255), Options.random.Next(255), Options.random.Next(255))) });
-            //}
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
@@ -45,10 +37,7 @@ namespace DotWayTest
                     this.Close();
                     break;
                 case Keys.Enter:
-                    this.timer.Stop();
-                    Options.DotsCount = Options.random.Next(5, 10);
-                    this.map.DotsInit();
-                    this.server.SendMap(this.map);
+                    this.server.StartGame();
                     this.Invalidate();
                     break;
             }
@@ -67,17 +56,6 @@ namespace DotWayTest
                         this.client.SendMilkyMan(this.milkyMan);
                         Options.State = Options.StateEnum.Wait;
                     }
-                    //foreach (MilkyMan milkyMan in this.map.milkyManList)
-                    //{
-                    //    if (milkyMan != this.map.milkyMan)
-                    //    {
-                    //        milkyMan.FinishDotsStackRandom();
-                    //    }
-                    //    milkyMan.IsDrawWay = false;
-                    //}
-                    //this.map.MilkyManOnStart();
-                    //this.timer.Start();
-                    //}
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -117,6 +95,14 @@ namespace DotWayTest
         {
             this.map.onManagedUpdate(this.timer.Interval / 1000f);
             this.Invalidate();
+        }
+
+        private void FillMilkyManData()
+        {
+            this.milkyMan.Speed = 500;
+            this.milkyMan.Radius = 3;
+            this.milkyMan.map = this.map;
+            this.milkyMan.IsDrawWay = true;
         }
     }
 }

@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientServer\Client.cs" />
+    <Compile Include="ClientServer\ClientData.cs" />
     <Compile Include="Entities\EntityCircle.cs" />
     <Compile Include="Entities\EntityRectangle.cs" />
     <Compile Include="Entities\IEntity.cs" />
