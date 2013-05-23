@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace MoveInCells
@@ -28,63 +27,7 @@ namespace MoveInCells
                 float vy = (float)rand.NextDouble() * this.maxSpeed;
                 this.entities.Add(new Entity() { X = x, Y = y, R = r, Brush = new SolidBrush(Color.FromArgb(150, rand.Next(256), rand.Next(256), rand.Next(256))), VX = vx, VY = vy });
             }
-        }
-
-        private void entities_Update()
-        {
-            Entity entity = this.heap.GetFirst();
-            while (entity.T <= 0)
-            {
-                this.RecalculateMinTime(entity);
-                entity = this.heap.GetFirst();
-            }
-
-
-
-
-            //for (int i = 0; i < this.entities.Count; i++)
-            //{
-            //    Entity entity = this.entities[i];
-
-            //    this.cells[(int)entity.X >> this.cellSize, (int)entity.Y >> this.cellSize] = null;
-
-            //    int ci = (int)(entity.X + entity.VX) >> this.cellSize;
-            //    int cj = (int)(entity.Y + entity.VY) >> this.cellSize;
-
-            //    bool iSCollide = false;
-            //    for (int x = -1; x <= 1 && !iSCollide; x++)
-            //    {
-            //        for (int y = -1; y <= 1 && !iSCollide; y++)
-            //        {
-            //            if (
-            //                0 <= ci + x && ci + x < this.cells.GetLength(0) &&
-            //                0 <= cj + y && cj + y < this.cells.GetLength(1))
-            //            {
-            //                iSCollide = this.cells[ci + x, cj + y] != null;
-            //            }
-            //        }
-            //    }
-
-            //    if (
-            //        0 <= ci && ci < this.cells.GetLength(0) &&
-            //        0 <= cj && cj < this.cells.GetLength(1) &&
-            //        !iSCollide)
-            //    {
-            //        entity.X += entity.VX;
-            //        entity.Y += entity.VY;
-
-            //        this.cells[ci, cj] = entity;
-
-            //        if (entity.X < entity.R || this.ClientSize.Width - entity.R < entity.X)
-            //        {
-            //            entity.VX = -entity.VX;
-            //        }
-            //        if (entity.Y < entity.R || this.ClientSize.Height - entity.R < entity.Y)
-            //        {
-            //            entity.VY = -entity.VY;
-            //        }
-            //    }
-            //}
+            this.heap.StartFill(this.entities.ToArray());
         }
 
         public MainForm()
@@ -134,11 +77,72 @@ namespace MoveInCells
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            this.cells = new Entity[(this.ClientSize.Width >> this.cellSize) + 1, (this.ClientSize.Height >> this.cellSize) + 1];
+            this.cells = new List<Entity>[(this.ClientSize.Width >> this.cellSize) + 1, (this.ClientSize.Height >> this.cellSize) + 1];
             this.entities_Create();
         }
 
-        void RecalculateMinTime(Entity entity)
+        private void entities_Update()
+        {
+            Entity entity = this.heap.GetFirst();
+            if (entity != null)
+            {
+                while (entity.T <= 0)
+                {
+                    this.RecalculateMinTime(entity);
+                    entity = this.heap.GetFirst();
+                }
+            }
+
+            #region Old code.
+
+            //for (int i = 0; i < this.entities.Count; i++)
+            //{
+            //    Entity entity = this.entities[i];
+
+            //    this.cells[(int)entity.X >> this.cellSize, (int)entity.Y >> this.cellSize] = null;
+
+            //    int ci = (int)(entity.X + entity.VX) >> this.cellSize;
+            //    int cj = (int)(entity.Y + entity.VY) >> this.cellSize;
+
+            //    bool iSCollide = false;
+            //    for (int x = -1; x <= 1 && !iSCollide; x++)
+            //    {
+            //        for (int y = -1; y <= 1 && !iSCollide; y++)
+            //        {
+            //            if (
+            //                0 <= ci + x && ci + x < this.cells.GetLength(0) &&
+            //                0 <= cj + y && cj + y < this.cells.GetLength(1))
+            //            {
+            //                iSCollide = this.cells[ci + x, cj + y] != null;
+            //            }
+            //        }
+            //    }
+
+            //    if (
+            //        0 <= ci && ci < this.cells.GetLength(0) &&
+            //        0 <= cj && cj < this.cells.GetLength(1) &&
+            //        !iSCollide)
+            //    {
+            //        entity.X += entity.VX;
+            //        entity.Y += entity.VY;
+
+            //        this.cells[ci, cj] = entity;
+
+            //        if (entity.X < entity.R || this.ClientSize.Width - entity.R < entity.X)
+            //        {
+            //            entity.VX = -entity.VX;
+            //        }
+            //        if (entity.Y < entity.R || this.ClientSize.Height - entity.R < entity.Y)
+            //        {
+            //            entity.VY = -entity.VY;
+            //        }
+            //    }
+            //}
+
+            #endregion Old code.
+        }
+
+        private void RecalculateMinTime(Entity entity)
         {
             this.RecalculateMinTimeToBlocks(entity);
             this.RecalculateMinTimeToBorders(entity);
