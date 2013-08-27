@@ -10,6 +10,8 @@ namespace MoveInCells
         private int nstart;
         private Entity[] heap;
 
+        public bool isBuild = false;
+
         public void StartFill(Entity[] entities)
         {
             int n = entities.Length;
@@ -40,6 +42,8 @@ namespace MoveInCells
                 }
                 count_ = count_ >> 1;
             } while ((count_ >> 1) > 0);
+
+            this.isBuild = true;
         }
 
         public void Recalculate(int i)

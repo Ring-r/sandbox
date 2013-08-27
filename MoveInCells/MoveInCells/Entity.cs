@@ -5,11 +5,12 @@ namespace MoveInCells
     class Entity
     {
         public float X;
-        public float Y;
-        public float R;
-
         public float VX;
+
+        public float Y;
         public float VY;
+
+        public float R;
 
         public float T;
         public float TLoc;
@@ -26,7 +27,8 @@ namespace MoveInCells
 
         public void Move()
         {
-            throw new System.NotImplementedException();
+            this.X += this.VX;
+            this.Y += this.VY;
         }
     }
 }

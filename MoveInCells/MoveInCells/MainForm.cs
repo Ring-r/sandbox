@@ -15,20 +15,6 @@ namespace MoveInCells
         private List<Entity>[,] cells = null;
         private Heap heap = new Heap();
 
-        private void entities_Create()
-        {
-            this.entities.Clear();
-            for (int i = 0; i < entitiesCount; i++)
-            {
-                float r = (1 << this.cellSize) >> 3;
-                float x = rand.Next((int)r, this.ClientSize.Width - (int)r);
-                float y = rand.Next((int)r, this.ClientSize.Height - (int)r);
-                float vx = (float)rand.NextDouble() * this.maxSpeed;
-                float vy = (float)rand.NextDouble() * this.maxSpeed;
-                this.entities.Add(new Entity() { X = x, Y = y, R = r, Brush = new SolidBrush(Color.FromArgb(150, rand.Next(256), rand.Next(256), rand.Next(256))), VX = vx, VY = vy });
-            }
-            this.heap.StartFill(this.entities.ToArray());
-        }
 
         public MainForm()
         {
@@ -81,65 +67,45 @@ namespace MoveInCells
             this.entities_Create();
         }
 
+        private void entities_Create()
+        {
+            for (int i = 0; i < this.cells.GetLength(0); ++i)
+            {
+                for (int j = 0; j < this.cells.GetLength(1); ++j)
+                {
+                    this.cells[i, j] = new List<Entity>();
+                }
+            }
+
+            this.entities.Clear();
+            for (int i = 0; i < entitiesCount; i++)
+            {
+                float r = (1 << this.cellSize) >> 3;
+                float x = rand.Next((int)r, this.ClientSize.Width - (int)r);
+                float y = rand.Next((int)r, this.ClientSize.Height - (int)r);
+                float vx = (float)rand.NextDouble() * this.maxSpeed;
+                float vy = (float)rand.NextDouble() * this.maxSpeed;
+                Entity entity = new Entity() { X = x, Y = y, R = r, Brush = new SolidBrush(Color.FromArgb(150, rand.Next(256), rand.Next(256), rand.Next(256))), VX = vx, VY = vy };
+                this.entities.Add(entity);
+                entity.i = (int)entity.X >> this.cellSize;
+                entity.j = (int)entity.Y >> this.cellSize;
+                this.cells[entity.i, entity.j].Add(entity);
+            }
+
+            this.heap.StartFill(this.entities.ToArray());
+        }
+
         private void entities_Update()
         {
-            Entity entity = this.heap.GetFirst();
-            if (entity != null)
+            if (this.heap.isBuild)
             {
+                Entity entity = this.heap.GetFirst();
                 while (entity.T <= 0)
                 {
                     this.RecalculateMinTime(entity);
                     entity = this.heap.GetFirst();
                 }
             }
-
-            #region Old code.
-
-            //for (int i = 0; i < this.entities.Count; i++)
-            //{
-            //    Entity entity = this.entities[i];
-
-            //    this.cells[(int)entity.X >> this.cellSize, (int)entity.Y >> this.cellSize] = null;
-
-            //    int ci = (int)(entity.X + entity.VX) >> this.cellSize;
-            //    int cj = (int)(entity.Y + entity.VY) >> this.cellSize;
-
-            //    bool iSCollide = false;
-            //    for (int x = -1; x <= 1 && !iSCollide; x++)
-            //    {
-            //        for (int y = -1; y <= 1 && !iSCollide; y++)
-            //        {
-            //            if (
-            //                0 <= ci + x && ci + x < this.cells.GetLength(0) &&
-            //                0 <= cj + y && cj + y < this.cells.GetLength(1))
-            //            {
-            //                iSCollide = this.cells[ci + x, cj + y] != null;
-            //            }
-            //        }
-            //    }
-
-            //    if (
-            //        0 <= ci && ci < this.cells.GetLength(0) &&
-            //        0 <= cj && cj < this.cells.GetLength(1) &&
-            //        !iSCollide)
-            //    {
-            //        entity.X += entity.VX;
-            //        entity.Y += entity.VY;
-
-            //        this.cells[ci, cj] = entity;
-
-            //        if (entity.X < entity.R || this.ClientSize.Width - entity.R < entity.X)
-            //        {
-            //            entity.VX = -entity.VX;
-            //        }
-            //        if (entity.Y < entity.R || this.ClientSize.Height - entity.R < entity.Y)
-            //        {
-            //            entity.VY = -entity.VY;
-            //        }
-            //    }
-            //}
-
-            #endregion Old code.
         }
 
         private void RecalculateMinTime(Entity entity)
@@ -168,19 +134,49 @@ namespace MoveInCells
             }
         }
 
-        private void RecalculateMinTimeToBlocks(Entity entity)
+        private void RecalculateMinTimeToBlocks(Entity entity) // t_stenki(ic)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
-        private void RecalculateMinTimeToBorders(Entity entity)
+        private void RecalculateMinTimeToBorders(Entity entity) // t_gran_in_cell(ic)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
-        private void RecalculateMinTimeToEntity(Entity entity, Entity entity_2)
+        private void RecalculateMinTimeToEntity(Entity entity, Entity entity_2) // t_chast(ic,jc)
         {
-            throw new NotImplementedException();
+            float x = entity_2.X - entity.X;
+            float y = entity_2.Y - entity.Y;
+            float vx = entity_2.VX - entity.VX;
+            float vy = entity_2.VY - entity.VY;
+            float L = entity_2.R + entity.R;
+            float A = vx * vx + vy * vy;
+            float B = -(x * vx + y * vy);
+            float C = x * x + y * y;
+
+            float D = B * B - A * (C - L * L);
+
+            float t1 = (float)(B - Math.Sqrt(D)) / A;
+            float t2 = (float)(B + Math.Sqrt(D)) / A;
+
+            // procedure t_chast (ic, jc : longint);
+            //double test = 1e20;
+            //bool ind_sosed = false;
+            //bool ind_tip = entity.tip == 2 && entity_2.tip == 2;
+            //if (ind_tip)
+            //    if (entity.k_sosedej > 0)
+            //    {
+            //        int k = 1;
+            //        while (entity.sosedi[k] != entity_2 && k <= entity.k_sosedej)
+            //            ++k;
+            //        if (k <= entity.k_sosedej)
+            //            ind_sosed = true;
+            //    }
+            //if (ind_sosed)
+            //    t_sosedi(ic, jc, test);
+            //else
+            //    t_not_sosedi(ic, jc, test);
         }
 
 
