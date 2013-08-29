@@ -42,6 +42,7 @@ namespace MoveInCells
         private void timer_Tick(object sender, EventArgs e)
         {
             this.entities.Update();
+			this.Text = this.entities.Max.ToString();
             this.Invalidate();
         }
 

@@ -8,7 +8,7 @@ namespace MoveInCells
     {
         private readonly Random random = new Random();
 
-        private readonly int entitiesCount = 10;
+        private readonly int entitiesCount = 20;
 
         private float maxX;
         private float maxY;
@@ -16,14 +16,18 @@ namespace MoveInCells
         private readonly float minRadius = 5.0f;
         private readonly float maxRadius = 20.0f;
         private readonly float minStep = 0.1f;
-        private readonly float maxStep = 1.0f;
+        private readonly float maxStep = 10.0f;
 
         private readonly int cellSize = 6;
+		private readonly int cellSize_ = 1 << 6;
         private readonly float timeInterval = 1f;
 
         private readonly List<Entity> entities = new List<Entity>();
         private List<Entity>[,] cells = null;
         private Heap heap = new Heap();
+
+		private readonly Font font = new Font(FontFamily.Families[0], 14);
+		public float Max;
 
 
         private float NextFloat(float min, float max)
@@ -205,7 +209,7 @@ namespace MoveInCells
 
         private void UpdateMana()
         {
-            // TODO: Something wrong.
+			this.Max = 0;
             foreach (Entity entity in this.entities)
             {
                 if (!entity.D)
@@ -220,23 +224,25 @@ namespace MoveInCells
                         {
                             for (int k = 0; k < cells[i, j].Count; ++k)
                             {
-                                if (cells[i, j][k].D)
+								Entity entityTemp = cells[i, j][k];
+                                if (entityTemp.D)
                                 {
-                                    float x = cells[i, j][k].X - entity.X;
-                                    float y = cells[i, j][k].Y - entity.Y;
-                                    double d = Math.Sqrt(x * x - y * y) - cells[i, j][k].R - entity.R;
-                                    if (d > 0)
+                                    float x = entityTemp.X - entity.X;
+                                    float y = entityTemp.Y - entity.Y;
+                                    float d = (float)Math.Sqrt(x * x + y * y) - entityTemp.R - entity.R;
+                                    if (0 < d && d < this.cellSize_)
                                     {
-                                        d = ((1 << this.cellSize) - d) / d;
-                                        if (d > 0)
-                                        {
-                                            entity.M += (float)d;
-                                        }
+                                            entity.M += (this.cellSize_ - d) / d;
                                     }
+									if (d < 0)
+									{
+										entity.M = 0;
+									}
                                 }
                             }
                         }
                     }
+					this.Max = Math.Max(this.Max, entity.M);
                 }
             }
         }
@@ -269,7 +275,7 @@ namespace MoveInCells
                 float s = this.NextFloat(this.minStep, this.maxStep);
                 float vx = s * (float)Math.Cos(a);
                 float vy = s * (float)Math.Sin(a);
-                bool d = this.random.Next(100) < 20;
+                bool d = this.random.Next(100) < 50;
                 Entity entity = new Entity()
                 {
                     Id = i,
@@ -328,25 +334,22 @@ namespace MoveInCells
                 {
                     //if (this.cells[i, j].Count > 0)
                     //{
-                    //    g.FillRectangle(Brushes.Yellow, i << this.cellSize, j << this.cellSize, 1 << this.cellSize, 1 << this.cellSize);
+                    //    g.FillRectangle(Brushes.Yellow, i << this.cellSize, j << this.cellSize, this.cellSize_, this.cellSize_);
                     //}
-                    g.DrawRectangle(Pens.Silver, i << this.cellSize, j << this.cellSize, 1 << this.cellSize, 1 << this.cellSize);
+                    g.DrawRectangle(Pens.Silver, i << this.cellSize, j << this.cellSize, this.cellSize_, this.cellSize_);
                 }
             }
 
-            Font font = new Font(FontFamily.Families[0], 14);
-            for (int i = 0; i < this.entities.Count; i++)
+			foreach(Entity entity in this.entities)
             {
-                Entity entity = this.entities[i];
-
                 g.FillEllipse(entity.Brush, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
                 g.DrawEllipse(Pens.Black, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
                 g.DrawString(entity.M.ToString(), font, Brushes.Black, entity.X + entity.R, entity.Y + entity.R);
                 g.DrawLine(Pens.Black, entity.X, entity.Y, entity.X + entity.VX * entity.T, entity.Y + entity.VY * entity.T);
                 if (entity.D)
                 {
-                    int rr = 1 << this.cellSize;
-                    g.DrawEllipse(Pens.Blue, entity.X - entity.R - rr, entity.Y - entity.R - rr, 2 * (entity.R + rr), 2 * (entity.R + rr));
+					float r = entity.R + this.cellSize_;
+                    g.DrawEllipse(Pens.Blue, entity.X - r, entity.Y - r, 2 * r, 2 * r);
                 }
             }
         }
