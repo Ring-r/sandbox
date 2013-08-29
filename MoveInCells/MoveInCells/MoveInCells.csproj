@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Heap.cs" />
     <Compile Include="MainForm.cs">

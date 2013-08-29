@@ -13,7 +13,6 @@ namespace MoveInCells
         public float R;
 
         public float T;
-        public float TLoc;
 
         public int i;
         public int j;
@@ -24,11 +23,20 @@ namespace MoveInCells
 
         public int Id;
         public Brush Brush;
+        public bool D;
+        public float M;
 
         public void Move()
         {
-            this.X += this.VX;
-            this.Y += this.VY;
+            this.X += this.VX * this.T;
+            this.Y += this.VY * this.T;
+        }
+
+        public void Move(float t)
+        {
+            this.X += this.VX * t;
+            this.Y += this.VY * t;
+            this.T -= t;
         }
     }
 }
