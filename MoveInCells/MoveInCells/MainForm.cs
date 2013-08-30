@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -12,7 +11,7 @@ namespace MoveInCells
         public MainForm()
         {
             InitializeComponent();
-            this.timer.Interval = 1;
+            this.timer.Interval = 20;
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
@@ -29,6 +28,8 @@ namespace MoveInCells
         {
             e.Graphics.Clear(Color.White);
             e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            e.Graphics.TranslateTransform(0, this.ClientSize.Height);
+            e.Graphics.ScaleTransform(1, -1);
 
             this.entities.Draw(e.Graphics);
         }
@@ -42,9 +43,8 @@ namespace MoveInCells
         private void timer_Tick(object sender, EventArgs e)
         {
             this.entities.Update();
-			this.Text = this.entities.Max.ToString();
+            this.Text = this.entities.Max.ToString();
             this.Invalidate();
         }
-
     }
 }

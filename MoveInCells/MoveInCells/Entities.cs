@@ -8,6 +8,10 @@ namespace MoveInCells
     {
         private readonly Random random = new Random();
 
+        private const int shift = 6; // cellSize <- 32.
+        private const int cellSize = 1 << shift;
+        private const int mAreaSize = cellSize;
+
         private readonly int entitiesCount = 20;
 
         private float maxX;
@@ -17,17 +21,15 @@ namespace MoveInCells
         private readonly float maxRadius = 20.0f;
         private readonly float minStep = 0.1f;
         private readonly float maxStep = 10.0f;
-
-        private readonly int cellSize = 6;
-		private readonly int cellSize_ = 1 << 6;
-        private readonly float timeInterval = 1f;
+        private readonly int dPercent = 50;
 
         private readonly List<Entity> entities = new List<Entity>();
         private List<Entity>[,] cells = null;
         private Heap heap = new Heap();
 
-		private readonly Font font = new Font(FontFamily.Families[0], 14);
-		public float Max;
+        public float Max;
+        private readonly float timeInterval = 0.5f;
+        private readonly Font font = new Font(FontFamily.Families[0], 14);
 
 
         private float NextFloat(float min, float max)
@@ -38,27 +40,33 @@ namespace MoveInCells
         private void RecalculateMinTime(Entity entity)
         {
             entity.T = float.PositiveInfinity;
-            this.RecalculateMinTimeToCellsBorders(entity);
-            //this.RecalculateMinTimeToEntities(entity);
+            this.RecalculateMinTime0(entity);
+            // this.RecalculateMinTime1(entity);
         }
 
-        private void RecalculateMinTimeToCellsBorders(Entity entity)
+        private void RecalculateMinTime0(Entity entity)
         {
+            if (entity.VX == 0 && entity.VY == 0)
+            {
+                entity.T = float.PositiveInfinity;
+                return;
+            }
+
             int ix = entity.VX > 0 ? entity.i + 1 : entity.i;
-            ix = ix << this.cellSize;
+            ix = ix << shift;
             if (entity.VX < 0 && ix >= entity.X)
             {
-                ix -= 1 << this.cellSize;
+                ix -= cellSize;
             }
 
             float tx = (ix - entity.X) / entity.VX;
             tx = Math.Max(tx, float.Epsilon);
 
             int jy = entity.VY > 0 ? entity.j + 1 : entity.j;
-            jy = jy << this.cellSize;
+            jy = jy << shift;
             if (entity.VY < 0 && jy >= entity.Y)
             {
-                jy -= 1 << this.cellSize;
+                jy -= cellSize;
             }
 
             float ty = (jy - entity.Y) / entity.VY;
@@ -69,38 +77,11 @@ namespace MoveInCells
             if (entity.T > t)
             {
                 entity.T = t;
-                entity.Event = 1;
-            }
-        }
-
-        private void RecalculateMinTimeToEntity(Entity entity, Entity entity_2) // t_chast(ic,jc)
-        {
-            float x = entity_2.X - entity.X;
-            float y = entity_2.Y - entity.Y;
-            float vx = entity_2.VX - entity.VX;
-            float vy = entity_2.VY - entity.VY;
-            float L = entity_2.R + entity.R;
-            float A = vx * vx + vy * vy;
-            float B = -(x * vx + y * vy);
-            float C = x * x + y * y;
-
-            float D = B * B - A * (C - L * L);
-
-            float t1 = (float)(B - Math.Sqrt(D)) / A;
-            float t2 = (float)(B + Math.Sqrt(D)) / A;
-
-            if (entity.T > t1)
-            {
-                entity.T = t1;
                 entity.Event = 0;
             }
-            if (entity_2.T > t2)
-            {
-                entity_2.T = t2;
-                entity_2.Event = 0;
-            }
         }
-        private void RecalculateMinTimeToEntities(Entity entity)
+
+        private void RecalculateMinTime1(Entity entity)
         {
             int imin = Math.Max(0, entity.i - 1);
             int imax = Math.Min(entity.i + 1, this.cells.GetLength(0) - 1);
@@ -114,13 +95,40 @@ namespace MoveInCells
                     {
                         if (entity != cells[i, j][k])
                         {
-                            this.RecalculateMinTimeToEntity(entity, cells[i, j][k]);
+                            this.RecalculateMinTime10(entity, cells[i, j][k]);
                         }
                     }
                 }
             }
         }
 
+        private void RecalculateMinTime10(Entity entity, Entity entityNext) // t_chast(ic,jc)
+        {
+            float x = entityNext.X - entity.X;
+            float y = entityNext.Y - entity.Y;
+            float vx = entityNext.VX - entity.VX;
+            float vy = entityNext.VY - entity.VY;
+            float L = entityNext.R + entity.R;
+            float A = vx * vx + vy * vy;
+            float B = -(x * vx + y * vy);
+            float C = x * x + y * y;
+
+            float D = B * B - A * (C - L * L);
+
+            float t1 = (float)(B - Math.Sqrt(D)) / A;
+            float t2 = (float)(B + Math.Sqrt(D)) / A;
+
+            if (entity.T > t1)
+            {
+                entity.T = t1;
+                entity.Event = 1;
+            }
+            if (entityNext.T > t2)
+            {
+                entityNext.T = t2;
+                entityNext.Event = 1;
+            }
+        }
 
         // procedure t_chast (ic, jc : longint);
         //double test = 1e20;
@@ -141,47 +149,19 @@ namespace MoveInCells
         //    t_not_sosedi(ic, jc, test);
         //    new_times(ic, jc, test);
 
-        private void step(Entity entity)
+        private void RaiseEvent(Entity entity)
         {
             switch (entity.Event)
             {
-                case 0: this.step_0(entity); break;
-                case 1: this.step_1(entity); break;
+                case 0: this.RaiseEvent0(entity); break;
+                case 1: this.RaiseEvent1(entity); break;
             }
         }
 
-        private void step_0(Entity entity)
-        {
-            Entity entityNext = entity.Next;
-            if (entity == entityNext.Next && entity.Event == 0)
-            {
-                //entity.Move();
-                //entityNext.Move();
-                this.event_0(entity, entityNext);
-            }
-            this.RecalculateMinTime(entity);
-            this.heap.Recalculate(entity.Id);
-            this.RecalculateMinTime(entityNext);
-            this.heap.Recalculate(entityNext.Id);
-        }
-
-        private void event_0(Entity entity, Entity entityNext)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void step_1(Entity entity)
-        {
-            //entity.Move();
-            this.event_1(entity);
-            this.RecalculateMinTime(entity);
-            this.heap.Recalculate(entity.Id);
-        }
-
-        private void event_1(Entity entity)
+        private void RaiseEvent0(Entity entity)
         {
             this.cells[entity.i, entity.j].Remove(entity);
-            entity.i = (int)entity.X >> this.cellSize;
+            entity.i = (int)entity.X >> shift;
             if (entity.i < 0)
             {
                 entity.X = this.maxX;
@@ -190,9 +170,9 @@ namespace MoveInCells
             {
                 entity.X = 0;
             }
-            entity.i = (int)entity.X >> this.cellSize;
+            entity.i = (int)entity.X >> shift;
 
-            entity.j = (int)entity.Y >> this.cellSize;
+            entity.j = (int)entity.Y >> shift;
             if (entity.j < 0)
             {
                 entity.Y = this.maxY;
@@ -201,49 +181,134 @@ namespace MoveInCells
             {
                 entity.Y = 0;
             }
-            entity.j = (int)entity.Y >> this.cellSize;
+            entity.j = (int)entity.Y >> shift;
 
             this.cells[entity.i, entity.j].Add(entity);
+
+            this.AfterEvent(entity);
+        }
+
+        private void RaiseEvent1(Entity entity)
+        {
+            Entity entityNext = entity.Next;
+            if (entity == entityNext.Next && entity.Event == 0)
+            {
+                throw new NotImplementedException();
+            }
+            this.AfterEvent(entity);
+            this.AfterEvent(entityNext);
+        }
+
+        private void AfterEvent(Entity entity)
+        {
+            this.RecalculateMinTime(entity);
+            this.heap.Recalculate(entity.Id);
         }
 
 
+        private void RandomEntityV(Entity entity)
+        {
+            float a = this.NextFloat(0, 2 * (float)Math.PI);
+            float s = this.NextFloat(this.minStep, this.maxStep);
+            entity.VX = s * (float)Math.Cos(a);
+            entity.VY = s * (float)Math.Sin(a);
+        }
+        private void RandomMove()
+        {
+            if (this.random.Next(100) < 10)
+            {
+                int i = this.random.Next(this.entitiesCount);
+                Entity entity = this.entities[i];
+                if (entity.State != State.Freeze)
+                {
+                    this.RandomEntityV(entity);
+                    this.AfterEvent(entity);
+                }
+            }
+        }
         private void UpdateMana()
         {
-			this.Max = 0;
+            this.Max = 0;
             foreach (Entity entity in this.entities)
             {
-                if (!entity.D)
+                if (entity.State == State.Run)
                 {
-                    int imin = Math.Max(0, entity.i - 1);
-                    int imax = Math.Min(entity.i + 1, this.cells.GetLength(0) - 1);
-                    int jmin = Math.Max(0, entity.j - 1);
-                    int jmax = Math.Min(entity.j + 1, this.cells.GetLength(1) - 1);
-                    for (int i = imin; i <= imax; ++i)
+                    int imin = Math.Max(0, entity.i - 2);
+                    int imax = Math.Min(entity.i + 2, this.cells.GetLength(0) - 1);
+                    int jmin = Math.Max(0, entity.j - 2);
+                    int jmax = Math.Min(entity.j + 2, this.cells.GetLength(1) - 1);
+                    for (int i = imin; i <= imax && entity.State == State.Run; ++i)
                     {
-                        for (int j = jmin; j <= jmax; ++j)
+                        for (int j = jmin; j <= jmax && entity.State == State.Run; ++j)
                         {
-                            for (int k = 0; k < cells[i, j].Count; ++k)
+                            for (int k = 0; k < cells[i, j].Count && entity.State == State.Run; ++k)
                             {
-								Entity entityTemp = cells[i, j][k];
-                                if (entityTemp.D)
+                                Entity entityTemp = cells[i, j][k];
+
+                                if (entityTemp.State == State.Catch)
                                 {
                                     float x = entityTemp.X - entity.X;
                                     float y = entityTemp.Y - entity.Y;
                                     float d = (float)Math.Sqrt(x * x + y * y) - entityTemp.R - entity.R;
-                                    if (0 < d && d < this.cellSize_)
+                                    if (0 < d && d < mAreaSize)
                                     {
-                                            entity.M += (this.cellSize_ - d) / d;
+                                        entity.M += (mAreaSize - d) / d;
                                     }
-									if (d < 0)
-									{
-										entity.M = 0;
-									}
+                                    if (d <= 0)
+                                    {
+                                        entity.M *= 0.5f;
+                                        entity.State = State.Freeze;
+                                        entity.VX = 0;
+                                        entity.VY = 0;
+                                        this.AfterEvent(entity);
+
+                                        entityTemp.M += entity.M;
+                                        entityTemp.State = State.Run;
+                                    }
                                 }
                             }
                         }
                     }
-					this.Max = Math.Max(this.Max, entity.M);
                 }
+
+                if (entity.State == State.Freeze)
+                {
+                    int imin = Math.Max(0, entity.i - 2);
+                    int imax = Math.Min(entity.i + 2, this.cells.GetLength(0) - 1);
+                    int jmin = Math.Max(0, entity.j - 2);
+                    int jmax = Math.Min(entity.j + 2, this.cells.GetLength(1) - 1);
+                    bool unfreeze = true;
+                    for (int i = imin; i <= imax && unfreeze; ++i)
+                    {
+                        for (int j = jmin; j <= jmax && unfreeze; ++j)
+                        {
+                            for (int k = 0; k < cells[i, j].Count && unfreeze; ++k)
+                            {
+                                Entity entityTemp = cells[i, j][k];
+
+                                if (entityTemp.State == State.Run)
+                                {
+                                    float x = entityTemp.X - entity.X;
+                                    float y = entityTemp.Y - entity.Y;
+                                    float d = (float)Math.Sqrt(x * x + y * y) - entityTemp.R - entity.R;
+                                    if (d < mAreaSize)
+                                    {
+                                        unfreeze = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (unfreeze)
+                    {
+                        entity.State = State.Catch;
+                        this.RandomEntityV(entity);
+                        this.AfterEvent(entity);
+                    }
+                }
+
+
+                this.Max = Math.Max(this.Max, entity.M);
             }
         }
 
@@ -253,7 +318,7 @@ namespace MoveInCells
             this.maxX = maxX;
             this.maxY = maxY;
 
-            this.cells = new List<Entity>[((int)this.maxX >> this.cellSize) + 1, ((int)this.maxY >> this.cellSize) + 1];
+            this.cells = new List<Entity>[((int)this.maxX >> shift) + 1, ((int)this.maxY >> shift) + 1];
             for (int i = 0; i < this.cells.GetLength(0); ++i)
             {
                 for (int j = 0; j < this.cells.GetLength(1); ++j)
@@ -273,23 +338,19 @@ namespace MoveInCells
                 float y = this.NextFloat(r, this.maxY - r);
                 float a = this.NextFloat(0, 2 * (float)Math.PI);
                 float s = this.NextFloat(this.minStep, this.maxStep);
-                float vx = s * (float)Math.Cos(a);
-                float vy = s * (float)Math.Sin(a);
-                bool d = this.random.Next(100) < 50;
                 Entity entity = new Entity()
                 {
                     Id = i,
                     X = x,
                     Y = y,
                     R = r,
-                    D = d,
-                    Brush = d ? Brushes.Black : Brushes.White,//new SolidBrush(Color.FromArgb(150, random.Next(256), random.Next(256), random.Next(256))),
-                    VX = vx,
-                    VY = vy,
+                    VX = s * (float)Math.Cos(a),
+                    VY = s * (float)Math.Sin(a),
+                    State = this.random.Next(100) < this.dPercent ? State.Catch : State.Run,
                 };
                 this.entities.Add(entity);
-                entity.i = (int)entity.X >> this.cellSize;
-                entity.j = (int)entity.Y >> this.cellSize;
+                entity.i = (int)entity.X >> shift;
+                entity.j = (int)entity.Y >> shift;
                 this.cells[entity.i, entity.j].Add(entity);
                 this.RecalculateMinTime(entity);
             }
@@ -319,37 +380,60 @@ namespace MoveInCells
                     }
                     time -= t;
 
-                    this.step(entity);
+                    this.RaiseEvent(entity);
                 }
 
                 this.UpdateMana();
+
+                this.RandomMove();
             }
         }
 
         public void Draw(Graphics g)
         {
+            Entity hero = this.entities[0];
+
+            float a = (float)Math.Atan2(hero.VY, hero.VX) - (float)Math.PI / 2;
+
+            g.TranslateTransform(-hero.X, -hero.Y);
+            g.TranslateTransform(this.maxX / 2, this.maxY / 2);
+
+            g.TranslateTransform(hero.X, hero.Y);
+            g.RotateTransform(-(float)(a / Math.PI * 180));
+            g.TranslateTransform(-hero.X, -hero.Y);
+
             for (int i = 0; i < this.cells.GetLength(0); i++)
             {
                 for (int j = 0; j < this.cells.GetLength(1); j++)
                 {
                     //if (this.cells[i, j].Count > 0)
                     //{
-                    //    g.FillRectangle(Brushes.Yellow, i << this.cellSize, j << this.cellSize, this.cellSize_, this.cellSize_);
+                    //    g.FillRectangle(Brushes.Yellow, i << cellSize, j << cellSize, this.cellSize_, this.cellSize_);
                     //}
-                    g.DrawRectangle(Pens.Silver, i << this.cellSize, j << this.cellSize, this.cellSize_, this.cellSize_);
+                    g.DrawRectangle(Pens.Silver, i << shift, j << shift, cellSize, cellSize);
                 }
             }
 
-			foreach(Entity entity in this.entities)
+            float d;
+            Brush brush;
+            foreach (Entity entity in this.entities)
             {
-                g.FillEllipse(entity.Brush, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
-                g.DrawEllipse(Pens.Black, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
+                d = 2 * entity.R;
+                switch (entity.State)
+                {
+                    case State.Run: brush = Brushes.White; break;
+                    case State.Freeze: brush = Brushes.Silver; break;
+                    case State.Catch: brush = Brushes.Black; break;
+                    default: brush = Brushes.Transparent; break;
+                }
+                g.FillEllipse(brush, entity.X - entity.R, entity.Y - entity.R, d, d);
+                g.DrawEllipse(Pens.Black, entity.X - entity.R, entity.Y - entity.R, d, d);
                 g.DrawString(entity.M.ToString(), font, Brushes.Black, entity.X + entity.R, entity.Y + entity.R);
                 g.DrawLine(Pens.Black, entity.X, entity.Y, entity.X + entity.VX * entity.T, entity.Y + entity.VY * entity.T);
-                if (entity.D)
+                if (entity.State != State.Run)
                 {
-					float r = entity.R + this.cellSize_;
-                    g.DrawEllipse(Pens.Blue, entity.X - r, entity.Y - r, 2 * r, 2 * r);
+                    d = entity.R + mAreaSize;
+                    g.DrawEllipse(Pens.Blue, entity.X - d, entity.Y - d, 2 * d, 2 * d);
                 }
             }
         }

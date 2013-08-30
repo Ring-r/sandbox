@@ -1,30 +1,28 @@
-﻿using System.Drawing;
-
-namespace MoveInCells
+﻿namespace MoveInCells
 {
-    class Entity
+    public class Entity
     {
+        public int Id;
+
         public float X;
         public float VX;
 
         public float Y;
         public float VY;
 
-        public float R;
+        public float R; // Radius.
 
-        public float T;
+        public float T; // Time.
 
-        public int i;
-        public int j;
+        public int i; // Cell index.
+        public int j; // Cell index.
 
-        public Entity Next;
+        public Entity Next; // Next collision event entity.
 
-        public int Event;
+        public int Event; // Next event type.
 
-        public int Id;
-        public Brush Brush;
-        public bool D;
-        public float M;
+        public State State;
+        public float M; // Mana. Score.
 
         public void Move()
         {
@@ -39,4 +37,6 @@ namespace MoveInCells
             this.T -= t;
         }
     }
+
+    public enum State { Run, Freeze, Catch };
 }
