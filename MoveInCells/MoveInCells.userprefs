@@ -1,8 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MoveInCells/Entities.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MoveInCells/MainForm.cs">
     <Files>
-      <File FileName="MoveInCells/Entities.cs" Line="278" Column="51" />
+      <File FileName="MoveInCells/Entities.cs" Line="73" Column="16" />
+      <File FileName="MoveInCells/Entity.cs" Line="3" Column="24" />
+      <File FileName="MoveInCells/MainForm.cs" Line="87" Column="25" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
