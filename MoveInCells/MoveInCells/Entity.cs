@@ -37,6 +37,4 @@
             this.T -= t;
         }
     }
-
-    public enum State { Run, Freeze, Catch };
 }

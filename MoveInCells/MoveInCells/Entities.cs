@@ -219,7 +219,7 @@ namespace MoveInCells
             {
                 int i = this.random.Next(this.entitiesCount);
                 Entity entity = this.entities[i];
-                if (entity.State != State.Freeze)
+                if (i != 0 && entity.State != State.Freeze)
                 {
                     this.RandomEntityV(entity);
                     this.AfterEvent(entity);
@@ -436,6 +436,12 @@ namespace MoveInCells
                     g.DrawEllipse(Pens.Blue, entity.X - d, entity.Y - d, 2 * d, 2 * d);
                 }
             }
+        }
+
+        public Entity Entity { get { return this.entities[0]; } }
+        public void UpdateEntity()
+        {
+            this.AfterEvent(this.entities[0]);
         }
     }
 }
