@@ -25,9 +25,10 @@
 
         public int Event; // Next event type.
         public Entity Next; // Next collision event entity.
+		public Entity Near; // Temp.
 
+        public float Score; // Score.
         public State State;
-        public float M; // Mana. Score.
 
         public void Move(float t)
         {
