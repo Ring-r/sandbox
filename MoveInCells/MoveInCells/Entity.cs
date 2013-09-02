@@ -4,31 +4,31 @@
     {
         public int Id;
 
-        public float X;
-        public float VX;
+        public float X, Y; // Coordinates.
+		public float V, A; // Speed and rotate angle.
+		public float VX, VY; // Moving vector.
+		public void SetV (float v, float a)
+		{
+			this.V = v;
+			this.A = a;
+			this.VX = v * (float)System.Math.Cos(a);
+			this.VY = v * (float)System.Math.Sin(a);
+		}
 
-        public float Y;
-        public float VY;
+		public float XT, YT; // Temp (or local) coordinates.
 
-        public float R; // Radius.
+		public float R; // Radius.
 
         public float T; // Time.
 
-        public int i; // Cell index.
-        public int j; // Cell index.
-
-        public Entity Next; // Next collision event entity.
+        public int i, j; // Cell indexes.
 
         public int Event; // Next event type.
+        public Entity Next; // Next collision event entity.
+		public Entity Near; // Temp.
 
+        public float Score; // Score.
         public State State;
-        public float M; // Mana. Score.
-
-        public void Move()
-        {
-            this.X += this.VX * this.T;
-            this.Y += this.VY * this.T;
-        }
 
         public void Move(float t)
         {
