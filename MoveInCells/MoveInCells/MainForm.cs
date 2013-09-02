@@ -8,14 +8,14 @@ namespace MoveInCells
     public partial class MainForm : Form
     {
         private readonly Entities entities = new Entities();
-		private readonly Entity entity;
+        private readonly Entity entity;
 
         private int isV = 0;
-        private float stepV = 20.0f;
+        private float stepV = 3.0f;
         private int isA = 0;
-        private float stepA = 0.1f;
-		private readonly HashSet<Keys> keys = new HashSet<Keys>();
-		private bool isNeedToUpdate = false;
+        private float stepA = 0.05f;
+        private readonly HashSet<Keys> keys = new HashSet<Keys>();
+        private bool isNeedToUpdate = false;
 
         public MainForm()
         {
@@ -23,22 +23,23 @@ namespace MoveInCells
             this.timer.Interval = 1;
 
             this.entities.Create();
-			this.entity = this.entities.GetMainEntity();
+            this.entity = this.entities.GetMainEntity();
         }
 
-        private void MainForm_KeyDown (object sender, KeyEventArgs e)
-		{
-			if (e.KeyCode == Keys.Escape) {
-				Close ();
-			}
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
 
-			this.keys.Add(e.KeyData);
-			this.isNeedToUpdate = true;
-		}
+            this.keys.Add(e.KeyData);
+            this.isNeedToUpdate = true;
+        }
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
-			this.keys.Remove(e.KeyData);
-			this.isNeedToUpdate = true;
+            this.keys.Remove(e.KeyData);
+            this.isNeedToUpdate = true;
         }
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
@@ -48,31 +49,32 @@ namespace MoveInCells
             this.entities.Draw(e.Graphics, this.ClientSize.Width, this.ClientSize.Height);
         }
 
-		private void KeysEvent ()
-		{
-			this.isA = 0;
-			if (keys.Contains(Keys.Left))
-				this.isA -= 1;
-			if (keys.Contains(Keys.Right))
-				this.isA += 1;
-			this.isV = 0;
-			if (keys.Contains(Keys.Up))
-				this.isV += 1;
-			if (keys.Contains(Keys.Down))
-				this.isV -= 1;
-		}
-        private void timer_Tick (object sender, EventArgs e)
-		{
-			if (this.isNeedToUpdate) {
-				this.KeysEvent ();
-				float v = isV * stepV;
-				float a = entity.A + isA * stepA;
-				if( this.entity.V != v || this.entity.A != a)
-				{
-					this.entity.SetV (v, a);
-					this.entities.UpdateMainEntity ();
-				}
-			}
+        private void KeysEvent()
+        {
+            this.isA = 0;
+            if (keys.Contains(Keys.Left))
+                this.isA -= 1;
+            if (keys.Contains(Keys.Right))
+                this.isA += 1;
+            this.isV = 0;
+            if (keys.Contains(Keys.Up))
+                this.isV += 1;
+            if (keys.Contains(Keys.Down))
+                this.isV -= 1;
+        }
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            if (this.isNeedToUpdate)
+            {
+                this.KeysEvent();
+                float v = isV * stepV;
+                float a = entity.A + isA * stepA;
+                if (this.entity.V != v || this.entity.A != a)
+                {
+                    this.entity.SetV(v, a);
+                    this.entities.UpdateMainEntity();
+                }
+            }
 
             this.entities.Update();
 
