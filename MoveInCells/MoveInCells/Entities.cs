@@ -11,6 +11,7 @@ namespace MoveInCells
         private const int areaShift = 10;
         private const int areaSize = 1 << areaShift; // <- 1024
         private const int scoreAreaSize = cellSize;
+        private const int cellEntityCount = 5;
 
         private readonly int entitiesCount = 10;
 
@@ -22,7 +23,7 @@ namespace MoveInCells
         private readonly int movePercent = 5;
 
         private readonly List<Entity> entities = new List<Entity>();
-        private List<Entity>[,] cells = null;
+        private CellList[,] cells = null;
         private Heap heap = new Heap();
 
         private readonly int mainEntityId = 0;
@@ -95,7 +96,6 @@ namespace MoveInCells
                 }
             }
         }
-
         private void RecalculateMinTime10(Entity entity, Entity entityNext) // t_chast(ic,jc)
         {
             float x = entityNext.X - entity.X;
@@ -151,7 +151,6 @@ namespace MoveInCells
                 case 1: this.RaiseEvent1(entity); break;
             }
         }
-
         private void RaiseEvent0(Entity entity)
         {
             this.cells[entity.i, entity.j].Remove(entity);
@@ -181,7 +180,6 @@ namespace MoveInCells
 
             this.AfterEvent(entity);
         }
-
         private void RaiseEvent1(Entity entity)
         {
             Entity entityNext = entity.Next;
@@ -335,12 +333,12 @@ namespace MoveInCells
         public Entities()
         {
             int length = (areaSize >> cellShift) + 1;
-            this.cells = new List<Entity>[length, length];
+            this.cells = new CellList[length, length];
             for (int i = 0; i < this.cells.GetLength(0); ++i)
             {
                 for (int j = 0; j < this.cells.GetLength(1); ++j)
                 {
-                    this.cells[i, j] = new List<Entity>();
+                    this.cells[i, j] = new CellList(cellEntityCount);
                 }
             }
         }
@@ -378,6 +376,8 @@ namespace MoveInCells
                     Entity entity = this.heap.GetFirst();
                     while (entity.T <= 0)
                     {
+                        this.RaiseEvent(entity);
+
                         this.AfterEvent(entity);
                         entity = this.heap.GetFirst();
                     }
@@ -388,8 +388,6 @@ namespace MoveInCells
                         entityTemp.Move(t);
                     }
                     time -= t;
-
-                    this.RaiseEvent(entity);
                 }
 
                 this.UpdateScore();
@@ -403,25 +401,26 @@ namespace MoveInCells
             g.TranslateTransform(width / 2, height / 2);
 
             #region For testing.
-            //System.Drawing.Drawing2D.Matrix matrix = g.Transform;
-            //g.Transform = new System.Drawing.Drawing2D.Matrix(1, 0, 0, 1, 0, 0);
-            //float x = this.entities[this.mainEntityId].X;
-            //float y = this.entities[this.mainEntityId].Y;
-            //float angle = this.entities[this.mainEntityId].A * 180 / (float)Math.PI;
-            //g.TranslateTransform(width / 2, height / 2);
-            //g.RotateTransform(-90 - angle);
-            //g.TranslateTransform(-x, -y);
-            //for (int i = 0; i < this.cells.GetLength(0); i++)
-            //{
-            //    for (int j = 0; j < this.cells.GetLength(1); j++)
-            //    {
-            //        //					if (this.cells[i, j].Count > 0) {
-            //        //						g.FillRectangle(Brushes.Yellow, i << cellShift, j << cellShift, cellSize, cellSize);
-            //        //					}
-            //        g.DrawRectangle(Pens.Silver, i << cellShift, j << cellShift, cellSize, cellSize);
-            //    }
-            //}
-            //g.Transform = matrix;
+            System.Drawing.Drawing2D.Matrix matrix = g.Transform;
+            g.Transform = new System.Drawing.Drawing2D.Matrix(1, 0, 0, 1, 0, 0);
+            float x = this.entities[this.mainEntityId].X;
+            float y = this.entities[this.mainEntityId].Y;
+            float angle = this.entities[this.mainEntityId].A * 180 / (float)Math.PI;
+            g.TranslateTransform(width / 2, height / 2);
+            g.RotateTransform(-90 - angle);
+            g.TranslateTransform(-x, -y);
+            for (int i = 0; i < this.cells.GetLength(0); i++)
+            {
+                for (int j = 0; j < this.cells.GetLength(1); j++)
+                {
+                    if (this.cells[i, j].Count > 0)
+                    {
+                        g.FillRectangle(Brushes.Yellow, i << cellShift, j << cellShift, cellSize, cellSize);
+                    }
+                    g.DrawRectangle(Pens.Silver, i << cellShift, j << cellShift, cellSize, cellSize);
+                }
+            }
+            g.Transform = matrix;
             #endregion For testing.
 
             int areaSize_2 = areaSize >> 1;
