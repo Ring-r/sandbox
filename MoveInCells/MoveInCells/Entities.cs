@@ -401,26 +401,26 @@ namespace MoveInCells
             g.TranslateTransform(width / 2, height / 2);
 
             #region For testing.
-            System.Drawing.Drawing2D.Matrix matrix = g.Transform;
-            g.Transform = new System.Drawing.Drawing2D.Matrix(1, 0, 0, 1, 0, 0);
-            float x = this.entities[this.mainEntityId].X;
-            float y = this.entities[this.mainEntityId].Y;
-            float angle = this.entities[this.mainEntityId].A * 180 / (float)Math.PI;
-            g.TranslateTransform(width / 2, height / 2);
-            g.RotateTransform(-90 - angle);
-            g.TranslateTransform(-x, -y);
-            for (int i = 0; i < this.cells.GetLength(0); i++)
-            {
-                for (int j = 0; j < this.cells.GetLength(1); j++)
-                {
-                    if (this.cells[i, j].Count > 0)
-                    {
-                        g.FillRectangle(Brushes.Yellow, i << cellShift, j << cellShift, cellSize, cellSize);
-                    }
-                    g.DrawRectangle(Pens.Silver, i << cellShift, j << cellShift, cellSize, cellSize);
-                }
-            }
-            g.Transform = matrix;
+            //System.Drawing.Drawing2D.Matrix matrix = g.Transform;
+            //g.Transform = new System.Drawing.Drawing2D.Matrix(1, 0, 0, 1, 0, 0);
+            //float x = this.entities[this.mainEntityId].X;
+            //float y = this.entities[this.mainEntityId].Y;
+            //float angle = this.entities[this.mainEntityId].A * 180 / (float)Math.PI;
+            //g.TranslateTransform(width / 2, height / 2);
+            //g.RotateTransform(-90 - angle);
+            //g.TranslateTransform(-x, -y);
+            //for (int i = 0; i < this.cells.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < this.cells.GetLength(1); j++)
+            //    {
+            //        if (this.cells[i, j].Count > 0)
+            //        {
+            //            g.FillRectangle(Brushes.Yellow, i << cellShift, j << cellShift, cellSize, cellSize);
+            //        }
+            //        g.DrawRectangle(Pens.Silver, i << cellShift, j << cellShift, cellSize, cellSize);
+            //    }
+            //}
+            //g.Transform = matrix;
             #endregion For testing.
 
             int areaSize_2 = areaSize >> 1;
