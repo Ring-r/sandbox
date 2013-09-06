@@ -1,17 +1,31 @@
-﻿namespace MoveOnSphere
+﻿using System;
+
+namespace MoveOnSphere
 {
     public class Entity
     {
-        public float x, y, z, a;
-        public float x_, y_, z_, a_;
+        public Vector v = new Vector() { z = 1 };
+        public float moveAngle = 0;
+        public float rotateAngle = 0;
+        private Vector moveAxe = new Vector() { y = 1 };
+
+        public void RandomFill()
+        {
+            this.rotateAngle = 0.0f;
+            this.v.x = Helper.RandomFloat(-1, 1);
+            this.v.y = Helper.RandomSign() * Helper.RandomFloat(0, (float)Math.Sqrt(1 - this.v.x * this.v.x));
+            this.v.z = Helper.RandomSign() * (float)Math.Sqrt(1 - this.v.x * this.v.x - this.v.y * this.v.y);
+
+            this.moveAngle = 0.0f;
+            this.moveAxe = Vector.CrossProductAndNormilize(this.v, World.Vector);
+        }
 
         public void Move()
         {
-            Quaternion q = new Quaternion(x, y, z, a);
-			q.Convert(ref x_, ref y_, ref z_);
-
-            Quaternion q_ = new Quaternion(x_, y_, z_, a_);
-			q_.Convert(ref x, ref y, ref z);
+            Quaternion rotateQuaternion = new Quaternion(this.v, rotateAngle);
+            rotateQuaternion.Convert(this.moveAxe);
+            Quaternion moveQuaternion = new Quaternion(this.moveAxe, moveAngle);            
+            moveQuaternion.Convert(this.v);
         }
     }
 }
