@@ -7,7 +7,7 @@ namespace MoveOnSphere
         public Vector v = new Vector() { z = 1 };
         public float moveAngle = 0;
         public float rotateAngle = 0;
-        private Vector moveAxe = new Vector() { y = 1 };
+        public Vector moveAxe = new Vector() { y = 1 };
 
         public void RandomFill()
         {

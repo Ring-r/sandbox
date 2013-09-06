@@ -12,10 +12,10 @@ namespace MoveOnSphere
             v.x = v1.y * v2.z - v1.z * v2.y;
             v.y = v1.z * v2.x - v1.x * v2.z;
             v.z = v1.x * v2.y - v1.y * v2.x;
-            float d = (float)Math.Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
-            v.x /= d;
-            v.y /= d;
-            v.z /= d;
+            float k = 1 / (float)Math.Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+            v.x *= k;
+			v.y *= k;
+			v.z *= k;
             return v;
         }
     }

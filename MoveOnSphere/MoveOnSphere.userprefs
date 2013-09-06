@@ -2,7 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
   <MonoDevelop.Ide.Workbench ActiveDocument="MoveOnSphere/MainForm.cs">
     <Files>
-      <File FileName="MoveOnSphere/MainForm.cs" Line="74" Column="1" />
+      <File FileName="MoveOnSphere/World.cs" Line="17" Column="44" />
+      <File FileName="MoveOnSphere/MainForm.cs" Line="33" Column="31" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

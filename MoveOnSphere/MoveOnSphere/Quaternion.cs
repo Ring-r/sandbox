@@ -4,7 +4,7 @@ namespace MoveOnSphere
 {
     public class Quaternion
     {
-        private float x, y, z, w;
+        public float x, y, z, w;
 
         public Quaternion(float x, float y, float z, float a)
         {
@@ -22,16 +22,18 @@ namespace MoveOnSphere
             this.z = sin * v.z;
             this.w = (float)Math.Cos(0.5 * a);
         }
-        public Quaternion(Vector v1, Vector v2)
-        {
-            float cosA = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-            float sinA_2 = (float)Math.Sqrt(0.5 * (1 - cosA));
-            float cosA_2 = (float)Math.Sqrt(0.5 * (1 + cosA));
+        public Quaternion (Vector v1, Vector v2)
+		{
+			float cosA = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+			float sinA_2 = (float)Math.Sqrt (0.5 * (1 - cosA));
+			float cosA_2 = (float)Math.Sqrt (0.5 * (1 + cosA));
 
-            this.x = (v1.y * v2.z - v1.z * v2.y) * sinA_2;
-            this.y = (v1.z * v2.x - v1.x * v2.z) * sinA_2;
-            this.z = (v1.x * v2.y - v1.y * v2.x) * sinA_2;
             this.w = cosA_2;
+            this.x = (v1.y * v2.z - v1.z * v2.y);
+            this.y = (v1.z * v2.x - v1.x * v2.z);
+            this.z = (v1.x * v2.y - v1.y * v2.x);
+			float d = sinA_2 / (float)Math.Sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+			this.x *= d; this.y *= d; this.z *= d;
         }
 
         public void Convert(ref float x, ref float y, ref float z)
