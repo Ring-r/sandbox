@@ -7,11 +7,10 @@ namespace MoveOnSphere
 {
     public partial class MainForm : Form
     {
-        private readonly Random random = new Random();
 		private const int entitiesCount = 30;
         private readonly Entity[] entities = new Entity[entitiesCount];
 
-		private const int moveProcent = 50;
+		private const int moveProcent = 10;
 		private const float minAngle = 0.001f;
 		private const float maxAngle = 0.005f;
 
@@ -36,9 +35,9 @@ namespace MoveOnSphere
 			foreach(Entity entity in this.entities)
 			{
 				entity.a = 0;
-    	        entity.x = 2 * (float)this.random.NextDouble() - 1;
-        	    entity.y = (float)Math.Sqrt(1 - entity.x * entity.x) * (float)this.random.NextDouble();
-            	entity.z = (float)Math.Sqrt(1 - entity.x * entity.x - entity.y * entity.y);
+				entity.x = Helper.RandomFloat(-1, 1);
+        	    entity.y = Helper.RandomSign() * Helper.RandomFloat(0, (float)Math.Sqrt(1 - entity.x * entity.x));
+            	entity.z = Helper.RandomSign() * Helper.RandomFloat(0, (float)Math.Sqrt(1 - entity.x * entity.x - entity.y * entity.y));
 
 				entity.a_ = 0;
 				entity.x_ = entity.y;
@@ -52,7 +51,7 @@ namespace MoveOnSphere
 
 		private void MainForm_Resize(object sender, System.EventArgs e)
         {
-            World.R = Math.Max(this.ClientSize.Width, this.ClientSize.Height) / 2;
+            World.R = Math.Min(this.ClientSize.Width, this.ClientSize.Height) / 2;
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -68,16 +67,16 @@ namespace MoveOnSphere
 			e.Graphics.Clear (Color.White);
 			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-			e.Graphics.TranslateTransform (this.ClientSize.Width / 2, this.ClientSize.Height / 2);
+			int bx = this.ClientSize.Width >> 1;
+			int by = this.ClientSize.Height >> 1;
+			e.Graphics.TranslateTransform (bx, by);
 
-			e.Graphics.DrawEllipse (Pens.Black, -World.R, -World.R, 2 * World.R, 2 * World.R);
+			e.Graphics.DrawEllipse (Pens.Silver, -World.R, -World.R, 2 * World.R, 2 * World.R);
 			foreach (Entity entity in this.entities) {
-				int bx = this.ClientSize.Width >> 1;
-				int by = this.ClientSize.Height >> 1;
 				if(-bx <= entity.x && entity.x <= bx && -by <= entity.y && entity.y <= by)
 				{
 					float s = (maxS - minS) * (entity.z + 1) / 2 + minS;
-					Brush brush = new SolidBrush (Color.FromArgb ((int)((maxT - minT) * (entity.z + 1) / 2) + minT, Color.Blue));
+					Brush brush = new SolidBrush (Color.FromArgb ((int)((maxT - minT) * (entity.z + 1) / 2) + minT, Color.Black));
 					e.Graphics.FillEllipse (brush, (float)(entity.x * World.R) - s / 2, (float)(entity.y * World.R) - s / 2, s, s);
 				}
 			}
@@ -85,13 +84,13 @@ namespace MoveOnSphere
 
         private void timer_Tick (object sender, EventArgs e)
 		{
-			if (this.random.Next (100) < moveProcent) {
-				int i = this.random.Next(entitiesCount);
-				if (this.random.Next (100) < 50) {
-					this.entities[i].a = (maxAngle - minAngle) * (float)this.random.NextDouble () + minAngle;
+			if (Helper.Random.Next (100) < moveProcent) {
+				int i = Helper.Random.Next(entitiesCount);
+				if (Helper.Random.Next (100) < 50) {
+					this.entities[i].a = Helper.RandomFloat(minAngle, maxAngle);
 				}
 				else {
-					this.entities[i].a_ = (maxAngle - minAngle) * (float)this.random.NextDouble () + minAngle;
+					this.entities[i].a_ = Helper.RandomFloat(minAngle, maxAngle);
 				}
 			}
 
