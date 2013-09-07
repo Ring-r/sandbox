@@ -15,8 +15,6 @@ namespace MoveOnSphere
 			Vector vt = new Vector();
 			vt.FillAsVectorProduction(this.v, this.v_);
 			this.v_.FillAsVectorProduction(vt, this.v);
-
-			float a = Vector.ScalarProduction(this.v, this.v_);
 		}
 
         public void Move()

@@ -4,7 +4,7 @@ using System.Drawing;
 
 namespace MoveInCells
 {
-    public class Entities
+    public class World
     {
         private const int cellShift = 6;
         private const int cellSize = 1 << cellShift; // <- 32.
@@ -330,7 +330,7 @@ namespace MoveInCells
         }
 
 
-        public Entities()
+        public World()
         {
             int length = (areaSize >> cellShift) + 1;
             this.cells = new CellList[length, length];

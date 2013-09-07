@@ -12,15 +12,20 @@ namespace MoveOnSphere
         private const int entitiesCount = 100;
         private readonly Entity[] entities = new Entity[entitiesCount];
         private readonly int mainEntityId = 0;
+		private int aimEntityId = 0;
 
-        private const int moveProcent = 50;
-        private const float minAngle = 0.001f;
-        private const float maxAngle = 0.0005f;
+        private const int moveProcent = 100;
+        private const float minAngle = 0.005f;
+        private const float maxAngle = 0.003f;
 
         private const int minS = 10;
         private const int maxS = 30;
         private const int minT = 50;
         private const int maxT = 255;
+
+		private const int isEndTimerMax = 100;
+		private int isEndTimer = 0;
+		private string isEndString = "";
 
         private void RandomEntityChange()
         {
@@ -54,65 +59,98 @@ namespace MoveOnSphere
 
 						this.entities[i].v.Deduct(vji); this.entities[i].v.Normilize();
 						this.entities[i].Recalculate();
+
+						if((i == this.mainEntityId && j == this.aimEntityId) || (i == this.aimEntityId && j == this.mainEntityId))
+						{
+							this.isEndString = "Right!";
+							this.isEndTimer = isEndTimerMax;
+							this.CreateAim();
+						}
+						if(this.isEndTimer <= 0 && (i == this.mainEntityId && j != this.aimEntityId) || (i != this.aimEntityId && j == this.mainEntityId))
+						{
+							this.isEndString = "Loser!";
+							this.isEndTimer = isEndTimerMax;
+						}
+
 					}
 				}
 			}
 		}
 
-        public void Create()
-        {
-            for (int i = 0; i < entitiesCount; ++i)
-            {
-                this.entities[i] = new Entity();
-                this.entities[i].RandomFill();
-            }
-			Entity mainEntity = this.entities[this.mainEntityId];
-			float a = Vector.ScalarProduction(mainEntity.v, mainEntity.v_);
+		private void CreateAim ()
+		{
+			this.aimEntityId = Helper.Random.Next (entitiesCount);
+			while (this.aimEntityId == this.mainEntityId) {
+				this.aimEntityId = Helper.Random.Next (entitiesCount);
+			}
+		}
+
+        public void Create ()
+		{
+			for (int i = 0; i < entitiesCount; ++i) {
+				this.entities [i] = new Entity ();
+				this.entities [i].RandomFill ();
+			}
+			this.CreateAim();
         }
 
-        public void Draw(Graphics g, int width, int height)
-        {
-            // g.DrawEllipse(Pens.Silver, -World.R, -World.R, 2 * World.R, 2 * World.R);
+        public void Draw (Graphics g, int width, int height)
+		{
+			// g.DrawEllipse(Pens.Silver, -World.R, -World.R, 2 * World.R, 2 * World.R);
 
-            int bx = width >> 1;
-            int by = height >> 1;
+			int bx = width >> 1;
+			int by = height >> 1;
 
-            Entity mainEntity = this.entities[this.mainEntityId];
+			Entity mainEntity = this.entities [this.mainEntityId];
 
-			Vector v = new Vector(); // TODO: Global?
+			Vector v = new Vector (); // TODO: Global?
 
-			TransformationAsQuaternion qMove = new TransformationAsQuaternion(); // TODO: Global?
-			qMove.Fill(mainEntity.v, World.VectorZ);
+			TransformationAsQuaternion qMove = new TransformationAsQuaternion (); // TODO: Global?
+			qMove.Fill (mainEntity.v, World.VectorZ);
 
-			v.Fill(mainEntity.v_); qMove.Transform(v); v.Normilize();
-			TransformationAsQuaternion qRotate = new TransformationAsQuaternion(); // TODO: Global?
-			qRotate.Fill(World.VectorZ, v, World.VectorX);
+			v.Fill (mainEntity.v_);
+			qMove.Transform (v);
+			v.Normilize ();
+			// TODO: Work wrong.
+			// TransformationAsQuaternion qRotate = new TransformationAsQuaternion(); // TODO: Global?
+			// qRotate.Fill(World.VectorZ, v, World.VectorX);
 
-			v.Fill(mainEntity.v_);
-            qMove.Transform(v);
-			qRotate.Transform(v);
-			g.DrawLine(Pens.Black, 0, 0, v.x * World.R, v.y * World.R);
+			Vector direction = new Vector (); // TODO: Global?
+			direction.FillAsVectorProduction (mainEntity.v_, mainEntity.v);
+			direction.Normilize ();
+			v.Fill (direction);
+			qMove.Transform (v);
+			// TODO: Work wrong. qRotate.Transform(v);
+			g.DrawLine (Pens.Black, 0, 0, v.x * World.R, v.y * World.R);
 
-            foreach (Entity entity in this.entities)
-            {
-                if (-bx <= entity.v.x && entity.v.x <= bx && -by <= entity.v.y && entity.v.y <= by)
-                {
-					try
-					{
-						v.Fill(entity.v);
-                    	qMove.Transform(v);
-						qRotate.Transform(v);
+			for (int i = 0; i< entitiesCount; ++i) {
+				Entity entity = this.entities [i];
+				if (-bx <= entity.v.x && entity.v.x <= bx && -by <= entity.v.y && entity.v.y <= by) {
+					try {
+						v.Fill (entity.v);
+						qMove.Transform (v);
+						// TODO: Work wrong. qRotate.Transform(v);
 
-                    	Brush brush = new SolidBrush(Color.FromArgb((int)(0.5f * (maxT - minT) * (v.z + 1) + minT), Color.Black));
+						Color color = i == this.aimEntityId ? Color.Green : Color.Black;
+						Brush brush = new SolidBrush (Color.FromArgb ((int)(0.5f * (maxT - minT) * (v.z + 1) + minT), color));
 
-                    	float s = 0.5f * (maxS - minS) * (v.z + 1) + minS;
+						float s = 0.5f * (maxS - minS) * (v.z + 1) + minS;
 
-                    	g.FillEllipse(brush, v.x * World.R - 0.5f * s, v.y * World.R - 0.5f * s, s, s);
+						g.FillEllipse (brush, v.x * World.R - 0.5f * s, v.y * World.R - 0.5f * s, s, s);
 
+					} catch {
 					}
-					catch{}
-                }
-            }
+				}
+			}
+
+			if (this.isEndTimer <= 0) {
+				this.isEndString = "";
+			} else {
+				--this.isEndTimer;
+				Font font = new Font(FontFamily.Families[0], 36);
+				SizeF size = g.MeasureString(this.isEndString, font);
+				g.DrawString(this.isEndString, font, Brushes.DeepPink, -size.Width / 2, 0);
+			}
         }
 
         public void Update ()

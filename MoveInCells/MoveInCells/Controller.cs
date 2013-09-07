@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace MoveOnSphere
+namespace MoveInCells
 {
 	public class Controller
 	{
-		private const float moveStep = 0.01f;
-		private const float rotateStep = (float)Math.PI / 180 * 3;
+		private const float moveStep = 10.0f;
+		private const float rotateStep = (float)Math.PI / 180 * 10;
 
 		private Entity entity = null;
         private readonly HashSet<Keys> keys = new HashSet<Keys>();
@@ -28,7 +28,7 @@ namespace MoveOnSphere
 			this.isNeedToUpdate = true;
 		}
 
-		public void RemoveKey (Keys key)
+		public void RemoveKey(Keys key)
 		{
             this.keys.Remove(key);
             this.isNeedToUpdate = true;
@@ -48,14 +48,21 @@ namespace MoveOnSphere
                 this.isMove -= 1;
         }
 
-		public void Update()
+		public bool Update()
 		{
+			bool isUpdate = false;
             if (this.isNeedToUpdate)
             {
                 this.KeysEvent();
-                this.entity.moveAngle = isMove * moveStep;
-                this.entity.rotateAngle = isRotate * rotateStep;
+				float v = isMove * moveStep;
+                float a = entity.A + isRotate * rotateStep;
+                if (this.entity.V != v || this.entity.A != a)
+                {
+                    this.entity.SetV(v, a);
+					isUpdate = true;
+                }
             }
+			return isUpdate;
 		}
 	}
 }

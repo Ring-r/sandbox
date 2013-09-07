@@ -11,8 +11,6 @@
     <RootNamespace>MoveInCells</RootNamespace>
     <AssemblyName>MoveInCells</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -41,7 +39,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CellList.cs" />
-    <Compile Include="Entities.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Heap.cs" />
     <Compile Include="MainForm.cs">
@@ -77,6 +74,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Helper.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

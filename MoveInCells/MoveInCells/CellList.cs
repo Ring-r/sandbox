@@ -2,7 +2,6 @@
 {
     public class CellList
     {
-        private int capacity = 0;
         private int count = 0;
         private Entity[] array = null;
 
@@ -11,7 +10,6 @@
 
         public CellList(int capacity)
         {
-            this.capacity = capacity;
             this.array = new Entity[capacity];
         }
         public void Add(Entity entity)

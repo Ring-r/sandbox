@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -24,21 +24,22 @@ namespace MoveOnSphere
         private void MainForm_Resize(object sender, System.EventArgs e)
         {
             World.R = Math.Max(this.ClientSize.Width, this.ClientSize.Height) / 2;
-			this.controller.RecalculateSteps();
         }
 
-        private void MainForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Escape)
-            {
-                this.Close();
-            }
+        private void MainForm_KeyDown (object sender, KeyEventArgs e)
+		{
+			if (e.KeyData == Keys.Escape) {
+				this.Close ();
+			}
+			if (e.KeyData == Keys.Pause) {
+				timer.Enabled = !timer.Enabled;
+			}
 
 			this.controller.AddKey(e.KeyData);
 		}
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
-			this.controller.Remove(e.KeyData);
+			this.controller.RemoveKey(e.KeyData);
         }
 
         private void MainForm_Paint(object sender, PaintEventArgs e)
