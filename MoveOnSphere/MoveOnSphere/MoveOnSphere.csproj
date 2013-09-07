@@ -70,8 +70,9 @@
     </Compile>
     <Compile Include="Vector.cs" />
     <Compile Include="World.cs" />
-    <Compile Include="Quaternion.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="Controller.cs" />
+    <Compile Include="TransformationAsQuaternion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

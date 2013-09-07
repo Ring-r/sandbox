@@ -1,9 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MoveOnSphere/MainForm.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MoveOnSphere/World.cs">
     <Files>
-      <File FileName="MoveOnSphere/World.cs" Line="17" Column="44" />
-      <File FileName="MoveOnSphere/MainForm.cs" Line="33" Column="31" />
+      <File FileName="MoveOnSphere/World.cs" Line="88" Column="91" />
+      <File FileName="MoveOnSphere/Vector.cs" Line="50" Column="3" />
+      <File FileName="MoveOnSphere/Entity.cs" Line="18" Column="15" />
+      <File FileName="MoveOnSphere/TransformationAsQuaternion.cs" Line="64" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

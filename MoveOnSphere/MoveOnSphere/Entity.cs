@@ -5,9 +5,29 @@ namespace MoveOnSphere
     public class Entity
     {
         public Vector v = new Vector() { z = 1 };
+        public Vector v_ = new Vector() { x = 1 };
         public float moveAngle = 0;
         public float rotateAngle = 0;
-        public Vector moveAxe = new Vector() { y = 1 };
+
+		public void Recalculate ()
+		{
+			// TODO: Check.
+			Vector vt = new Vector();
+			vt.FillAsVectorProduction(this.v, this.v_);
+			this.v_.FillAsVectorProduction(vt, this.v);
+
+			float a = Vector.ScalarProduction(this.v, this.v_);
+		}
+
+        public void Move()
+        {
+			TransformationAsQuaternion qRotate = new TransformationAsQuaternion();
+			qRotate.Fill(this.v, rotateAngle);
+            qRotate.Transform(this.v_);
+			TransformationAsQuaternion qMove = new TransformationAsQuaternion();
+			qMove.Fill(this.v_, moveAngle);            
+            qMove.Transform(this.v);
+        }
 
         public void RandomFill()
         {
@@ -17,15 +37,7 @@ namespace MoveOnSphere
             this.v.z = Helper.RandomSign() * (float)Math.Sqrt(1 - this.v.x * this.v.x - this.v.y * this.v.y);
 
             this.moveAngle = 0.0f;
-            this.moveAxe = Vector.CrossProductAndNormilize(this.v, World.Vector);
+            this.v_.FillAsVectorProduction(this.v, World.VectorZ);
         }
-
-        public void Move()
-        {
-            Quaternion rotateQuaternion = new Quaternion(this.v, rotateAngle);
-            rotateQuaternion.Convert(this.moveAxe);
-            Quaternion moveQuaternion = new Quaternion(this.moveAxe, moveAngle);            
-            moveQuaternion.Convert(this.v);
-        }
-    }
+	}
 }

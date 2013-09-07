@@ -6,15 +6,16 @@ namespace MoveOnSphere
     public class World
     {
         public static float R;
-        public static readonly Vector Vector = new Vector() { z = 1 };
+		public static readonly Vector VectorX = new Vector() { x = 1 };
+        public static readonly Vector VectorZ = new Vector() { z = 1 };
 
         private const int entitiesCount = 100;
         private readonly Entity[] entities = new Entity[entitiesCount];
         private readonly int mainEntityId = 0;
 
         private const int moveProcent = 50;
-        private const float minAngle = 0.01f;
-        private const float maxAngle = 0.005f;
+        private const float minAngle = 0.001f;
+        private const float maxAngle = 0.0005f;
 
         private const int minS = 10;
         private const int maxS = 30;
@@ -26,8 +27,7 @@ namespace MoveOnSphere
             if (Helper.Random.Next(100) < moveProcent)
             {
 				int i = Helper.Random.Next(entitiesCount);
-				// i != this.mainEntityId && 
-                if (Helper.Random.Next(100) < 50)
+                if (i != this.mainEntityId && Helper.Random.Next(100) < 50)
                 {
                     this.entities[i].rotateAngle = Helper.RandomFloat(minAngle, maxAngle);
                 }
@@ -38,6 +38,27 @@ namespace MoveOnSphere
             }
         }
 
+		private void CollisionEvent ()
+		{
+			Vector vji = new Vector(); // Global?
+			for (int i = 0; i < entitiesCount - 1; ++i) {
+				for (int j = i + 1; j < entitiesCount; ++j) {
+					vji.FillAsDistinction(this.entities[i].v, this.entities[j].v);
+					float length = vji.GetLength();
+					float lengthCollision = 0.5f * (maxS + maxS) / World.R - length;
+					if(lengthCollision > 0 && length > 0) {
+						vji.Multiply(0.5f * lengthCollision / length);
+
+						this.entities[j].v.Add(vji); this.entities[j].v.Normilize();
+						this.entities[j].Recalculate();
+
+						this.entities[i].v.Deduct(vji); this.entities[i].v.Normilize();
+						this.entities[i].Recalculate();
+					}
+				}
+			}
+		}
+
         public void Create()
         {
             for (int i = 0; i < entitiesCount; ++i)
@@ -45,6 +66,8 @@ namespace MoveOnSphere
                 this.entities[i] = new Entity();
                 this.entities[i].RandomFill();
             }
+			Entity mainEntity = this.entities[this.mainEntityId];
+			float a = Vector.ScalarProduction(mainEntity.v, mainEntity.v_);
         }
 
         public void Draw(Graphics g, int width, int height)
@@ -55,23 +78,37 @@ namespace MoveOnSphere
             int by = height >> 1;
 
             Entity mainEntity = this.entities[this.mainEntityId];
-            Quaternion q = new Quaternion(mainEntity.v, World.Vector);
+
+			Vector v = new Vector(); // TODO: Global?
+
+			TransformationAsQuaternion qMove = new TransformationAsQuaternion(); // TODO: Global?
+			qMove.Fill(mainEntity.v, World.VectorZ);
+
+			v.Fill(mainEntity.v_); qMove.Transform(v); v.Normilize();
+			TransformationAsQuaternion qRotate = new TransformationAsQuaternion(); // TODO: Global?
+			qRotate.Fill(World.VectorZ, v, World.VectorX);
+
+			v.Fill(mainEntity.v_);
+            qMove.Transform(v);
+			qRotate.Transform(v);
+			g.DrawLine(Pens.Black, 0, 0, v.x * World.R, v.y * World.R);
+
             foreach (Entity entity in this.entities)
             {
                 if (-bx <= entity.v.x && entity.v.x <= bx && -by <= entity.v.y && entity.v.y <= by)
                 {
 					try
 					{
-                    float x = entity.v.x;
-                    float y = entity.v.y;
-                    float z = entity.v.z;
-                    q.Convert(ref x, ref y, ref z);
+						v.Fill(entity.v);
+                    	qMove.Transform(v);
+						qRotate.Transform(v);
 
-                    Brush brush = new SolidBrush(Color.FromArgb((int)((maxT - minT) * (z + 1) / 2) + minT, Color.Black));
+                    	Brush brush = new SolidBrush(Color.FromArgb((int)(0.5f * (maxT - minT) * (v.z + 1) + minT), Color.Black));
 
-                    float s = (maxS - minS) * (z + 1) / 2 + minS;
+                    	float s = 0.5f * (maxS - minS) * (v.z + 1) + minS;
 
-                    g.FillEllipse(brush, x * World.R - s / 2, y * World.R - s / 2, s, s);
+                    	g.FillEllipse(brush, v.x * World.R - 0.5f * s, v.y * World.R - 0.5f * s, s, s);
+
 					}
 					catch{}
                 }
@@ -86,38 +123,7 @@ namespace MoveOnSphere
 				entity.Move ();
 			}
 
-			for (int i = 0; i < entitiesCount - 1; ++i) {
-				for (int j = i + 1; j < entitiesCount; ++j) {
-					float x = (this.entities[j].v.x - this.entities[i].v.x) * World.R;
-					float y = (this.entities[j].v.y - this.entities[i].v.y) * World.R;
-					float z = (this.entities[j].v.z - this.entities[i].v.z) * World.R;
-					float d = (float)Math.Sqrt(x * x + y * y + z * z);
-					float dd = maxS - d;
-					if(dd > 0) {
-						d = 1 / d;
-						x *= d;
-						y *= d;
-						z *= d;
-						dd *= 0.5f;
-						float X, Y, Z, K;
-						X = this.entities[i].v.x * World.R - dd * x;
-						Y = this.entities[i].v.y * World.R - dd * y;
-						Z = this.entities[i].v.z * World.R - dd * z;
-						K = 1 / (float)Math.Sqrt(X * X + Y * Y + Z * Z);
-						this.entities[i].v.x = X * K;
-						this.entities[i].v.y = Y * K;
-						this.entities[i].v.z = Z * K;
-
-						X = this.entities[j].v.x * World.R + dd * x;
-						Y = this.entities[j].v.y * World.R + dd * y;
-						Z = this.entities[j].v.z * World.R + dd * z;
-						K = 1 / (float)Math.Sqrt(X * X + Y * Y + Z * Z);
-						this.entities[j].v.x = X * K;
-						this.entities[j].v.y = Y * K;
-						this.entities[j].v.z = Z * K;
-					}
-				}
-			}
+			this.CollisionEvent();
         }
     
 		public Entity GetMainEntity()
