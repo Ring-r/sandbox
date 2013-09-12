@@ -1,4 +1,4 @@
-﻿namespace PositionBasedMethod
+﻿namespace Particles
 {
     public class Particle
     {
@@ -19,13 +19,13 @@
         #region Position-based
 
         public float radius;
-        public Vector3 position;
-        public Vector3 prevPosition;
-        public Vector3 acceleration;
+        public Vector position;
+        public Vector prevPosition;
+        public Vector acceleration;
 
         public void Move(float dt)
         {
-            Vector3 delta = this.position - this.prevPosition;
+            Vector delta = this.position - this.prevPosition;
             this.prevPosition = this.position;
             this.position += delta + this.acceleration * dt * dt;
         }

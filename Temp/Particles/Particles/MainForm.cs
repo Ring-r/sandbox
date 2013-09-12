@@ -3,11 +3,10 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-namespace PositionBasedMethod
+namespace Particles
 {
     public partial class MainForm : Form
     {
-        private float moveStep = 10;
         private World world = new World();
 
         public MainForm()

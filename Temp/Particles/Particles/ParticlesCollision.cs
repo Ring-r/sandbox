@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PositionBasedMethod
+namespace Particles
 {
     public class ParticlesCollision
     {
@@ -11,9 +11,9 @@ namespace PositionBasedMethod
             {
                 for (int j = i + 1; j < particlesCount; j++)
                 {
-                    Vector3 p1 = particles[i].position;
-                    Vector3 p2 = particles[j].position;
-                    Vector3 penetrationDirection = (p2 - p1);
+                    Vector p1 = particles[i].position;
+                    Vector p2 = particles[j].position;
+                    Vector penetrationDirection = (p2 - p1);
                     float penetrationSquareLength = penetrationDirection.SquareLength();
                     if (penetrationSquareLength < Math.Sqrt(particles[i].radius + particles[j].radius))
                     {

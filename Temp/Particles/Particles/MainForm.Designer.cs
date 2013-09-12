@@ -1,4 +1,4 @@
-﻿namespace PositionBasedMethod
+﻿namespace Particles
 {
     partial class MainForm
     {
