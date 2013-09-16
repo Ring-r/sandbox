@@ -24,12 +24,12 @@ namespace WeaponTest
         public float BulletsHeight = 5f;
         public float BulletsSpeed = 500f; // Points in second.
         public float BulletsHealth = 1f;
-        public float BulletsLifeTime = 10f; // Seconds.
+        public float BulletsLifeTime = 1f; // Seconds.
         //
         public int FragmetsCount = 3;
         public float FragmetsPart = 0.5f;
         //
-        public float ShotTime = 0.1f; // Time (seconds) for prepare bllet to shot.
+        public float ShotTime = 0.1f; // Time (seconds) for prepare bullet to shot.
         private int shotCount = 0;
         public int ShotCount = 10;
         //

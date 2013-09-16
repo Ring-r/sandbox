@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Entities;
 
 namespace WeaponTest
@@ -16,8 +12,9 @@ namespace WeaponTest
                 {
                     if (Check(evil.enemies[i], weapon.bullets[j]))
                     {
+                        float enemy_health = evil.enemies[i].Health;
                         evil.enemies[i].Health -= weapon.bullets[j].Health;
-                        weapon.bullets[j].Health -= evil.enemies[i].Health + weapon.bullets[j].Health;
+                        weapon.bullets[j].Health -= enemy_health;
                     }
                 }
 
@@ -28,10 +25,15 @@ namespace WeaponTest
         {
             bool isNotColide =
                 (enemy.X + enemy.Width <= bullet.X ||
-            	bullet.X + bullet.Width <= enemy.X ||
-            	enemy.Y + enemy.Height <= bullet.Y ||
-            	bullet.Y + bullet.Height <= enemy.Y);
+                bullet.X + bullet.Width <= enemy.X ||
+                enemy.Y + enemy.Height <= bullet.Y ||
+                bullet.Y + bullet.Height <= enemy.Y);
             return !isNotColide;
+
+            //float x = enemy.X - bullet.X;
+            //float y = enemy.Y - bullet.Y;
+            //float r = enemy.R + bullet.R;
+            //return x * x + y * y < r * r;
         }
     }
 }
