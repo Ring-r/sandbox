@@ -6,75 +6,90 @@ namespace Buildings
 {
     public class PolygonBuilder
     {
-        public List<LocatorZ> points;
-        public List<int> contour;
-        public List<Tuple<int, int, int>> triangles;
+        public readonly List<LocatorZ> points = new List<LocatorZ>();
+        public readonly List<int> contour = new List<int>();
+        public List<Tuple<int, int, int>> triangles = null;
 
-        public double Distance2D(LocatorZ loc1, LocatorZ loc2)
+        private static double Distance2D(LocatorZ loc1, LocatorZ loc2)
         {
             double dX = loc1.X - loc2.X;
             double dY = loc1.Y - loc2.Y;
             return Math.Sqrt(dX * dX + dY * dY);
         }
 
-        public PolygonBuilder(List<LocatorZ> points)
+        public void Clear()
         {
-            this.points = points;
-            this.contour = null;
-            this.triangles = null;
+            this.points.Clear();
+            this.contour.Clear();
         }
 
-        public void BuildContour(double radius)
+        public void Init(List<LocatorZ> points)
         {
-            // 0. Preparations
-            int pointCount = this.points.Count;
-            this.contour = new List<int>();
+            this.points.AddRange(points);
+        }
 
-            // 1. Get point with lowest X and mark it as origin
+        public void BuildContour(double radius, Func<bool> afterstep = null)
+        {
+            this.contour.Clear();
+
+            int currIndex = -1;
+            #region Find first point.
+
             double minX = double.MaxValue;
-            int lastIndex = -1;
-            for (int i = 0; i < pointCount; ++i)
+            for (int i = 0; i < this.points.Count; ++i)
             {
-                if (this.points[i].X < minX)
+                if (minX > this.points[i].X)
                 {
-                    lastIndex = i;
                     minX = this.points[i].X;
+                    currIndex = i;
                 }
             }
-            this.contour.Add(lastIndex);
+
+            #endregion Find first point.
+            this.contour.Add(currIndex);
 
             LocatorZ lastVector = new LocatorZ(0, 1, 0);
-            // 2. Start wrapping with small radius:
+            LocatorZ currPoint = this.points[currIndex];
+
+            bool isExit = false;
             do
             {
-                LocatorZ lastPoint = this.points[lastIndex];
-
                 int index = -1;
-                double glDist = double.MaxValue;
+                double glCos = double.MinValue;
                 double glLength = double.MinValue;
-                for (int i = 0; i < pointCount; ++i)
+                for (int i = 0; i < this.points.Count; ++i)
                 {
-                    if (i != lastIndex && this.Distance2D(this.points[i], lastPoint) <= radius)
+                    if (i != currIndex && Distance2D(this.points[i], currPoint) <= radius)
                     {
-                        LocatorZ vec = this.points[i] - lastPoint;
-                        double dist = vec.X * lastVector.Y - vec.Y * lastVector.X;
+                        LocatorZ vec = this.points[i] - currPoint;
+                        double cos = (vec.X * lastVector.X + vec.Y * lastVector.Y) / vec.Length2D() / lastVector.Length2D();
+                        double sign = vec.X * lastVector.Y - vec.Y * lastVector.X;
+                        if (sign > 0 || (sign == 0 && cos > 0))
+                        {
+                            cos = -cos - 2;
+                        }
                         double length = vec.Length2D();
 
-                        if (dist >= 0 && (glDist > dist || (glDist == dist && glLength < length)))
+                        if (cos < 0.5 && glCos < cos || (glCos == cos && glLength < length))
                         {
                             index = i;
-                            glDist = dist;
+                            glCos = cos;
                             glLength = length;
                         }
                     }
                 }
-                lastIndex = index;
-                lastVector = this.points[lastIndex] - lastPoint;
-                this.contour.Add(lastIndex);
+                currIndex = index;
+                this.contour.Add(currIndex);
+                if (afterstep != null)
+                {
+                    isExit = afterstep();
+                }
 
-                // Check if contour closed
-            } while (lastIndex != this.contour[0]);
-            this.contour.RemoveAt(this.contour.Count - 1); // Last vertice = first vertice
+                lastVector = currPoint - this.points[currIndex];
+                currPoint = this.points[currIndex];
+
+            } while (currIndex != this.contour[0] && !isExit);
+            //this.contour.RemoveAt(this.contour.Count - 1); // Last vertice = first vertice
         }
 
         public void TriangulateContour()

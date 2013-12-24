@@ -39,11 +39,5 @@ namespace Buildings
         {
             return Math.Sqrt(this.X * this.X + this.Y * this.Y);
         }
-
-        public void ProjectionAndRejection(LocatorZ axis, LocatorZ vector, out double projection, out double rejection)
-        {
-            projection = axis.DotProduct2D(vector) / axis.Length2D();
-            rejection = (vector - projection * axis).Length2D();
-        }
     }
 }
