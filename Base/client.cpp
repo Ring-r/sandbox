@@ -58,7 +58,7 @@ void Client::Draw() {
 void GetMessages(float* data, int data_size, bool* quit) {
 	UDPsocket socket = SDLNet_UDP_Open(DEFAULT_CLIENT_PORT);
 	if(!socket) {
-		std::cout << "SDLNet_UDP_Open" << std::endl; // TODO: Use log.
+		LogSdlError("SDLNet_UDP_Open");
 		return;
 	}
 

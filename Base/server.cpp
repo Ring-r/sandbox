@@ -3,8 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL/SDL_net.h>
 #include <random>
-
-#include <iostream>
+#include "base.hpp"
 
 Server::Server()
 	: count(0), positions(nullptr), vectors(nullptr) {
