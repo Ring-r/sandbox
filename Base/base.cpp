@@ -1,4 +1,4 @@
-#include "base.h"
+#include "base.hpp"
 
 #include <iostream>
 
@@ -28,24 +28,20 @@ bool Base::Init(std::string title) {
 		return false;
 	}
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
 	SDL_Rect window_rect;
 	SDL_GetDisplayBounds(0, &window_rect);
-	this->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_rect.w, window_rect.h, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_SHOWN);
+	window_rect.w = 700; window_rect.h = 700;
+	this->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_rect.w, window_rect.h, SDL_WINDOW_SHOWN); // SDL_WINDOW_FULLSCREEN_DESKTOP |
 	if(!this->window) {
 		LogSdlError("SDL_CreateWindow");
 		return false;
 	}
 
-	this->gl_context = SDL_GL_CreateContext(this->window);
-	if(!this->gl_context) {
-		LogSdlError("SDL_GL_CreateContext");
-		return false;
-	}
+//	this->gl_context = SDL_GL_CreateContext(this->window);
+//	if(!this->gl_context) {
+//		LogSdlError("SDL_GL_CreateContext");
+//		return false;
+//	}
 
 	this->renderer = SDL_CreateRenderer(this->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	if(!this->renderer) {
