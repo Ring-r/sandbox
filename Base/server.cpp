@@ -1,9 +1,7 @@
 #include "server.hpp"
 
-#include <SDL2/SDL.h>
-#include <SDL/SDL_net.h>
 #include <random>
-#include "base.hpp"
+#include <thread>
 
 Server::Server()
 	: count(0), positions(nullptr), vectors(nullptr) {
@@ -11,17 +9,9 @@ Server::Server()
 
 Server::~Server() {
 	this->Clear();
-	SDLNet_Quit();
-	SDL_Quit();
 }
 
 bool Server::Init(int count) {
-	if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		// LogSdlError("SDL_Init"); // TODO:
-		return false;
-	}
-	SDLNet_Init();
-
 	this->Clear();
 
 	this->count = count;
@@ -31,7 +21,7 @@ bool Server::Init(int count) {
 	this->positions = new float[size];
 	this->vectors = new float[size];
 	for(int i = 0; i < size; ++i) {
-		this->positions[i] = rand() % 700; // TODO: Use map.Width or other.
+		this->positions[i] = rand() % MAP_SIZE; // TODO: Use map.Width or other.
 		this->vectors[i] = 1.0 * rand() / RAND_MAX;
 	}
 
@@ -55,20 +45,53 @@ void Server::Update() {
 		if(this->positions[i] < 0) {
 			this->vectors[i] = std::abs(this->vectors[i]);
 		}
-		if(this->positions[i] > 700 - 64) {
+		if(this->positions[i] > MAP_SIZE - ENTITY_SIZE) {
 			this->vectors[i] = -std::abs(this->vectors[i]);
 		}
 	}
 }
 
-void Server::Run() {
-	// TODO: Create thread and get all message.
+void Server::ListenCmd(bool* quit) {
+	std::string str_cmd;
+	while(!*quit) {
+		std::cin >> str_cmd;
+		// TODO: Parse string.
+			// TODO: lock
+			// TODO: Run command(command.id, command.data, command.length);
+			// TODO: unlock
+	}
+}
 
+void Server::ListenNet(bool* quit) {
+	UDPsocket socket = SDLNet_UDP_Open(DEFAULT_SERVER_PORT);
+	if(!socket) {
+		LogSdlError("SDLNet_UDP_Open");
+		return;
+	}
+
+	UDPpacket* packet = SDLNet_AllocPacket(size); // TODO: unique_ptr. Find max length.
+	while(!*quit) {
+		if(SDLNet_UDP_Recv(socket, packet) > 0) {
+			// TODO: lock
+			// TODO: Run command(command.id, command.data, command.length);
+			// TODO: unlock
+		}
+	}
+
+	SDLNet_FreePacket(packet);
+	SDLNet_UDP_Close(socket);
+}
+
+void Server::Run() {
+	std::thread listen_cmd_thread(ListenCmd);
+	std::thread listen_net_thread(ListenNet);
+
+	// TODO: Move code to thread or function?
 	UDPpacket packet;
 	packet.len = sizeof(float) / sizeof(Uint8) * (this->count << 1);
 	packet.data = new Uint8[packet.len];
 
-	for(int i = 0; i < 5000; ++i) {
+	while(!this->quit) {
 		this->Update();
 
 		// TODO: lock
@@ -85,4 +108,7 @@ void Server::Run() {
 	}
 
 	delete packet.data;
+
+	listen_net_thread.join();
+	listen_cmd_thread.join();
 }

@@ -1,30 +1,24 @@
 #ifndef BASE_H
 #define BASE_H
 
-#include<SDL2/SDL.h>
+#include<SDL.h>
+//#include<SDL2/SDL.h>
+#include <SDL_net.h>
+//#include <SDL/SDL_net.h>
 #include <string>
 
 class Base {
-protected:
-	SDL_Window* window;
-	SDL_GLContext gl_context;
-	SDL_Renderer* renderer;
+private:
+	int sdl_init_error;
+	int sdlnet_init_error;
 
 public:
 	Base();
 	~Base();
-
-	bool Init(std::string title = "Base");
-
-	void ClearRenderer();
-	void DrawRenderer();
-
-	SDL_Texture* CreateTexture(std::string filename);
-	void ReleaseTexture(SDL_Texture* texture);
-	void DrawTexture(SDL_Texture* texture, int x = 0, int y = 0);
-
-	void DrawContext();
 };
+
+const int DEFAULT_SERVER_PORT = 11110;
+const int DEFAULT_CLIENT_PORT = 11111;
 
 void LogSdlError(const std::string& msg);
 

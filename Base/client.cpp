@@ -1,28 +1,23 @@
 #include "client.hpp"
 
-#include <SDL/SDL_net.h>
 #include <thread>
 
-#include <iostream>
-
 Client::Client()
-	: Base(), texture(nullptr), count(0), positions(nullptr), quit(false) {
+	: BaseRenderable(), texture(nullptr), count(0), positions(nullptr), quit(false) {
 }
 
 Client::~Client() {
 	this->Clear();
-	SDLNet_Quit();
 }
 
 bool Client::Init(int count) {
-	Base::Init();
-	SDLNet_Init();
+	BaseRenderable::Init("Client");
 
 	this->Clear();
 
 	this->texture = this->CreateTexture("./resources/entity.bmp");
 	if(!this->texture) {
-		return false; // TODO: Write to log and use default texture.
+		return false;
 	}
 
 	this->count = count;
@@ -56,6 +51,20 @@ void Client::Draw() {
 }
 
 void GetMessages(float* data, int data_size, bool* quit) {
+}
+
+void Client::ListenCmd() {
+	std::string str_cmd;
+	while(!this->quit) {
+		std::cin >> str_cmd;
+		// TODO: Parse string.
+			// TODO: lock
+			// TODO: Run command(command.id, command.data, command.length);
+			// TODO: unlock
+	}
+}
+
+void Client::ListenNet() {
 	UDPsocket socket = SDLNet_UDP_Open(DEFAULT_CLIENT_PORT);
 	if(!socket) {
 		LogSdlError("SDLNet_UDP_Open");
@@ -63,14 +72,13 @@ void GetMessages(float* data, int data_size, bool* quit) {
 	}
 
 	UDPpacket packet;
-	packet.len = sizeof(float) / sizeof(Uint8) * (data_size << 1);
+	packet.len = sizeof(float) / sizeof(Uint8) * (this->count << 1);
 	packet.data = new Uint8[packet.len];
 
-	std::cout << std::endl;
-	while (!*quit) {
+	while (!this->quit) {
 		if(SDLNet_UDP_Recv(socket, &packet) > 0) {
 			// TODO: lock
-			memcpy(data, packet.data, packet.len); // TODO: Clear before? Min...
+			memcpy(this->positions, packet.data, packet.len); // TODO: Clear before? Min...
 			// TODO: unlock
 		}
 	}
@@ -80,7 +88,8 @@ void GetMessages(float* data, int data_size, bool* quit) {
 }
 
 void Client::Run() {
-	std::thread getMessages(GetMessages, this->positions, this->count << 1, &this->quit);
+	std::thread listen_cmd_thread(ListenCmd);
+	std::thread listen_net_thread(ListenNet);
 
 	this->quit = false;
 	while(!this->quit) {
@@ -103,5 +112,6 @@ void Client::Run() {
 
 		// SDL_Delay(2000);
 	}
-	getMessages.join();
+	listen_net_thread.join();
+	listen_cmd_thread.join();
 }

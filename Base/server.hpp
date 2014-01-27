@@ -1,14 +1,23 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "base.hpp"
+
 class Server {
 private:
+	static const ENTITY_SIZE = 64;
+	static const MAP_SIZE = 700;
+private:
 	int count;
-	float* positions; // TODO: uniqe_ptr?
-	float* vectors; // TODO: uniqe_ptr?
+	float* positions;
+	float* vectors;
 
 	void Clear();
 	void Update();
+
+	bool quit;
+	void Server::ListenCmd();
+	void Server::ListenNet();
 
 public:
 	Server();
@@ -17,8 +26,5 @@ public:
 	bool Init(int count);
 	void Run();
 };
-
-const int DEFAULT_SERVER_PORT = 11110;
-const int DEFAULT_CLIENT_PORT = 11111; // TODO: Remove.
 
 #endif // SERVER_H

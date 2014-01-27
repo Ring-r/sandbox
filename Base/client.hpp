@@ -2,17 +2,21 @@
 #define CLIENT_H
 
 #include "base.hpp"
+#include "base_renderable.hpp"
 
-class Client : public Base {
+class Client : public BaseRenderable {
 private:
 	SDL_Texture* texture;
 	int count;
-	float* positions; // TODO: uniqe_ptr?
-	bool quit;
+	float* positions;
 
 	void Clear();
 	void Update();
 	void Draw();
+
+	bool quit;
+	void Server::ListenCmd();
+	void Server::ListenNet();
 
 public:
 	Client();
@@ -21,7 +25,5 @@ public:
 	bool Init(int count);
 	void Run();
 };
-
-const int DEFAULT_CLIENT_PORT = 11111;
 
 #endif // CLIENT_H
