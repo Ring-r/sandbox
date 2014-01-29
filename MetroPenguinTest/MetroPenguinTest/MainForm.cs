@@ -93,22 +93,14 @@ namespace MetroPenguinTest
             float vx = penguinOther.x - penguin.x;
             float vy = penguinOther.y - penguin.y;
             float d = (float)Math.Sqrt(vx * vx + vy * vy);
-            if (d == 0)
-            {
-                penguinOther.x -= Options.eps;
-                penguinOther.x += Options.eps;
-                vx = 2 * Options.eps;
-                d = 2 * Options.eps;
-            }
             float r = penguinOther.r + penguin.r;
 
-            if (d < r - Options.eps)
+            if (Options.eps < d && d < r - Options.eps)
             {
-                vx /= d;
-                vy /= d;
+                float coef = 0.5f * (r / d - 1);
 
-                vx *= (r - d) * 0.5f;
-                vy *= (r - d) * 0.5f;
+                vx *= coef;
+                vy *= coef;
 
                 penguinOther.x += vx;
                 penguinOther.y += vy;

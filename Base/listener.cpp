@@ -1,12 +1,10 @@
 #include "listener.hpp"
 
+#include "base.hpp"
 #include <iostream>
-#include <thread>
 
 Listener::Listener()
-	: quit(false) {
-	this->listen_cmd_thread(this->ListenCmd);
-	this->listen_net_thread(this->ListenNet);
+	: quit(false), listen_cmd_thread(Listener::ListenCmd), listen_net_thread(Listener::ListenNet) {
 }
 
 Listener::~Listener() {

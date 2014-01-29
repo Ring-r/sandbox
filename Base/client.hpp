@@ -2,9 +2,10 @@
 #define CLIENT_H
 
 #include "base.hpp"
+#include "listener.hpp"
 #include "base_renderable.hpp"
 
-class Client : public BaseRenderable {
+class Client : public Listener, public BaseRenderable {
 private:
 	SDL_Texture* texture;
 	int count;
@@ -13,10 +14,6 @@ private:
 	void Clear();
 	void Update();
 	void Draw();
-
-	bool quit;
-	void Server::ListenCmd();
-	void Server::ListenNet();
 
 public:
 	Client();

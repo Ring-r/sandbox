@@ -1,9 +1,7 @@
 #include "client.hpp"
 
-#include <thread>
-
 Client::Client()
-	: BaseRenderable(), texture(nullptr), count(0), positions(nullptr), quit(false) {
+	: Listener(), BaseRenderable(), texture(nullptr), count(0), positions(nullptr) {
 }
 
 Client::~Client() {
@@ -50,68 +48,48 @@ void Client::Draw() {
 	}
 }
 
-void GetMessages(float* data, int data_size, bool* quit) {
-}
-
-void Client::ListenCmd() {
-	std::string str_cmd;
-	while(!this->quit) {
-		std::cin >> str_cmd;
-		// TODO: Parse string.
-			// TODO: lock
-			// TODO: Run command(command.id, command.data, command.length);
-			// TODO: unlock
-	}
-}
-
-void Client::ListenNet() {
-	UDPsocket socket = SDLNet_UDP_Open(DEFAULT_CLIENT_PORT);
-	if(!socket) {
-		LogSdlError("SDLNet_UDP_Open");
-		return;
-	}
-
-	UDPpacket packet;
-	packet.len = sizeof(float) / sizeof(Uint8) * (this->count << 1);
-	packet.data = new Uint8[packet.len];
-
-	while (!this->quit) {
-		if(SDLNet_UDP_Recv(socket, &packet) > 0) {
-			// TODO: lock
-			memcpy(this->positions, packet.data, packet.len); // TODO: Clear before? Min...
-			// TODO: unlock
-		}
-	}
-
-	delete[] packet.data;
-	SDLNet_UDP_Close(socket);
-}
+//void Client::ListenNet() {
+//	UDPsocket socket = SDLNet_UDP_Open(DEFAULT_CLIENT_PORT);
+//	if(!socket) {
+//		LogSdlError("SDLNet_UDP_Open");
+//		return;
+//	}
+//
+//	UDPpacket packet;
+//	packet.len = sizeof(float) / sizeof(Uint8) * (this->count << 1);
+//	packet.data = new Uint8[packet.len];
+//
+//	while (!this->quit) {
+//		if(SDLNet_UDP_Recv(socket, &packet) > 0) {
+//			// TODO: lock
+//			memcpy(this->positions, packet.data, packet.len); // TODO: Clear before? Min...
+//			// TODO: unlock
+//		}
+//	}
+//
+//	delete[] packet.data;
+//	SDLNet_UDP_Close(socket);
+//}
 
 void Client::Run() {
-	std::thread listen_cmd_thread(ListenCmd);
-	std::thread listen_net_thread(ListenNet);
+	//while(!this->quit) {
+	//	SDL_Event sdl_event;
+	//	while(SDL_PollEvent(&sdl_event)) {
+	//		if(sdl_event.type == SDL_QUIT) {
+	//			this->quit = true;
+	//		}
+	//		if(sdl_event.type == SDL_KEYDOWN) {
+	//			if(sdl_event.key.keysym.sym == SDLK_ESCAPE) {
+	//				this->quit = true;
+	//			}
+	//		}
+	//	}
 
-	this->quit = false;
-	while(!this->quit) {
-		SDL_Event sdl_event;
-		while(SDL_PollEvent(&sdl_event)) {
-			if(sdl_event.type == SDL_QUIT) {
-				this->quit = true;
-			}
-			if(sdl_event.type == SDL_KEYDOWN) {
-				if(sdl_event.key.keysym.sym == SDLK_ESCAPE) {
-					this->quit = true;
-				}
-			}
-		}
+	//	this->Update();
+	//	this->ClearRenderer();
+	//	this->Draw();
+	//	this->DrawRenderer();
 
-		this->Update();
-		this->ClearRenderer();
-		this->Draw();
-		this->DrawRenderer();
-
-		// SDL_Delay(2000);
-	}
-	listen_net_thread.join();
-	listen_cmd_thread.join();
+	//	// SDL_Delay(2000);
+	//}
 }

@@ -10,6 +10,26 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\base.cpp" />
+    <ClCompile Include="..\base_renderable.cpp" />
+    <ClCompile Include="..\client.cpp" />
+    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\listener.cpp" />
+    <ClCompile Include="..\map.cpp" />
+    <ClCompile Include="..\server.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\base.hpp" />
+    <ClInclude Include="..\base_renderable.hpp" />
+    <ClInclude Include="..\client.hpp" />
+    <ClInclude Include="..\listener.hpp" />
+    <ClInclude Include="..\map.hpp" />
+    <ClInclude Include="..\server.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Makefile" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{D729E993-2446-4D50-AF70-B522C528FA57}</ProjectGuid>
     <RootNamespace>Base</RootNamespace>
@@ -37,10 +57,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\SDL2\include;$(IncludePath)</IncludePath>
+    <IncludePath>..\..\..\SDL\SDL2-2.0.1\include;..\..\..\SDL\SDL2_net-2.0.0\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>..\..\SDL2\lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\..\..\SDL\SDL2-2.0.1\lib\x64;..\..\..\SDL\SDL2_net-2.0.0\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -70,13 +90,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="base.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="base.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
