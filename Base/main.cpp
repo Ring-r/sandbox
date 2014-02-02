@@ -1,21 +1,13 @@
 #include "base.hpp"
-#include "client.hpp"
-#include "server.hpp"
+#include "game.hpp"
 
 int main(int argc, char* args[]) {
-	Base base; // TODO: If some error then return.
-
-	const int count = 10;
-
-	Client client;
-	if(!client.Init(count)) {
+	Base base;
+	if(base.Error()) {
 		return 1;
 	}
-	client.Run();
 
-	Server server;
-	if(!server.Init(count)) {
-		return 1;
-	}
-	server.Run();
+	Game game;
+	game.Run();
+	return 0;
 }

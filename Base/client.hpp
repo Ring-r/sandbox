@@ -3,9 +3,9 @@
 
 #include "base.hpp"
 #include "listener.hpp"
-#include "base_renderable.hpp"
+#include "sdl_viewer.hpp"
 
-class Client : public Listener, public BaseRenderable {
+class Client : public Listener, public SdlViewer {
 private:
 	SDL_Texture* texture;
 	int count;

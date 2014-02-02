@@ -13,7 +13,7 @@ Map::~Map() {
 bool Map::InitRandom(int count) {
 	this->Clear();
 
-	this->size[0] = Map::DEFAULT_SIZE; this->size[1] = Map::DEFAULT_SIZE; 
+	this->size[0] = DEFAULT_SIZE; this->size[1] = DEFAULT_SIZE;
 
 	this->count = count;
 

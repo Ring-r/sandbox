@@ -2,12 +2,6 @@
 #define MAP_H
 
 class Map {
-private:
-	static const float DEFAULT_SIZE = 700.0f;
-	static const float ENTITY_RADIUS = 32.0f;
-	static const float MIN_SPEED_COEF = 0.5f;
-	static const float MAX_SPEED_COEF = 1.5f;
-
 protected:
 	float size[2];
 
@@ -24,5 +18,10 @@ public:
 
 	bool InitRandom(int count);
 };
+
+static const float DEFAULT_SIZE = 700.0f;
+static const float ENTITY_RADIUS = 32.0f;
+static const float MIN_SPEED_COEF = 0.5f;
+static const float MAX_SPEED_COEF = 1.5f;
 
 #endif // MAP_H

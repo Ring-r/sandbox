@@ -1,10 +1,8 @@
 #ifndef BASE_H
 #define BASE_H
 
-#include<SDL.h>
-//#include<SDL2/SDL.h>
-#include <SDL_net.h>
-//#include <SDL/SDL_net.h>
+#include<SDL2/SDL.h>
+#include <SDL/SDL_net.h>
 #include <string>
 
 class Base {
@@ -15,6 +13,8 @@ private:
 public:
 	Base();
 	~Base();
+
+	bool Error();
 };
 
 const int DEFAULT_SERVER_PORT = 11110;

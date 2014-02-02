@@ -1,7 +1,7 @@
 #include "server.hpp"
 
 Server::Server()
-	: Listener(), Map() {
+	: Listener(DEFAULT_SERVER_PORT), Map() {
 }
 
 Server::~Server() {
@@ -11,7 +11,7 @@ bool Server::Init() {
 	return true;
 }
 
-//void Server::Run() {
+void Server::Run() {
 //	// TODO: Move code to thread or function?
 //	UDPpacket packet;
 //	packet.len = sizeof(float) / sizeof(Uint8) * (this->count << 1);
@@ -34,4 +34,4 @@ bool Server::Init() {
 //	}
 //
 //	delete packet.data;
-//}
+}

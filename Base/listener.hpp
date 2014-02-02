@@ -1,19 +1,25 @@
 #ifndef LISTENER_H
 #define LISTENER_H
 
+#include <map>
+#include <string>
 #include <thread>
 
 class Listener {
 protected:
 	bool quit;
-	std::thread listen_cmd_thread;
+	std::map<std::string, void(Listener::*)()> commands;
 	std::thread listen_net_thread;
-	void ListenCmd();
 	void ListenNet();
+	void QuitCmd();
 
 public:
-	Listener();
+	Listener(int port);
 	~Listener();
+
+	void Run();
 };
+
+const int MAX_COMMAND_LENGTH = 1024;
 
 #endif // LISTENER_H

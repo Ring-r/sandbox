@@ -1,7 +1,7 @@
 #include "client.hpp"
 
 Client::Client()
-	: Listener(), BaseRenderable(), texture(nullptr), count(0), positions(nullptr) {
+	: Listener(DEFAULT_CLIENT_PORT), SdlViewer(), texture(nullptr), count(0), positions(nullptr) {
 }
 
 Client::~Client() {
@@ -9,7 +9,7 @@ Client::~Client() {
 }
 
 bool Client::Init(int count) {
-	BaseRenderable::Init("Client");
+	SdlViewer::Init("Client");
 
 	this->Clear();
 
@@ -72,24 +72,24 @@ void Client::Draw() {
 //}
 
 void Client::Run() {
-	//while(!this->quit) {
-	//	SDL_Event sdl_event;
-	//	while(SDL_PollEvent(&sdl_event)) {
-	//		if(sdl_event.type == SDL_QUIT) {
-	//			this->quit = true;
-	//		}
-	//		if(sdl_event.type == SDL_KEYDOWN) {
-	//			if(sdl_event.key.keysym.sym == SDLK_ESCAPE) {
-	//				this->quit = true;
-	//			}
-	//		}
-	//	}
+	while(!this->quit) {
+		SDL_Event sdl_event;
+		while(SDL_PollEvent(&sdl_event)) {
+			if(sdl_event.type == SDL_QUIT) {
+				this->quit = true;
+			}
+			if(sdl_event.type == SDL_KEYDOWN) {
+				if(sdl_event.key.keysym.sym == SDLK_ESCAPE) {
+					this->quit = true;
+				}
+			}
+		}
 
-	//	this->Update();
-	//	this->ClearRenderer();
-	//	this->Draw();
-	//	this->DrawRenderer();
+		this->Update();
+		this->ClearViewer();
+		this->Draw();
+		this->EndDraw();
 
-	//	// SDL_Delay(2000);
-	//}
+		// SDL_Delay(2000);
+	}
 }

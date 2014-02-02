@@ -1,12 +1,28 @@
 CC = g++ -Wall -ansi -std=c++11
 
-all: client server
+all: base game
+	$(CC) main.cpp debug/*.o -o debug/base -lSDL2 -lSDL_net
 
-client:
-	$(CC) base.cpp client.cpp client_main.cpp -o debug/client -lSDL2 -lSDL_net -Wl,-rpath=/usr/local/lib
+base:
+	$(CC) -c base.cpp -o debug/base.o
 
-server:
-	$(CC) base.cpp server.cpp server_main.cpp -o debug/server -lSDL2 -lSDL_net -Wl,-rpath=/usr/local/lib
+game: client server
+	$(CC) -c game.cpp -o debug/game.o
+
+listener:
+	$(CC) -c listener.cpp -o debug/listener.o
+
+client: sdl_viewer listener
+	$(CC) -c client.cpp -o debug/client.o
+
+sdl_viewer:
+	$(CC) -c sdl_viewer.cpp -o debug/sdl_viewer.o
+
+server: map listener
+	$(CC) -c server.cpp -o debug/server.o
+
+map:
+	$(CC) -c map.cpp -o debug/map.o
 
 clean:
 	@echo Cleaning up...

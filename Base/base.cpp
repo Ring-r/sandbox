@@ -25,6 +25,10 @@ Base::~Base() {
 	}
 }
 
+bool Base::Error() {
+	return this->sdl_init_error != 0 || this->sdlnet_init_error != 0;
+}
+
 void LogSdlError(const std::string& msg) {
 	std::cerr << msg << " error: " << SDL_GetError() << std::endl;
 }

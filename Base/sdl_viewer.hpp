@@ -1,29 +1,30 @@
-#ifndef BASE_RENDERABLE_H
-#define BASE_RENDERABLE_H
+#ifndef SDL_VIEWER_H
+#define SDL_VIEWER_H
 
 #include "base.hpp"
 #include <string>
 
-class BaseRenderable {
+class SdlViewer {
 protected:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 
-public:
-	BaseRenderable();
-	~BaseRenderable();
-
 	void Clear();
+
+public:
+	SdlViewer();
+	~SdlViewer();
+
 	bool Init(const std::string& title);
 
-	void ClearRenderer();
-	void DrawRenderer();
+	void ClearViewer();
+	void EndDraw();
 
 	SDL_Texture* CreateTexture(const std::string& filename);
 	void ReleaseTexture(SDL_Texture* texture);
 	void DrawTexture(SDL_Texture* texture, int x = 0, int y = 0);
 
-	void DrawContext();
+	// TODO: Add function to work with fonts.
 };
 
-#endif // BASE_RENDERABLE_H
+#endif // SDL_VIEWER_H
