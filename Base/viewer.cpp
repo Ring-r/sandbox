@@ -32,7 +32,6 @@ void Viewer::Draw() {
 }
 
 void Viewer::Events() {
-	uint32_t data(0);
 	SDL_Event sdl_event;
 	while(SDL_PollEvent(&sdl_event)) {
 		if(sdl_event.type == SDL_QUIT) {

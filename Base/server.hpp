@@ -7,7 +7,7 @@
 
 #include <cstdint>
 
-class Server: public NetListener, public Map {
+class Server: public ListenerNet, public Map {
 public:
 	Server();
 	~Server();

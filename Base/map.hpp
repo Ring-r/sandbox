@@ -1,13 +1,15 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include <vector>
+
 class Map {
 protected:
-	float size[2];
+	float size[2]; // TODO: Magic number.
 
 	int count;
-	float* positions;
-	float* vectors;
+	std::vector<float> positions;
+	std::vector<float> vectors;
 
 	void Clear();
 	void Update();

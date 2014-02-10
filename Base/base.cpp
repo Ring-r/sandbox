@@ -3,30 +3,31 @@
 #include <iostream>
 
 Base::Base()
-	: sdl_init_error(-1), sdlnet_init_error(-1) {
-	this->sdl_init_error = SDL_Init(SDL_INIT_EVERYTHING);
-	if(this->sdl_init_error < 0) {
-		LogSdlError("SDL_Init");
-		return;
-	}
-	this->sdlnet_init_error = SDLNet_Init();
-	if(this->sdlnet_init_error < 0) {
-		LogSdlError("SDLNet_Init");
-		return;
-	}
+	: init(false) {
 }
 
 Base::~Base() {
-	if(!this->sdlnet_init_error) {
-		SDLNet_Quit();
-	}
-	if(!this->sdl_init_error) {
-		SDL_Quit();
-	}
+	this->Clear();
 }
 
-bool Base::Error() {
-	return this->sdl_init_error != 0 || this->sdlnet_init_error != 0;
+void Base::Clear() {
+	this->init = false;
+	SDLNet_Quit();
+	SDL_Quit();
+}
+
+void Base::Init() {
+	this->Clear();
+
+	if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+		LogSdlError("SDL_Init");
+		return;
+	}
+	if(SDLNet_Init() < 0) {
+		LogSdlError("SDLNet_Init");
+		return;
+	}
+	this->init = true;
 }
 
 void LogSdlError(const std::string& msg) {

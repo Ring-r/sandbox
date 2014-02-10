@@ -10,7 +10,7 @@ Server::~Server() {
 }
 
 void Server::Init(uint16_t port) {
-	NetListener::Init(port);
+	ListenerNet::Init(port);
 }
 
 void Server::Step() {

@@ -22,7 +22,7 @@ public:
 	~Viewer();
 
 	void Init();
-	void DoStep();
+	void DoStep(double seconds);
 };
 
 #endif // VIEWER_HPP

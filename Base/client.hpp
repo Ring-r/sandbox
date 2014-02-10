@@ -9,7 +9,7 @@
 #include <thread>
 #include <vector>
 
-class Client : public NetListener, public SdlViewer {
+class Client : public ListenerNet, public SdlViewer {
 private:
 	void Clear();
 

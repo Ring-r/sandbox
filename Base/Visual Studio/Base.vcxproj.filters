@@ -15,25 +15,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Makefile" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="..\base.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\base_renderable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\listener.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\server.cpp">
+    <ClCompile Include="..\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\map.cpp">
+    <ClCompile Include="..\viewer_sdl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\listener_cmd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,23 +38,17 @@
     <ClInclude Include="..\base.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\base_renderable.hpp">
+    <ClInclude Include="..\game.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\client.hpp">
+    <ClInclude Include="..\settings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\listener.hpp">
+    <ClInclude Include="..\viewer_sdl.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\server.hpp">
+    <ClInclude Include="..\listener_cmd.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\map.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Makefile" />
   </ItemGroup>
 </Project>

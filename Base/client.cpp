@@ -3,7 +3,7 @@
 #include "settings.hpp"
 
 Client::Client()
-	: NetListener(), SdlViewer(), texture(nullptr) {
+	: ListenerNet(), SdlViewer(), texture(nullptr) {
 }
 
 Client::~Client() {
@@ -98,7 +98,7 @@ void Client::Events() {
 }
 
 void Client::Init(uint16_t port) {
-	NetListener::Init(port);
+	ListenerNet::Init(port);
 	SdlViewer::Init("Client");
 
 	this->Clear();
