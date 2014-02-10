@@ -1,10 +1,10 @@
-#ifndef SDL_VIEWER_H
-#define SDL_VIEWER_H
+#ifndef VIEWER_SDL_H
+#define VIEWER_SDL_H
 
 #include "base.hpp"
 #include <string>
 
-class SdlViewer {
+class ViewerSdl {
 protected:
 	SDL_Window* window;
 	SDL_Renderer* renderer;
@@ -12,10 +12,10 @@ protected:
 	void Clear();
 
 public:
-	SdlViewer();
-	~SdlViewer();
+	ViewerSdl();
+	~ViewerSdl();
 
-	bool Init(const std::string& title);
+	void Init(const std::string& title);
 
 	void ClearViewer();
 	void EndDraw();
@@ -24,7 +24,7 @@ public:
 	void ReleaseTexture(SDL_Texture* texture);
 	void DrawTexture(SDL_Texture* texture, int x = 0, int y = 0);
 
-	// TODO: Add function to work with fonts.
+	// TODO: Add functions to work with fonts.
 };
 
-#endif // SDL_VIEWER_H
+#endif // VIEWER_SDL_H

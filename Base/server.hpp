@@ -2,18 +2,18 @@
 #define SERVER_H
 
 #include "base.hpp"
-#include "listener.hpp"
+#include "net_listener.hpp"
 #include "map.hpp"
 
-class Server: public Listener, public Map {
-private:
+#include <cstdint>
 
+class Server: public NetListener, public Map {
 public:
 	Server();
 	~Server();
 
-	bool Init();
-	void Run();
+	void Init(uint16_t port);
+	void Step();
 };
 
 #endif // SERVER_H

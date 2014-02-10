@@ -2,25 +2,35 @@
 #define CLIENT_H
 
 #include "base.hpp"
-#include "listener.hpp"
+#include "net_listener.hpp"
 #include "sdl_viewer.hpp"
 
-class Client : public Listener, public SdlViewer {
-private:
-	SDL_Texture* texture;
-	int count;
-	float* positions;
+#include <cstdint>
+#include <thread>
+#include <vector>
 
+class Client : public NetListener, public SdlViewer {
+private:
 	void Clear();
-	void Update();
+
+	IPaddress server_ip_address;
+	void SendToServer(uint32_t len, const uint8_t* data);
+
+	SDL_Texture* texture;
+	std::vector<float> positions;
+	void BeforDraw();
 	void Draw();
+
+	void Events();
 
 public:
 	Client();
 	~Client();
 
-	bool Init(int count);
-	void Run();
+	void Init(uint16_t port);
+	void ConnectTo(const IPaddress& ip_address);
+
+	void DoStep();
 };
 
 #endif // CLIENT_H

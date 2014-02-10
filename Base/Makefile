@@ -9,16 +9,16 @@ base:
 game: client server
 	$(CC) -c game.cpp -o debug/game.o
 
-listener:
-	$(CC) -c listener.cpp -o debug/listener.o
+net_listener:
+	$(CC) -c net_listener.cpp -o debug/net_listener.o
 
-client: sdl_viewer listener
+client: sdl_viewer net_listener
 	$(CC) -c client.cpp -o debug/client.o
 
 sdl_viewer:
 	$(CC) -c sdl_viewer.cpp -o debug/sdl_viewer.o
 
-server: map listener
+server: map net_listener
 	$(CC) -c server.cpp -o debug/server.o
 
 map:

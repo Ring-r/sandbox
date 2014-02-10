@@ -1,17 +1,19 @@
 #include "server.hpp"
 
+#include "settings.hpp"
+
 Server::Server()
-	: Listener(DEFAULT_SERVER_PORT), Map() {
+	: Map() {
 }
 
 Server::~Server() {
 }
 
-bool Server::Init() {
-	return true;
+void Server::Init(uint16_t port) {
+	NetListener::Init(port);
 }
 
-void Server::Run() {
+void Server::Step() {
 //	// TODO: Move code to thread or function?
 //	UDPpacket packet;
 //	packet.len = sizeof(float) / sizeof(Uint8) * (this->count << 1);

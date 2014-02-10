@@ -5,6 +5,8 @@
 #include <SDL/SDL_net.h>
 #include <string>
 
+#include <iostream>
+
 class Base {
 private:
 	int sdl_init_error;
