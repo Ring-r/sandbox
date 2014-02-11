@@ -1,7 +1,5 @@
 #include "base.hpp"
 
-#include <iostream>
-
 Base::Base()
 	: init(false) {
 }
@@ -27,9 +25,17 @@ void Base::Init() {
 		LogSdlError("SDLNet_Init");
 		return;
 	}
+	if(TTF_Init() < 0) {
+		LogTtfError("TTF_Init");
+		return;
+	}
 	this->init = true;
 }
 
 void LogSdlError(const std::string& msg) {
 	std::cerr << msg << " error: " << SDL_GetError() << std::endl;
+}
+
+void LogTtfError(const std::string& msg) {
+	std::cerr << msg << " error: " << TTF_GetError() << std::endl;
 }

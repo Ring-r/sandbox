@@ -1,28 +1,39 @@
 #include "game.hpp"
 
-#include <algorithm>
-#include <cstdint>
-
 Game::Game()
 	: quit(false) {
-	//// Common commands:
-	//this->commands["init_client"] = &Game::BaseInitClientCmd;
-	//this->commands["init_server"] = &Game::BaseInitServerCmd;
-	//this->commands["quit"] = &Game::BaseQuitCmd;
-	//// Client commands:
-	//this->commands["connect_to"] = &Game::ClientConnectToCmd;
-	//// Server commands:
-	//this->commands["create_map"] = &Game::ServerCreateMapCmd;
-	//this->commands["pause"] = &Game::ServerPauseCmd;
-	//this->commands["start"] = &Game::ServerStartCmd;
-	//this->commands["stop"] = &Game::ServerStopCmd;
 }
 
 Game::~Game() {
 	this->quit = true;
 }
 
-void Game::Listen() {
+void Game::Run() {
+	this->quit = false;
+	while(!this->quit) {
+		SDL_Event sdl_event;
+		while(SDL_PollEvent(&sdl_event)) {
+			if(sdl_event.type == SDL_QUIT) {
+				this->quit = true;
+			}
+			if(sdl_event.type == SDL_KEYDOWN) {
+				if(sdl_event.key.keysym.sym == SDLK_ESCAPE) {
+					this->quit = true;
+				}
+			}
+		}
+		//this->client.Step();
+		//this->server.Step();
+		this->ClearViewer();
+		SDL_Color color = { 192, 192, 192 };
+		SDL_Texture* text_texture = this->CreateTextTexture("0123456789abcdefghiklmnopqrstuvwxyz_", "C:\\Windows\\Fonts\\couri.ttf", color, 14); // TODO: Find cc0 ttf.
+		this->DrawTexture(text_texture);
+		this->ReleaseTexture(text_texture);
+		this->EndDraw();
+	}
+}
+
+//void Game::Listen() {
 	//std::cout << ">> Run game. Enter command." << std::endl;
 	//std::string str;
 	//while(!this->quit) {
@@ -36,15 +47,20 @@ void Game::Listen() {
 	//		std::cout << ">> Unknown command." << std::endl;
 	//	}
 	//}
-}
+//}
 
-void Game::Run() {
-	this->quit = false;
-	while(!this->quit) {
-		//this->client.Step();
-		//this->server.Step();
-	}
-}
+//// Common commands:
+//this->commands["init_client"] = &Game::BaseInitClientCmd;
+//this->commands["init_server"] = &Game::BaseInitServerCmd;
+//this->commands["quit"] = &Game::BaseQuitCmd;
+//// Client commands:
+//this->commands["connect_to"] = &Game::ClientConnectToCmd;
+//// Server commands:
+//this->commands["create_map"] = &Game::ServerCreateMapCmd;
+//this->commands["pause"] = &Game::ServerPauseCmd;
+//this->commands["start"] = &Game::ServerStartCmd;
+//this->commands["stop"] = &Game::ServerStopCmd;
+
 
 //void Game::BaseInitClientCmd(const std::string& params) {
 //	// TODO: Parse params.

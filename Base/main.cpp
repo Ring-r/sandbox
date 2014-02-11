@@ -1,8 +1,10 @@
-#include "base.hpp"
 #include "game.hpp"
 
+#undef main
 int main(int argc, char* args[]) {
-	Base base; base.Init();
-	Game game; game.Run();
+	Game game;
+	game.Base::Init();
+	game.ViewerSdl::Init("Test");
+	game.Run();
 	return 0;
 }

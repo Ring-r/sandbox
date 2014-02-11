@@ -24,7 +24,7 @@ void ViewerSdl::Init(const std::string& title) {
 
 	SDL_Rect window_rect;
 	SDL_GetDisplayBounds(0, &window_rect);
-	this->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_rect.w, window_rect.h, SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
+	this->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_rect.w >> 1, window_rect.h >> 1, SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
 	if(!this->window) {
 		LogSdlError("SDL_CreateWindow");
 	}
@@ -70,4 +70,19 @@ void ViewerSdl::DrawTexture(SDL_Texture* texture, int x, int y) {
 	rect.x = x; rect.y = y;
 	SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
 	SDL_RenderCopy(this->renderer, texture, NULL, &rect);
+}
+
+SDL_Texture* ViewerSdl::CreateTextTexture(std::string text, std::string fontFile, SDL_Color color, int fontSize) {
+    TTF_Font *font = TTF_OpenFont(fontFile.c_str(), fontSize);
+    if(!font) {
+		LogTtfError("TTF_OpenFont");
+		return nullptr;
+	}
+	
+    SDL_Surface *surf = TTF_RenderText_Blended(font, text.c_str(), color);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surf);
+    SDL_FreeSurface(surf);
+    TTF_CloseFont(font);
+ 
+    return texture;
 }

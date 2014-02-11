@@ -24,7 +24,7 @@ public:
 	void ReleaseTexture(SDL_Texture* texture);
 	void DrawTexture(SDL_Texture* texture, int x = 0, int y = 0);
 
-	// TODO: Add functions to work with fonts.
+	SDL_Texture* CreateTextTexture(std::string text, std::string fontFile, SDL_Color color, int fontSize); // TODO: Correct functions to work with fonts.
 };
 
 #endif // VIEWER_SDL_H

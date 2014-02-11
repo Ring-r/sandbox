@@ -10,25 +10,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Makefile" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\base.cpp" />
-    <ClCompile Include="..\game.cpp" />
-    <ClCompile Include="..\listener_cmd.cpp" />
-    <ClCompile Include="..\main.cpp" />
-    <ClCompile Include="..\viewer_sdl.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\base.hpp" />
-    <ClInclude Include="..\game.hpp" />
-    <ClInclude Include="..\listener_cmd.hpp" />
-    <ClInclude Include="..\settings.hpp" />
-    <ClInclude Include="..\viewer_sdl.hpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D729E993-2446-4D50-AF70-B522C528FA57}</ProjectGuid>
+    <ProjectGuid>{0B66EC65-DBCC-4A01-924C-A7C1CAF9669A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
     <RootNamespace>Base</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -41,7 +25,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -54,40 +38,60 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\..\..\SDL\SDL2-2.0.1\include;..\..\..\SDL\SDL2_net-2.0.0\include;$(IncludePath)</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\..\..\SDL\SDL2-2.0.1\include;..\..\..\SDL\SDL2_net-2.0.0\include;..\..\..\SDL\SDL2_ttf-2.0.12\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSdkDir)include;$(FrameworkSDKDir)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\..\SDL\SDL2-2.0.1\lib\x86;..\..\..\SDL\SDL2_net-2.0.0\lib\x86;..\..\..\SDL\SDL2_ttf-2.0.12\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>..\..\..\SDL\SDL2-2.0.1\lib\x86;..\..\..\SDL\SDL2_net-2.0.0\lib\x86;$(LibraryPath)</LibraryPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2_net.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <NoEntryPoint>false</NoEntryPoint>
-      <AdditionalDependencies>SDL2.lib;SDL2_net.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\base.cpp" />
+    <ClCompile Include="..\game.cpp" />
+    <ClCompile Include="..\main.cpp">
+      <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Cdecl</CallingConvention>
+    </ClCompile>
+    <ClCompile Include="..\viewer_sdl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\base.hpp" />
+    <ClInclude Include="..\game.hpp" />
+    <ClInclude Include="..\settings.hpp" />
+    <ClInclude Include="..\viewer_sdl.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
