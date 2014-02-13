@@ -19,6 +19,7 @@ public:
 	void Init();
 };
 
+void LogError(const std::string& msg);
 void LogSdlError(const std::string& msg);
 void LogTtfError(const std::string& msg);
 

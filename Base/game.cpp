@@ -1,5 +1,7 @@
 #include "game.hpp"
 
+#include "terminal.hpp"
+
 Game::Game()
 	: quit(false) {
 }
@@ -8,29 +10,32 @@ Game::~Game() {
 	this->quit = true;
 }
 
+void Game::Event(const SDL_Event& sdl_event) {
+	if(sdl_event.type == SDL_QUIT) {
+		this->quit = true;
+	}
+	if(sdl_event.type == SDL_KEYDOWN) {
+		if(sdl_event.key.keysym.sym == SDLK_ESCAPE) {
+			this->quit = true;
+		}
+	}
+}
+
 void Game::Run() {
 	this->quit = false;
+	Terminal terminal; terminal.Init(this->window, this->renderer);
 	while(!this->quit) {
 		SDL_Event sdl_event;
 		while(SDL_PollEvent(&sdl_event)) {
-			if(sdl_event.type == SDL_QUIT) {
-				this->quit = true;
-			}
-			if(sdl_event.type == SDL_KEYDOWN) {
-				if(sdl_event.key.keysym.sym == SDLK_ESCAPE) {
-					this->quit = true;
-				}
-			}
+			this->Event(sdl_event);
+			terminal.Event(sdl_event);
 		}
-		//this->client.Step();
-		//this->server.Step();
+
 		this->ClearViewer();
-		SDL_Color color = { 192, 192, 192 };
-		SDL_Texture* text_texture = this->CreateTextTexture("0123456789abcdefghiklmnopqrstuvwxyz_", "C:\\Windows\\Fonts\\couri.ttf", color, 14); // TODO: Find cc0 ttf.
-		this->DrawTexture(text_texture);
-		this->ReleaseTexture(text_texture);
+		terminal.DoStep();
 		this->EndDraw();
 	}
+	terminal.Clear();
 }
 
 //void Game::Listen() {

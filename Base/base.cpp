@@ -32,6 +32,10 @@ void Base::Init() {
 	this->init = true;
 }
 
+void LogError(const std::string& msg) {
+	std::cerr << msg << " error: " << std::endl;
+}
+
 void LogSdlError(const std::string& msg) {
 	std::cerr << msg << " error: " << SDL_GetError() << std::endl;
 }

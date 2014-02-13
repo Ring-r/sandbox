@@ -10,6 +10,8 @@ private:
 	bool quit;
 	Settings settings;
 
+	void Event(const SDL_Event& sdl_event);
+
 public:
 	Game();
 	~Game();
