@@ -1,6 +1,7 @@
 #include "game.hpp"
 
-#include "terminal.hpp"
+#include "client.hpp"
+#include "server.hpp"
 
 Game::Game()
 	: quit(false) {
@@ -23,19 +24,19 @@ void Game::Event(const SDL_Event& sdl_event) {
 
 void Game::Run() {
 	this->quit = false;
-	Terminal terminal; terminal.Init(this->window, this->renderer);
+	Client client; client.Init(this->window, this->renderer);
 	while(!this->quit) {
 		SDL_Event sdl_event;
 		while(SDL_PollEvent(&sdl_event)) {
 			this->Event(sdl_event);
-			terminal.Event(sdl_event);
+			client.Event(sdl_event);
 		}
 
 		this->ClearViewer();
-		terminal.DoStep();
+		client.DoStep();
 		this->EndDraw();
 	}
-	terminal.Clear();
+	client.Clear();
 }
 
 //void Game::Listen() {

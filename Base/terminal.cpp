@@ -1,7 +1,5 @@
 #include "terminal.hpp"
 
-#include <string>
-
 Terminal::Terminal()
 	: init(false) {
 }

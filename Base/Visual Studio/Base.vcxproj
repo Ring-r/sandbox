@@ -80,18 +80,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\base.cpp" />
+    <ClCompile Include="..\client.cpp" />
     <ClCompile Include="..\game.cpp" />
+    <ClCompile Include="..\listener_net.cpp" />
     <ClCompile Include="..\main.cpp">
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Cdecl</CallingConvention>
     </ClCompile>
-    <ClCompile Include="..\terminal.cpp" />
+    <ClCompile Include="..\server.cpp" />
     <ClCompile Include="..\viewer_sdl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base.hpp" />
+    <ClInclude Include="..\client.hpp" />
     <ClInclude Include="..\game.hpp" />
+    <ClInclude Include="..\listener_net.hpp" />
+    <ClInclude Include="..\server.hpp" />
     <ClInclude Include="..\settings.hpp" />
-    <ClInclude Include="..\terminal.hpp" />
     <ClInclude Include="..\viewer_sdl.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

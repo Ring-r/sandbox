@@ -1,6 +1,8 @@
 #ifndef LISTENER_NET_H
 #define LISTENER_NET_H
 
+#include "base.hpp"
+
 #include <cstdint>
 #include <map>
 
