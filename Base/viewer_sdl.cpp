@@ -43,7 +43,7 @@ void ViewerSdl::EndDraw() {
 	SDL_RenderPresent(this->renderer);
 }
 
-SDL_Texture* ViewerSdl::CreateTexture(const std::string& filename) {
+SDL_Texture* ViewerSdl::CreateTexture(const std::string& filename) const {
 	SDL_Surface* loadedImage = SDL_LoadBMP(filename.c_str());
 	if(!loadedImage) {
 		LogSdlError("SDL_LoadBMP");
@@ -65,14 +65,14 @@ void ViewerSdl::ReleaseTexture(SDL_Texture* texture) {
 	}
 }
 
-void ViewerSdl::DrawTexture(SDL_Texture* texture, int x, int y) {
+void ViewerSdl::DrawTexture(SDL_Texture* texture, int x, int y) const {
 	SDL_Rect rect;
 	rect.x = x; rect.y = y;
 	SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
 	SDL_RenderCopy(this->renderer, texture, NULL, &rect);
 }
 
-SDL_Texture* ViewerSdl::CreateTextTexture(std::string text, std::string fontFile, SDL_Color color, int fontSize) {
+SDL_Texture* ViewerSdl::CreateTextTexture(std::string text, std::string fontFile, SDL_Color color, int fontSize) const {
     TTF_Font *font = TTF_OpenFont(fontFile.c_str(), fontSize);
     if(!font) {
 		LogTtfError("TTF_OpenFont");

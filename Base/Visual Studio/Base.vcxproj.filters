@@ -1,63 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Base">
+      <UniqueIdentifier>{1d272389-a825-4442-a4bd-f5cb9c923bfa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="ClientServer">
+      <UniqueIdentifier>{614f08d9-c2b9-4c46-ba31-6ad4d583b73f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Others">
+      <UniqueIdentifier>{4dec747e-4b19-4874-80a2-9c653e163d72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{f0d6553b-a0e8-4e2f-89b0-61cf24559524}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\base.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="..\game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\viewer_sdl.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="..\client.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ClientServer</Filter>
     </ClCompile>
     <ClCompile Include="..\server.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>ClientServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\main.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="..\listener_net.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\viewer_sdl.cpp">
+      <Filter>Others</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hero.cpp">
+      <Filter>Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\_.hpp">
+      <Filter>Base</Filter>
+    </ClInclude>
     <ClInclude Include="..\base.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="..\game.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\settings.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\viewer_sdl.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="..\client.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>ClientServer</Filter>
     </ClInclude>
     <ClInclude Include="..\server.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>ClientServer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\settings.hpp">
+      <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="..\listener_net.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Others</Filter>
+    </ClInclude>
+    <ClInclude Include="..\viewer_sdl.hpp">
+      <Filter>Others</Filter>
+    </ClInclude>
+    <ClInclude Include="..\hero.hpp">
+      <Filter>Test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

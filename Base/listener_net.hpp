@@ -1,18 +1,15 @@
 #ifndef LISTENER_NET_H
 #define LISTENER_NET_H
 
-#include "base.hpp"
+#include "_.hpp"
 
-#include <cstdint>
-#include <map>
-
-abstract class ListenerNet {
+class ListenerNet {
 protected:
 	bool init;
 	uint16_t port;
 	UDPsocket socket;
 	UDPpacket* packet;
-	std::map<uint16_t, void(ListenerNet::*)()> commands;
+	std::map<uint16_t, void(ListenerNet::*)(UDPpacket* packet)> commands;
 
 	void Clear();
 

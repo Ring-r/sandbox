@@ -1,17 +1,9 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "base.hpp"
-#include "viewer_sdl.hpp"
-#include "settings.hpp"
+#include "_.hpp"
 
-class Game : public Base, public ViewerSdl {
-private:
-	bool quit;
-	Settings settings;
-
-	void Event(const SDL_Event& sdl_event);
-
+class Game {
 public:
 	Game();
 	~Game();

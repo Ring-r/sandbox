@@ -1,8 +1,5 @@
 #include "listener_net.hpp"
 
-#include "base.hpp"
-#include <algorithm>
-
 ListenerNet::ListenerNet()
 	: init(false), port(0), socket(nullptr), packet(nullptr) {
 }

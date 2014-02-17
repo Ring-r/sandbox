@@ -1,23 +1,7 @@
 #ifndef BASE_H
 #define BASE_H
 
-#include <iostream>
-#include <SDL.h> //#include <SDL2/SDL.h>
-#include <SDL_net.h> //#include <SDL2/SDL_net.h>
-#include <SDL_ttf.h> //#include <SDL2/SDL_ttf.h>
-#include <string>
-
-class Base {
-private:
-	bool init;
-	void Clear();
-
-public:
-	Base();
-	~Base();
-
-	void Init();
-};
+#include "_.hpp"
 
 void LogError(const std::string& msg);
 void LogSdlError(const std::string& msg);

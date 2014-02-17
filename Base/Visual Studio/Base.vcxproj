@@ -82,6 +82,7 @@
     <ClCompile Include="..\base.cpp" />
     <ClCompile Include="..\client.cpp" />
     <ClCompile Include="..\game.cpp" />
+    <ClCompile Include="..\hero.cpp" />
     <ClCompile Include="..\listener_net.cpp" />
     <ClCompile Include="..\main.cpp">
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Cdecl</CallingConvention>
@@ -93,10 +94,12 @@
     <ClInclude Include="..\base.hpp" />
     <ClInclude Include="..\client.hpp" />
     <ClInclude Include="..\game.hpp" />
+    <ClInclude Include="..\hero.hpp" />
     <ClInclude Include="..\listener_net.hpp" />
     <ClInclude Include="..\server.hpp" />
     <ClInclude Include="..\settings.hpp" />
     <ClInclude Include="..\viewer_sdl.hpp" />
+    <ClInclude Include="..\_.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
