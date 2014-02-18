@@ -1,37 +1,18 @@
 #include "hero.hpp"
 
-Hero::Hero()
-	: x(0), y(0), texture(nullptr) {
-}
-
-Hero::~Hero() {
-	this->Clear();
-}
-
-void Hero::Clear() {
-	if(this->texture) {
-		ViewerSdl::ReleaseTexture(this->texture);
-		this->texture = nullptr;
-	}
-	this->viewer = nullptr;
-}
-
-void Hero::Init(const ViewerSdl* viewer) {
-	this->Clear();
-	this->viewer = viewer;
-	if(this->viewer) {
-		this->texture = this->viewer->CreateTexture("./resources/entity.bmp");
-	}
-}
-
-void Hero::Event(const SDL_Event& sdl_event) {
-	const uint8_t *keys = SDL_GetKeyboardState(NULL);
-	x += keys[SDL_SCANCODE_RIGHT] - keys[SDL_SCANCODE_LEFT];
-	y += keys[SDL_SCANCODE_DOWN] - keys[SDL_SCANCODE_UP];
-}
-
 void Hero::DoStep() {
-	if(this->viewer) {
-		this->viewer->DrawTexture(this->texture, this->x, this->y);
-	}
+	const uint8_t *keys = SDL_GetKeyboardState(NULL);
+	float coef = keys[SDL_SCANCODE_DOWN] | keys[SDL_SCANCODE_UP]? 0.5f : 1.0f;
+	this->angle += coef * DEFAULT_ANGLE_STEP * (keys[SDL_SCANCODE_RIGHT] - keys[SDL_SCANCODE_LEFT]);
+	this->speed = DEFAULT_SPEED * (keys[SDL_SCANCODE_DOWN] - keys[SDL_SCANCODE_UP]);
+	this->vx = std::cos(this->angle * M_PI / 180) * this->speed;
+	this->vy = std::sin(this->angle * M_PI / 180) * this->speed;
+	this->px += this->vx;
+	this->py += this->vy;
+}
+
+void Hero::Draw(SDL_Renderer* renderer, SDL_Texture* texture) const {
+	SDL_Point point; point.x = this->r; point.y = this->r;
+	SDL_Rect rect; rect.x = this->px - this->r; rect.y = this->py - this->r; rect.w = rect.h = this->r + this->r;
+	SDL_RenderCopyEx(renderer, texture, NULL, &rect, 0, &point, SDL_FLIP_NONE);
 }

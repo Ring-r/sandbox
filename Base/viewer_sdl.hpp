@@ -16,12 +16,15 @@ public:
 
 	void Init(const std::string& title);
 
+	SDL_Renderer* GetRenderer();
+
 	void ClearViewer();
 	void EndDraw();
 
 	SDL_Texture* CreateTexture(const std::string& filename) const;
 	static void ReleaseTexture(SDL_Texture* texture);
 	void DrawTexture(SDL_Texture* texture, int x = 0, int y = 0) const;
+	void DrawRoundTexture(SDL_Texture* texture, int x, int y, int r, double a) const;
 
 	SDL_Texture* CreateTextTexture(std::string text, std::string fontFile, SDL_Color color, int fontSize) const; // TODO: Correct functions to work with fonts.
 };

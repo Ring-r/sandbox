@@ -1,26 +1,12 @@
 #ifndef HERO_H
 #define HERO_H
 
-#include "_.hpp"
+#include "entity.hpp"
 
-class ViewerSdl;
-
-class Hero {
-private:
-	const ViewerSdl* viewer;
-
-	int x, y;
-	SDL_Texture* texture;
-
-	void Clear();
-
+class Hero : public Entity {
 public:
-	Hero();
-	~Hero();
-
-	void Init(const ViewerSdl* viewer);
-	void Event(const SDL_Event& sdl_event);
 	void DoStep();
+	void Draw(SDL_Renderer* renderer, SDL_Texture* texture) const;
 };
 
 #endif // HERO_H

@@ -13,6 +13,9 @@
     <Filter Include="Test">
       <UniqueIdentifier>{f0d6553b-a0e8-4e2f-89b0-61cf24559524}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{301e35ae-4763-446a-8d6d-672bc30afa0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\base.cpp">
@@ -36,7 +39,13 @@
     <ClCompile Include="..\viewer_sdl.cpp">
       <Filter>Others</Filter>
     </ClCompile>
+    <ClCompile Include="..\entity.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
     <ClCompile Include="..\hero.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\level.cpp">
       <Filter>Test</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,6 +75,12 @@
       <Filter>Others</Filter>
     </ClInclude>
     <ClInclude Include="..\hero.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\entity.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\level.hpp">
       <Filter>Test</Filter>
     </ClInclude>
   </ItemGroup>

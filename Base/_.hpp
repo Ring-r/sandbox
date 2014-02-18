@@ -4,9 +4,12 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <cstdlib>
 #include <iostream>
 #include <map>
+#include <cmath>
 #include <string>
+#include <vector>
 
 #include "base.hpp"
 #include "game.hpp"
@@ -18,5 +21,3 @@
 
 //#include "client.hpp"
 //#include "server.hpp"
-
-#include "hero.hpp"

@@ -35,6 +35,10 @@ void ViewerSdl::Init(const std::string& title) {
 	}
 }
 
+SDL_Renderer* ViewerSdl::GetRenderer() {
+	return this->renderer;
+}
+
 void ViewerSdl::ClearViewer() {
 	SDL_RenderClear(this->renderer);
 }
@@ -66,10 +70,16 @@ void ViewerSdl::ReleaseTexture(SDL_Texture* texture) {
 }
 
 void ViewerSdl::DrawTexture(SDL_Texture* texture, int x, int y) const {
-	SDL_Rect rect;
-	rect.x = x; rect.y = y;
+	SDL_Rect rect; rect.x = x; rect.y = y;
 	SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
 	SDL_RenderCopy(this->renderer, texture, NULL, &rect);
+}
+
+void ViewerSdl::DrawRoundTexture(SDL_Texture* texture, int x, int y, int r, double a) const {
+	SDL_Point point; point.x = x; point.y = y;
+	SDL_Rect rect; rect.x = x - r; rect.y = y - r;
+	SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+	SDL_RenderCopyEx(this->renderer, texture, NULL, &rect, a, &point, SDL_FLIP_NONE);
 }
 
 SDL_Texture* ViewerSdl::CreateTextTexture(std::string text, std::string fontFile, SDL_Color color, int fontSize) const {
