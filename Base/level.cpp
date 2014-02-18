@@ -43,6 +43,7 @@ void Level::Draw(SDL_Renderer* renderer, SDL_Texture* texture) const {
 		hero.py = std::cos(angle_rad) * x + std::sin(angle_rad) * y;
 		hero.px += 0.5f * this->size_x;
 		hero.py += 0.5f * this->size_y;
+		hero.angle = 0;
 		hero.Draw(renderer, texture);
 	}
 }
