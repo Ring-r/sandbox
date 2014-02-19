@@ -30,7 +30,7 @@ void Game::Run() {
 
 	// TODO: Init somes.
 	SDL_Texture* texture = viewer.CreateTexture("./resources/entity.bmp");
-	Level level(10, 1, true);
+	Level level(50, 1, true);
 
 	while(!quit) {
 		SDL_Event sdl_event;

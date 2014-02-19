@@ -18,7 +18,7 @@ public:
 	void Draw(SDL_Renderer* renderer, SDL_Texture* texture) const;
 };
 
-const float DEFAULT_SIZE_X = 500.0f;
-const float DEFAULT_SIZE_Y = 500.0f;
+const float DEFAULT_SIZE_X = 1000.0f;
+const float DEFAULT_SIZE_Y = 1000.0f;
 
 #endif // LEVEL_H
