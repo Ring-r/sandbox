@@ -7,6 +7,8 @@ void LogError(const std::string& msg);
 void LogSdlError(const std::string& msg);
 void LogTtfError(const std::string& msg);
 
+const float EPS = 0.0001;
+
 const float TO_DEG = 180.0f / M_PI;
 const float TO_RAD = M_PI / 180.0f;
 

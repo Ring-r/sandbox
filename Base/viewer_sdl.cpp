@@ -35,6 +35,10 @@ void ViewerSdl::Init(const std::string& title) {
 	}
 }
 
+SDL_Window* ViewerSdl::GetWindow() {
+	return this->window;
+}
+
 SDL_Renderer* ViewerSdl::GetRenderer() {
 	return this->renderer;
 }
