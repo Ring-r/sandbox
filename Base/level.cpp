@@ -10,7 +10,7 @@ Level::Level(uint8_t count, uint8_t index, bool random_init)
 	this->index = index;
 	if(random_init) {
 		for(size_t i = 0; i < this->heroes.size(); ++i) {
-			this->heroes[i].angle = rand() % 360;
+			this->heroes[i].angle = static_cast<float>(rand() % 360);
 			this->heroes[i].px = 1.0f * rand() / RAND_MAX * this->size_x;
 			this->heroes[i].py = 1.0f * rand() / RAND_MAX * this->size_y;
 
@@ -67,8 +67,8 @@ void Level::DoStep() {
 		//this->cells[this->heroes[i].cell_index] = i;
 	}
 
-	for(int i = 0; i < this->heroes.size() - 1; ++i) {
-		for(int j = i + 1; j < this->heroes.size(); ++j) {
+	for(size_t i = 0; i < this->heroes.size() - 1; ++i) {
+		for(size_t j = i + 1; j < this->heroes.size(); ++j) {
 			collision(this->heroes[i], this->heroes[j]);
 		}
 	}
