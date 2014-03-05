@@ -16,6 +16,7 @@ public:
 
 	void Init(const std::string& title);
 
+	SDL_Window* GetWindow();
 	SDL_Renderer* GetRenderer();
 
 	void ClearViewer();

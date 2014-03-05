@@ -12,6 +12,8 @@ public:
 
 	float r;
 
+	uint16_t cell_index;
+
 public:
 	Entity();
 	~Entity();

@@ -31,6 +31,9 @@ void Game::Run() {
 	// TODO: Init somes.
 	SDL_Texture* texture = viewer.CreateTexture("./resources/entity.bmp");
 	Level level(50, 1, true);
+	int w, h;
+	SDL_GetWindowSize(viewer.GetWindow(), &w, &h);
+	level.SetScreenCenter(w >> 1, h >> 1);
 
 	while(!quit) {
 		SDL_Event sdl_event;

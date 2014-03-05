@@ -5,11 +5,8 @@
 
 class Map {
 protected:
-	float size[2]; // TODO: Magic number.
-
-	int count;
-	std::vector<float> positions;
-	std::vector<float> vectors;
+	int count_x, count_y;
+	std::vector<uint8_t> cells;
 
 	void Clear();
 	void Update();
@@ -17,8 +14,6 @@ protected:
 public:
 	Map();
 	~Map();
-
-	bool InitRandom(int count);
 };
 
 static const float DEFAULT_SIZE = 700.0f;

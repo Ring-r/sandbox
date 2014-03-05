@@ -16,8 +16,3 @@
 #include "settings.hpp"
 
 #include "viewer_sdl.hpp"
-
-#include "listener_net.hpp"
-
-//#include "client.hpp"
-//#include "server.hpp"
