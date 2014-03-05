@@ -1,6 +1,9 @@
-#include <SDL.h> //#include <SDL2/SDL.h>
-#include <SDL_net.h> //#include <SDL2/SDL_net.h>
-#include <SDL_ttf.h> //#include <SDL2/SDL_ttf.h>
+#include <SDL.h>
+//#include <SDL2/SDL.h>
+#include <SDL_net.h>
+//#include <SDL/SDL_net.h>
+#include <SDL_ttf.h>
+//#include <SDL/SDL_ttf.h>
 
 #include <algorithm>
 #include <cstdint>
