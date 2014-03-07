@@ -89,6 +89,7 @@
     <ClCompile Include="..\main.cpp">
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Cdecl</CallingConvention>
     </ClCompile>
+    <ClCompile Include="..\map.cpp" />
     <ClCompile Include="..\server.cpp" />
     <ClCompile Include="..\viewer_sdl.cpp" />
   </ItemGroup>
@@ -100,6 +101,7 @@
     <ClInclude Include="..\hero.hpp" />
     <ClInclude Include="..\level.hpp" />
     <ClInclude Include="..\listener_net.hpp" />
+    <ClInclude Include="..\map.hpp" />
     <ClInclude Include="..\server.hpp" />
     <ClInclude Include="..\settings.hpp" />
     <ClInclude Include="..\viewer_sdl.hpp" />

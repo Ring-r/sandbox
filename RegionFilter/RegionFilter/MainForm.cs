@@ -11,9 +11,11 @@ namespace RegionFilter
 {
     public partial class MainForm : Form
     {
-        private readonly List<PointF> pointList = new List<PointF>();
+        private readonly List<List<PointF>> points = new List<List<PointF>>();
         private readonly Region region = new Region();
-        private const int regionPointCount = 100;
+
+        private const int defaultPointCount = 10;
+        private const int defaultRegionCount = 10;
 
         public MainForm()
         {
@@ -28,18 +30,22 @@ namespace RegionFilter
             }
             if (e.KeyData == Keys.F2)
             {
-                this.pointList.Clear();
-                this.region.Update(this.pointList);
+                this.points.Clear();
+                this.region.Update(this.points);
             }
             if (e.KeyData == Keys.F3)
             {
                 Random random = new Random();
-                this.pointList.Clear();
-                for (int i = 0; i < regionPointCount; ++i)
+                this.points.Clear();
+                for (int i = 0; i < defaultRegionCount; ++i)
                 {
-                    this.pointList.Add(new PointF(random.Next(this.ClientSize.Width), random.Next(this.ClientSize.Height)));
+                    this.points.Add(new List<PointF>());
+                    for (int j = 0; j < defaultPointCount; ++j)
+                    {
+                        this.points[i].Add(new PointF(random.Next(this.ClientSize.Width), random.Next(this.ClientSize.Height)));
+                    }
                 }
-                this.region.Update(this.pointList);
+                this.region.Update(this.points);
 
                 this.Invalidate();
             }
@@ -72,16 +78,23 @@ namespace RegionFilter
                 e.Graphics.DrawImageUnscaled(bitmap, 0, 0);
             }
 
-            if (this.pointList.Count > 1)
+            foreach (List<PointF> points in this.points)
             {
-                e.Graphics.DrawPolygon(Pens.Red, this.pointList.ToArray());
+                if (points.Count > 1)
+                {
+                    e.Graphics.DrawPolygon(Pens.Red, points.ToArray());
+                }
             }
         }
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-            this.pointList.Add(new PointF(e.X, e.Y));
-            this.region.Update(this.pointList);
+            if (e.Button == MouseButtons.Right || this.points.Count == 0)
+            {
+                this.points.Add(new List<PointF>());
+            }
+            this.points[this.points.Count - 1].Add(new PointF(e.X, e.Y));
+            this.region.Update(this.points);
 
             this.Invalidate();
         }

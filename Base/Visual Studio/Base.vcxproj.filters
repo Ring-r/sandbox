@@ -10,11 +10,11 @@
     <Filter Include="Others">
       <UniqueIdentifier>{4dec747e-4b19-4874-80a2-9c653e163d72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Test">
-      <UniqueIdentifier>{f0d6553b-a0e8-4e2f-89b0-61cf24559524}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Entities">
       <UniqueIdentifier>{301e35ae-4763-446a-8d6d-672bc30afa0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level">
+      <UniqueIdentifier>{fa587121-6736-4c33-b848-df1f0cba29fc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,7 +46,10 @@
       <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="..\level.cpp">
-      <Filter>Test</Filter>
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="..\map.cpp">
+      <Filter>Level</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,7 +84,10 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\level.hpp">
-      <Filter>Test</Filter>
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="..\map.hpp">
+      <Filter>Level</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 
 #include "_.hpp"
 #include "hero.hpp"
+#include "map.hpp"
 
 class Level {
 private:
@@ -12,8 +13,7 @@ private:
 
 	float screen_center_x, screen_center_y;
 
-	//uint16_t count_x, count_y;
-	//std::vector<uint16_t> cells;
+	Map map;
 
 public:
 	Level(uint8_t count = 1, uint8_t index = 0, bool random_init = false);
@@ -27,7 +27,5 @@ public:
 
 const float DEFAULT_SIZE_X = 1000.0f;
 const float DEFAULT_SIZE_Y = 1000.0f;
-
-//const int DEFAULT_CELL_SIZE = 8;
 
 #endif // LEVEL_H

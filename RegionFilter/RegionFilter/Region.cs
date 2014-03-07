@@ -6,17 +6,39 @@ namespace RegionFilter
 {
     class Region
     {
-        struct Edge
+        class Edge
         {
             private double px, py, vx, vy;
 
-            public Edge(double px, double py, double vx, double vy)
+            public double BeginX { get { return this.px; } }
+            public double EndX { get { return this.px + this.vx; } }
+
+            public double BeginY { get { return this.py; } }
+            public double EndY { get { return this.py + this.vy; } }
+
+            public Edge(double px, double py, double vx, double vy, bool normilize = true)
             {
-                this.px = px;
-                this.py = py;
-                double d = Math.Sqrt(vx * vx + vy * vy);
-                this.vx = vx / d;
-                this.vy = vy / d;
+                if (vx >= 0)
+                {
+                    this.px = px;
+                    this.py = py;
+                    this.vx = vx;
+                    this.vy = vy;
+                }
+                else
+                {
+                    this.px = px + vx;
+                    this.py = py + vy;
+                    this.vx = -vx;
+                    this.vy = -vy;
+                }
+
+                if (normilize)
+                {
+                    double d = Math.Sqrt(vx * vx + vy * vy);
+                    this.vx = vx / d;
+                    this.vy = vy / d;
+                }
             }
 
             public double GetY(double x)
@@ -151,6 +173,108 @@ namespace RegionFilter
             this.pyList[index].TrimExcess();
         }
 
+
+        private void FillStripBorder(List<List<PointF>> pointListList)
+        {
+            SortedSet<double> sortedSet = new SortedSet<double>();
+            foreach (List<PointF> pointList in pointListList)
+            {
+                int pointListCount = pointList.Count;
+                if (pointListCount >= 3)
+                {
+                    for (int j = 0; j < pointListCount; ++j)
+                    {
+                        if (!sortedSet.Contains(pointList[j].X))
+                        {
+                            sortedSet.Add(pointList[j].X);
+                        }
+                    }
+                }
+            }
+            this.pxList.AddRange(sortedSet);
+        }
+
+        private void UpdateStripBorder()
+        {
+            SortedSet<double> sortedSet = new SortedSet<double>();
+            foreach (double x in this.pxList)
+            {
+                sortedSet.Add(x);
+            }
+            for (int i = 0; i < this.pxList.Count; ++i)
+            {
+                List<Edge> edges = this.edgeList[i];
+                for (int ii = 0; ii < edges.Count - 1; ++ii)
+                {
+                    for (int jj = ii + 1; jj < edges.Count; ++jj)
+                    {
+                        // Find x-intersection of edges. Add to sortedList.
+                    }
+                }
+            }
+            this.pxList.Clear();
+            this.pxList.AddRange(sortedSet);
+        }
+
+        private List<Edge> CreateEdges(List<List<PointF>> pointListList)
+        {
+            List<Edge> edges = new List<Edge>();
+            SortedSet<double> sortedSet = new SortedSet<double>();
+            foreach (List<PointF> pointList in pointListList)
+            {
+                int pointListCount = pointList.Count;
+                if (pointListCount >= 3)
+                {
+                    for (int j = 0; j < pointListCount; ++j)
+                    {
+                        if (!sortedSet.Contains(pointList[j].X))
+                        {
+                            sortedSet.Add(pointList[j].X);
+                        }
+                        int j_next = j < pointListCount - 1 ? j + 1 : 0;
+                        edges.Add(new Edge(pointList[j].X, pointList[j].Y, pointList[j_next].X - pointList[j].X, pointList[j_next].Y - pointList[j].Y, false));
+                    }
+                }
+            }
+            this.pxList.AddRange(sortedSet);
+            return edges;
+        }
+
+        private void FillStrips(List<Edge> edges)
+        {
+            foreach (double x in this.pxList)
+            {
+                this.pyList.Add(new List<double>()); List<double> pyList = this.pyList[this.pyList.Count - 1];
+                this.edgeList.Add(new List<Edge>()); List<Edge> edgeList = this.edgeList[this.edgeList.Count - 1];
+                foreach (Edge edge in edges)
+                {
+                    if (edge.BeginX <= x && x < edge.EndX)
+                    {
+                        if (edge.BeginX == edge.EndX)
+                        {
+                            pyList.Add(edge.BeginY); pyList.Add(edge.EndY);
+                        }
+                        else
+                        {
+                            double y = edge.GetY(x);
+                            pyList.Add(y);
+                            edgeList.Add(new Edge(x, y, edge.EndX - edge.BeginX, edge.EndY - edge.BeginY));
+                        }
+                    }
+                }
+                pyList.Sort(); pyList.TrimExcess();
+            }
+
+            int pxListCount = this.pxList.Count;
+            for (int i = 0; i < pxListCount - 1; ++i)
+            {
+                double middleX = 0.5 * (this.pxList[i] + this.pxList[i + 1]);
+                this.edgeList[i].Sort((left, right) => (int)(left.GetY(middleX) - right.GetY(middleX)));
+                this.edgeList[i].TrimExcess();
+            }
+        }
+
+
         public bool Contains(double x, double y)
         {
             double lastDistance;
@@ -205,6 +329,16 @@ namespace RegionFilter
                     this.edgeList[i].TrimExcess();
                 }
             }
+        }
+
+        public void Update(List<List<PointF>> pointListList)
+        {
+            this.pxList.Clear(); this.pyList.Clear(); this.edgeList.Clear();
+            this.FillStripBorder(pointListList);
+            List<Edge> edges = this.CreateEdges(pointListList);
+            this.FillStrips(edges);
+            this.UpdateStripBorder(); this.pyList.Clear(); this.edgeList.Clear();
+            this.FillStrips(edges);
         }
     }
 }
