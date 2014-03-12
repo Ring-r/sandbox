@@ -39,7 +39,7 @@ SDL_Window* ViewerSdl::GetWindow() {
 	return this->window;
 }
 
-SDL_Renderer* ViewerSdl::GetRenderer() {
+SDL_Renderer* ViewerSdl::GetRenderer() const {
 	return this->renderer;
 }
 

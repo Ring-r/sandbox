@@ -13,7 +13,7 @@ public:
 public: //CircleEntity
 	float r;
 
-public: // Entity
+public: // MapEntity
 	uint16_t i;
 	uint8_t j;
 
@@ -27,7 +27,7 @@ public:
 void collision(Entity& entity_i, Entity& entity_j);
 
 const float DEFAULT_ANGLE_STEP = 3.0f;
-const int DEFAULT_RADIUS = 16;
-const int DEFAULT_SPEED = 3;
+const float DEFAULT_RADIUS = 16.0f;
+const float DEFAULT_SPEED = 3.0f;
 
 #endif // ENTITY_H

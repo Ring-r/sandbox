@@ -4,6 +4,7 @@
 #include "_.hpp"
 #include "hero.hpp"
 #include "map.hpp"
+#include "map_viewer.h"
 
 class Level {
 private:
@@ -14,6 +15,7 @@ private:
 	float screen_center_x, screen_center_y;
 
 	Map map;
+	MapViewer map_viewer;
 
 public:
 	Level(uint8_t count = 1, uint8_t index = 0, bool random_init = false);
@@ -21,6 +23,8 @@ public:
 
 	void DoStep();
 	void Draw(SDL_Renderer* renderer, SDL_Texture* texture) const;
+
+	void LoadMap(const ViewerSdl& viewer, const std::string& filename);
 
 	void SetScreenCenter(float screen_center_x, float screen_center_y);
 };
