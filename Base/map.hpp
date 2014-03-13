@@ -5,21 +5,30 @@
 #include "entity.hpp"
 
 class Map {
-protected:
-	uint8_t count_x, count_y, step_coef;
-	std::vector<std::vector<Entity*>> cells;
+private:
+	std::vector<SDL_Texture*> textures;
+
+	float size_x, size_y;
+
+	uint32_t count_x, count_y;
+	std::vector<uint32_t> cells;
+
+	void Clear();
 
 public:
-	Map();
+	Map(uint32_t count_x = 0, uint32_t count_y = 0);
 	~Map();
 
-	void Inits(Entity* entity);
-	void Updates(Entity* entity);
-	void CheckCollision(Entity* entity);
+	void Load(const ViewerSdl& viewer, const std::string& filename);
+	void Draw(SDL_Renderer* renderer, const Entity& entity, float screen_center_x, float screen_center_y) const;
+
+	void Updates(std::vector<Entity>& entity) const;
+
+	void InitsRandom(std::vector<Entity>& entity) const;
 };
 
-static const int DEFAULT_STEP_COEF = 5;
-static const int DEFAULT_COUNT_X = 100;
-static const int DEFAULT_COUNT_Y = 100;
+const float DEFAULT_SIZE_X = 1000.0f;
+const float DEFAULT_SIZE_Y = 1000.0f;
+const uint8_t DEFAULT_BLOCK_SIZE = 32;
 
 #endif // MAP_H

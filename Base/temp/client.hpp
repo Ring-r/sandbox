@@ -1,7 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "_.hpp"
+#include "../_.hpp"
 //
 //class Client : public ListenerNet, public SdlViewer {
 //private:

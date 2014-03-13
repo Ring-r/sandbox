@@ -1,12 +1,8 @@
 #ifndef TERMINAL_HPP
 #define TERMINAL_HPP
 
-#include "base.hpp"
-#include "viewer_sdl.hpp"
-#include "settings.hpp"
-
-#include <string>
-#include <vector>
+#include "../_.hpp"
+#include "../settings.hpp"
 
 class Terminal : public ViewerSdl {
 private:

@@ -1,7 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
-#include "_.hpp"
+#include "../_.hpp"
 
 //class Server: public ListenerNet, public Map {
 //public:

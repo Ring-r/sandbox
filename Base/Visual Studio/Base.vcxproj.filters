@@ -4,16 +4,16 @@
     <Filter Include="Base">
       <UniqueIdentifier>{1d272389-a825-4442-a4bd-f5cb9c923bfa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ClientServer">
-      <UniqueIdentifier>{614f08d9-c2b9-4c46-ba31-6ad4d583b73f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Others">
       <UniqueIdentifier>{4dec747e-4b19-4874-80a2-9c653e163d72}</UniqueIdentifier>
     </Filter>
     <Filter Include="Entities">
       <UniqueIdentifier>{301e35ae-4763-446a-8d6d-672bc30afa0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Level">
+    <Filter Include="Temp">
+      <UniqueIdentifier>{37e397e3-e5e2-4b31-b8d9-90bec925a71e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Screen">
       <UniqueIdentifier>{fa587121-6736-4c33-b848-df1f0cba29fc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -24,17 +24,8 @@
     <ClCompile Include="..\game.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\client.cpp">
-      <Filter>ClientServer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\server.cpp">
-      <Filter>ClientServer</Filter>
-    </ClCompile>
     <ClCompile Include="..\main.cpp">
       <Filter>Base</Filter>
-    </ClCompile>
-    <ClCompile Include="..\listener_net.cpp">
-      <Filter>Others</Filter>
     </ClCompile>
     <ClCompile Include="..\viewer_sdl.cpp">
       <Filter>Others</Filter>
@@ -42,14 +33,38 @@
     <ClCompile Include="..\entity.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
-    <ClCompile Include="..\hero.cpp">
-      <Filter>Entities</Filter>
-    </ClCompile>
     <ClCompile Include="..\level.cpp">
-      <Filter>Level</Filter>
+      <Filter>Screen</Filter>
     </ClCompile>
     <ClCompile Include="..\map.cpp">
-      <Filter>Level</Filter>
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\entity_controller.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\entity_viewer.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\collision_controller.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\temp\client.cpp">
+      <Filter>Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\temp\listener_cmd.cpp">
+      <Filter>Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\temp\listener_net.cpp">
+      <Filter>Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\temp\server.cpp">
+      <Filter>Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\temp\terminal.cpp">
+      <Filter>Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\temp\viewer_sdl_gl.cpp">
+      <Filter>Temp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -62,32 +77,50 @@
     <ClInclude Include="..\game.hpp">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\client.hpp">
-      <Filter>ClientServer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\server.hpp">
-      <Filter>ClientServer</Filter>
-    </ClInclude>
     <ClInclude Include="..\settings.hpp">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\listener_net.hpp">
-      <Filter>Others</Filter>
-    </ClInclude>
     <ClInclude Include="..\viewer_sdl.hpp">
       <Filter>Others</Filter>
-    </ClInclude>
-    <ClInclude Include="..\hero.hpp">
-      <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\entity.hpp">
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\level.hpp">
-      <Filter>Level</Filter>
+      <Filter>Screen</Filter>
     </ClInclude>
     <ClInclude Include="..\map.hpp">
-      <Filter>Level</Filter>
+      <Filter>Screen</Filter>
     </ClInclude>
+    <ClInclude Include="..\entity_controller.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\entity_viewer.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\collision_controller.hpp">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\temp\client.hpp">
+      <Filter>Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\temp\listener_cmd.hpp">
+      <Filter>Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\temp\listener_net.hpp">
+      <Filter>Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\temp\server.hpp">
+      <Filter>Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\temp\terminal.hpp">
+      <Filter>Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\temp\viewer_sdl_gl.hpp">
+      <Filter>Temp</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Makefile" />
   </ItemGroup>
 </Project>

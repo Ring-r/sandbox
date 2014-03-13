@@ -30,8 +30,10 @@ void Game::Run() {
 
 	// TODO: Init somes.
 	SDL_Texture* texture = viewer.CreateTexture("./resources/entity.bmp");
-	Level level(50, 1, true);
+
+	Level level;
 	level.LoadMap(viewer, "./resources/map.txt");
+	level.AddBots(50, true);
 
 	int w, h;
 	SDL_GetWindowSize(viewer.GetWindow(), &w, &h);

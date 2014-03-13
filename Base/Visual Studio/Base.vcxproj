@@ -80,32 +80,45 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\base.cpp" />
-    <ClCompile Include="..\client.cpp" />
+    <ClCompile Include="..\collision_controller.cpp" />
     <ClCompile Include="..\entity.cpp" />
+    <ClCompile Include="..\entity_controller.cpp" />
+    <ClCompile Include="..\entity_viewer.cpp" />
     <ClCompile Include="..\game.cpp" />
-    <ClCompile Include="..\hero.cpp" />
     <ClCompile Include="..\level.cpp" />
-    <ClCompile Include="..\listener_net.cpp" />
     <ClCompile Include="..\main.cpp">
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Cdecl</CallingConvention>
     </ClCompile>
     <ClCompile Include="..\map.cpp" />
-    <ClCompile Include="..\server.cpp" />
+    <ClCompile Include="..\temp\client.cpp" />
+    <ClCompile Include="..\temp\listener_cmd.cpp" />
+    <ClCompile Include="..\temp\listener_net.cpp" />
+    <ClCompile Include="..\temp\server.cpp" />
+    <ClCompile Include="..\temp\terminal.cpp" />
+    <ClCompile Include="..\temp\viewer_sdl_gl.cpp" />
     <ClCompile Include="..\viewer_sdl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base.hpp" />
-    <ClInclude Include="..\client.hpp" />
+    <ClInclude Include="..\collision_controller.hpp" />
     <ClInclude Include="..\entity.hpp" />
+    <ClInclude Include="..\entity_controller.hpp" />
+    <ClInclude Include="..\entity_viewer.hpp" />
     <ClInclude Include="..\game.hpp" />
-    <ClInclude Include="..\hero.hpp" />
     <ClInclude Include="..\level.hpp" />
-    <ClInclude Include="..\listener_net.hpp" />
     <ClInclude Include="..\map.hpp" />
-    <ClInclude Include="..\server.hpp" />
     <ClInclude Include="..\settings.hpp" />
+    <ClInclude Include="..\temp\client.hpp" />
+    <ClInclude Include="..\temp\listener_cmd.hpp" />
+    <ClInclude Include="..\temp\listener_net.hpp" />
+    <ClInclude Include="..\temp\server.hpp" />
+    <ClInclude Include="..\temp\terminal.hpp" />
+    <ClInclude Include="..\temp\viewer_sdl_gl.hpp" />
     <ClInclude Include="..\viewer_sdl.hpp" />
     <ClInclude Include="..\_.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Makefile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

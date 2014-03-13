@@ -1,58 +1,93 @@
 #include "map.hpp"
 
-Map::Map()
-	: count_x(DEFAULT_COUNT_X), count_y(DEFAULT_COUNT_Y), step_coef(DEFAULT_STEP_COEF) {
+#include "entity_viewer.hpp"
 
-	this->cells.resize(this->count_x * this->count_y);
+Map::Map(uint32_t count_x, uint32_t count_y)
+	: size_x(DEFAULT_SIZE_X), size_y(DEFAULT_SIZE_Y) {
+		this->count_x = count_x;
+		this->count_y = count_y;
+		this->cells.resize(this->count_x * this->count_y);
 }
 
 Map::~Map() {
+	this->Clear();
 }
 
-void Map::Inits(Entity* entity) {
-	uint8_t x_index = static_cast<uint8_t>(entity->px) >> this->step_coef;
-	uint8_t y_index = static_cast<uint8_t>(entity->py) >> this->step_coef;
-	// TODO: if(0 <= x_index && x_index < this->count_x && 0 <= y_index && y_index < this->count_y)
-	entity->i = x_index + this->count_x * y_index;
-	entity->j = static_cast<uint8_t>(this->cells[entity->i].size());
-	this->cells[entity->i].push_back(entity);
+void Map::Clear() {
+	for(auto it = this->textures.begin(); it < this->textures.end(); ++it) {
+		ViewerSdl::ReleaseTexture(*it); // TODO: Check.
+	}
+	this->count_x = 0;
+	this->count_y = 0;
+	this->cells.clear();
 }
 
-void Map::Updates(Entity* entity) {
-	std::vector<Entity*>& entities = this->cells[entity->i];
-	std::iter_swap(entities.begin() + entity->j, entities.begin() + entities.size() - 1);
-	entities[entity->j]->j = entity->j;
-	entities.pop_back();
+void Map::Load(const ViewerSdl& viewer, const std::string& filename)
+{
+	this->Clear();
 
-	this->Inits(entity);
-}
-
-void Map::CheckCollision(Entity* entity) {
-	uint16_t x_index = entity->i % this->count_x;
-	uint16_t y_index = entity->i / this->count_x;
-
-	uint16_t step = 1; // TODO: Find right value.
-
-	x_index = x_index > step ? x_index - step : 0;
-	uint16_t x_index_end = x_index + step + step;
-	if(x_index_end >= this->count_x) {
-		x_index_end = this->count_x - 1;
+	std::ifstream input(filename);
+	uint32_t textures_count;
+	input >> textures_count;
+	std::string file_path;
+	for(uint32_t i = 0; i < textures_count; ++i) {
+		input >> file_path;
+		this->textures.push_back(viewer.CreateTexture(file_path));
 	}
 
-	y_index = y_index > step ? y_index - step : 0;
-	uint16_t y_index_end = y_index + step + step;
-	if(y_index_end >= this->count_y) {
-		y_index_end = this->count_y - 1;
-	}
+	input >> this->size_x;
+	input >> this->size_y;
 
-	std::vector<Entity*>* entities = &(this->cells[y_index * this->count_x + x_index]);
-	for(uint16_t ix = x_index; ix <= x_index_end; ++ix) {
-		for(uint16_t iy = y_index; iy <= y_index_end; ++iy) {
-			for(auto it = entities->begin(); it < entities->end(); ++it) {
-				collision(*entity, **it);
+	input >> this->count_x;
+	input >> this->count_y;
+	this->cells.resize(this->count_x * this->count_y);
+	for(auto it = this->cells.begin(); it < this->cells.end(); ++it) {
+		input >> *it;
+	}
+}
+
+void Map::Draw(SDL_Renderer* renderer, const Entity& entity, float screen_center_x, float screen_center_y) const {
+	if(renderer) {
+		EntityViewer block;
+		block.angle = -entity.angle;
+		block.r = DEFAULT_BLOCK_SIZE >> 1;
+
+		float angle_rad = entity.angle * TO_RAD;
+		float sin_angle_rad = std::sin(angle_rad);
+		float cos_angle_rad = std::cos(angle_rad);
+
+		float px = 0.0f;
+		float py = 0.0f;
+		auto it = this->cells.begin();
+		for (uint32_t i = 0; i < this->count_x; ++i) {
+			for (uint32_t j = 0; j < this->count_y; ++j) {
+				if(*it) {
+					float x = px - entity.px;
+					float y = py - entity.py;
+					block.px = screen_center_x + sin_angle_rad * x - cos_angle_rad * y;
+					block.py = screen_center_y + cos_angle_rad * x + sin_angle_rad * y;
+					block.Draw(renderer, this->textures[*it - 1]);
+				}
+				++it;
+				py += DEFAULT_BLOCK_SIZE;
 			}
-			++entities;
+			px += DEFAULT_BLOCK_SIZE;
+			py = 0.0f;
 		}
-		entities += this->count_x - x_index - 1; // TODO: Check.
+	}
+}
+
+void Map::Updates(std::vector<Entity>& entities) const{
+	for(auto it = entities.begin(); it < entities.end(); ++it) {
+		it->px = std::max(it->px, it->r); it->px = std::min(it->px, this->size_x - it->r);
+		it->py = std::max(it->py, it->r); it->py = std::min(it->py, this->size_y - it->r);
+	}
+}
+
+void Map::InitsRandom(std::vector<Entity>& entities) const{
+	for(auto it = entities.begin(); it < entities.end(); ++it) {
+		it->angle = static_cast<float>(rand() % 360);
+		it->px = 1.0f * rand() / RAND_MAX * this->size_x;
+		it->py = 1.0f * rand() / RAND_MAX * this->size_y;
 	}
 }

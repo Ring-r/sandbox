@@ -12,20 +12,20 @@ game: viewer_sdl level
 viewer_sdl:
 	$(CC) -c viewer_sdl.cpp -o debug/viewer_sdl.o
 
-level: hero map map_viewer entity_viewer
+level: map enity entity_viewer entity_controller collision_controller
 	$(CC) -c level.cpp -o debug/level.o
-
-hero: entity
-	$(CC) -c hero.cpp -o debug/hero.o
 
 map:
 	$(CC) -c map.cpp -o debug/map.o
 
-map_viewer: entity_viewer
-	$(CC) -c map_viewer.cpp -o debug/map_viewer.o
-
 entity_viewer: entity
 	$(CC) -c entity_viewer.cpp -o debug/entity_viewer.o
+
+entity_controller: entity
+	$(CC) -c entity_controller.cpp -o debug/entity_controller.o
+
+collision_controller: entity
+	$(CC) -c collision_controller.cpp -o debug/collision_controller.o
 
 entity:
 	$(CC) -c entity.cpp -o debug/entity.o
