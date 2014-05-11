@@ -52,7 +52,7 @@ void ViewerSdl::EndDraw() {
 }
 
 SDL_Texture* ViewerSdl::CreateTexture(const std::string& filename) const {
-	SDL_Surface* loadedImage = SDL_LoadBMP(filename.c_str());
+  SDL_Surface* loadedImage = SDL_LoadBMP(filename.c_str());
 	if(!loadedImage) {
 		LogSdlError("SDL_LoadBMP");
 		return nullptr;

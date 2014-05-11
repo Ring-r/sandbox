@@ -13,7 +13,7 @@ void Level::RandomEntityChange() {
 	// TODO: Test code. Rewrite.
 	const int moveProcent = 20;
 	if(rand() % 100 < moveProcent) {
-		int i = rand() % this->entities.size();
+		uint32_t i = rand() % this->entities.size();
 		if (i != this->entity_index) {
 			Entity& entity = this->entities[i];
 			if (rand() % 100 < 50){
@@ -70,7 +70,8 @@ void Level::Draw(SDL_Renderer* renderer, SDL_Texture* texture) const {
 }
 
 void Level::LoadMap(const ViewerSdl& viewer, const std::string& filename) {
-	this->map.Load(viewer, filename);
+  this->map.Load(viewer, filename);
+  this->map.InitRandom();
 	this->map.Updates(this->entities);
 }
 

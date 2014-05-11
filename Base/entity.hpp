@@ -26,4 +26,13 @@ const float DEFAULT_ANGLE_STEP = 1.0f;
 const float DEFAULT_RADIUS = 16.0f;
 const float DEFAULT_SPEED = 1.0f;
 
+class Entity_ {
+public:
+  // TODO: Index in cells.
+  // TODO: Rotation.
+  // TODO: Count of commands.
+  // TODO: Commands.
+};
+
+
 #endif // ENTITY_H

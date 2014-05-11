@@ -1,7 +1,7 @@
 CC = g++ -Wall -ansi -std=c++11
 
 all: base game
-	$(CC) main.cpp debug/*.o -o debug/base -lSDL2 -lSDL_net -lSDL_ttf
+	$(CC) main.cpp debug/*.o -o debug/base -lSDL2 -lSDL2_net -lSDL2_ttf
 
 base:
 	$(CC) -c base.cpp -o debug/base.o
@@ -12,7 +12,7 @@ game: viewer_sdl level
 viewer_sdl:
 	$(CC) -c viewer_sdl.cpp -o debug/viewer_sdl.o
 
-level: map enity entity_viewer entity_controller collision_controller
+level: map entity entity_viewer entity_controller collision_controller
 	$(CC) -c level.cpp -o debug/level.o
 
 map:
