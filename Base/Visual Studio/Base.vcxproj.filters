@@ -66,6 +66,12 @@
     <ClCompile Include="..\temp\viewer_sdl_gl.cpp">
       <Filter>Temp</Filter>
     </ClCompile>
+    <ClCompile Include="..\map_factory.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\map_viewer.cpp">
+      <Filter>Screen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\_.hpp">
@@ -118,6 +124,12 @@
     </ClInclude>
     <ClInclude Include="..\temp\viewer_sdl_gl.hpp">
       <Filter>Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\map_factory.hpp">
+      <Filter>Screen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\map_viewer.hpp">
+      <Filter>Screen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

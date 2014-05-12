@@ -44,6 +44,7 @@ SDL_Renderer* ViewerSdl::GetRenderer() const {
 }
 
 void ViewerSdl::ClearViewer() {
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0); // TODO: Add const.
 	SDL_RenderClear(this->renderer);
 }
 

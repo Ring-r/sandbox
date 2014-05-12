@@ -29,7 +29,7 @@ void Game::Run() {
 	SDL_Renderer* renderer = viewer.GetRenderer();
 
 	// TODO: Init somes.
-	SDL_Texture* texture = viewer.CreateTexture("./resources/entity.bmp");
+	SDL_Texture* texture = nullptr;//viewer.CreateTexture("./resources/entity.bmp");
 
 	Level level;
 	level.LoadMap(viewer, "./resources/map.txt");

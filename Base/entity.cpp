@@ -35,3 +35,18 @@ void collision(Entity& entity_i, Entity& entity_j)
         //entity_i.isCollide = true;
     }
 }
+
+void Updates(std::vector<Entity>& entities, float min_x, float max_x, float min_y, float max_y) {
+	for(auto it = entities.begin(); it < entities.end(); ++it) {
+		it->px = std::max(it->px, min_x + it->r); it->px = std::min(it->px, max_x - it->r);
+		it->py = std::max(it->py, min_y + it->r); it->py = std::min(it->py, max_x - it->r);
+	}
+}
+
+void InitsRandom(std::vector<Entity>& entities, float min_x, float max_x, float min_y, float max_y) {
+	for(auto it = entities.begin(); it < entities.end(); ++it) {
+		it->angle = static_cast<float>(rand() % 360);
+		it->px = 1.0f * rand() / RAND_MAX * (max_x - min_x) + min_x;
+		it->py = 1.0f * rand() / RAND_MAX * (max_y - min_y) + min_y;
+	}
+}

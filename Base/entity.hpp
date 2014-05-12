@@ -26,13 +26,7 @@ const float DEFAULT_ANGLE_STEP = 1.0f;
 const float DEFAULT_RADIUS = 16.0f;
 const float DEFAULT_SPEED = 1.0f;
 
-class Entity_ {
-public:
-  // TODO: Index in cells.
-  // TODO: Rotation.
-  // TODO: Count of commands.
-  // TODO: Commands.
-};
-
+void Updates(std::vector<Entity>& entities, float min_x, float max_x, float min_y, float max_y);
+void InitsRandom(std::vector<Entity>& entities, float min_x, float max_x, float min_y, float max_y);
 
 #endif // ENTITY_H

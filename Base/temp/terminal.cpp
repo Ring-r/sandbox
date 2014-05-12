@@ -11,7 +11,7 @@ Terminal::~Terminal() {
 void Terminal::Clear() {
 	this->init = false;
 
-	for(int i = 0; i < this->textures.size(); ++i) {
+	for(size_t i = 0; i < this->textures.size(); ++i) {
 		this->ReleaseTexture(this->textures[i]);
 	}
 	this->textures.clear();
@@ -65,7 +65,7 @@ void Terminal::DoStep() {
 	if(init) {
 		int x = 0;
 		int y = 100;
-		for(int i = 0; i < this->str.size(); ++i) {
+		for(size_t i = 0; i < this->str.size(); ++i) {
 			this->DrawTexture(this->textures[str[i]], x, y);
 			x += 10;
 		}

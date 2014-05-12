@@ -90,6 +90,8 @@
       <CallingConvention Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Cdecl</CallingConvention>
     </ClCompile>
     <ClCompile Include="..\map.cpp" />
+    <ClCompile Include="..\map_factory.cpp" />
+    <ClCompile Include="..\map_viewer.cpp" />
     <ClCompile Include="..\temp\client.cpp" />
     <ClCompile Include="..\temp\listener_cmd.cpp" />
     <ClCompile Include="..\temp\listener_net.cpp" />
@@ -107,6 +109,8 @@
     <ClInclude Include="..\game.hpp" />
     <ClInclude Include="..\level.hpp" />
     <ClInclude Include="..\map.hpp" />
+    <ClInclude Include="..\map_factory.hpp" />
+    <ClInclude Include="..\map_viewer.hpp" />
     <ClInclude Include="..\settings.hpp" />
     <ClInclude Include="..\temp\client.hpp" />
     <ClInclude Include="..\temp\listener_cmd.hpp" />

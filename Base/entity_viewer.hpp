@@ -5,6 +5,7 @@
 
 class EntityViewer : public Entity {
 public:
+	void Draw(SDL_Renderer* renderer, uint8_t r, uint8_t g, uint8_t b) const;
 	void Draw(SDL_Renderer* renderer, SDL_Texture* texture) const;
 };
 
