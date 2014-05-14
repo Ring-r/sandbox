@@ -40,13 +40,13 @@ void Level::DoStep() {
 	//	this->entities[entity_index] = this->entity_controller.entity;
 	//} // TODO: Dislike.
 
-	//for(auto it = this->entities.begin(); it < this->entities.end(); ++it) {
-	//	it->DoStep();
-	//}
-	//this->collision_controller.Updates(this->entities);
-	//Updates(this->entities, 0.0f, 2 * this->screen_center_x, 0.0f, 2 * this->screen_center_y);
+	for(auto it = this->entities.begin(); it < this->entities.end(); ++it) {
+		it->DoStep();
+	}
+	this->collision_controller.Updates(this->entities);
+	Updates(this->entities, 0.0f, 2 * this->screen_center_x, 0.0f, 2 * this->screen_center_y);
 
-	//this->RandomEntityChange();
+	this->RandomEntityChange();
 }
 
 void Level::Draw(SDL_Renderer* renderer, SDL_Texture* texture) const {
