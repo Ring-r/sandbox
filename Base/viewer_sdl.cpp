@@ -24,7 +24,7 @@ void ViewerSdl::Init(const std::string& title) {
 
 	SDL_Rect window_rect;
 	SDL_GetDisplayBounds(0, &window_rect);
-	this->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_rect.w >> 1, window_rect.h >> 1, SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
+	this->window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_rect.w, window_rect.h, SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN);
 	if(!this->window) {
 		LogSdlError("SDL_CreateWindow");
 	}

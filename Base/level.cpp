@@ -1,59 +1,29 @@
 #include "level.hpp"
 
-#include "entity_viewer.hpp"
+#include "entity.hpp"
 #include "map_factory.hpp"
 #include "map_viewer.hpp"
 
 Level::Level()
-	: screen_center_x(0.0f), screen_center_y(0.0f), entity_index(0) {
+	: screen_center_x(0.0f), screen_center_y(0.0f) {
 }
 
 Level::~Level() {
 }
 
-void Level::RandomEntityChange() {
-	// TODO: Test code. Rewrite.
-	const int moveProcent = 20;
-	if(rand() % 100 < moveProcent) {
-		uint32_t i = rand() % this->entities.size();
-		if (i != this->entity_index) {
-			Entity& entity = this->entities[i];
-			if (rand() % 100 < 50){
-				entity.angle = rand() % 360;
-			}
-			else
-			{
-				entity.speed = rand() % 4;
-			}
-			entity.vx = std::cos(entity.angle * TO_RAD) * entity.speed;
-			entity.vy = std::sin(entity.angle * TO_RAD) * entity.speed;
-		}
-	}
-}
-
 void Level::DoStep() {
-	//if(entity_index < this->entities.size()) {
-	//	this->entity_controller.entity = this->entities[entity_index];
-	//} // TODO: Dislike.
-	//this->entity_controller.DoStep();
-	//if(entity_index < this->entities.size()) {
-	//	this->entities[entity_index] = this->entity_controller.entity;
-	//} // TODO: Dislike.
-
-	for(auto it = this->entities.begin(); it < this->entities.end(); ++it) {
-		it->DoStep();
-	}
-	this->collision_controller.Updates(this->entities);
-	Updates(this->entities, 0.0f, 2 * this->screen_center_x, 0.0f, 2 * this->screen_center_y);
-
-	this->RandomEntityChange();
+  //this->collision_controller.Updates(this->entities);
+  //Updates(this->entities, 0.0f, 2 * this->screen_center_x, 0.0f, 2 * this->screen_center_y);
 }
 
 void Level::Draw(SDL_Renderer* renderer, SDL_Texture* texture) const {
-	if(renderer) {
-		const Entity& entity = this->entity_controller.entity;
-		MapViewer mapViewer;
-		mapViewer.Draw(renderer, this->map, entity, this->screen_center_x, this->screen_center_y);
+  Entity entity;
+  MapViewer mapViewer;
+  mapViewer.Draw(renderer, this->map, entity, this->screen_center_x, this->screen_center_y);
+	// if(renderer) {
+	// 	const Entity& entity = this->entity_controller.entity;
+	// 	MapViewer mapViewer;
+	// 	mapViewer.Draw(renderer, this->map, entity, this->screen_center_x, this->screen_center_y);
 
 		//float angle_rad = entity.angle * TO_RAD;
 		//float sin_angle_rad = std::sin(angle_rad);
@@ -69,7 +39,7 @@ void Level::Draw(SDL_Renderer* renderer, SDL_Texture* texture) const {
 		//	entity_viewer.angle = it->angle - entity.angle;
 		//	entity_viewer.Draw(renderer, texture);
 		//}
-	}
+	// }
 }
 
 void Level::LoadMap(const ViewerSdl& viewer, const std::string& filename) {
@@ -77,15 +47,6 @@ void Level::LoadMap(const ViewerSdl& viewer, const std::string& filename) {
 	//this->map.Updates(this->entities);
 }
 
-void Level::AddBots(uint8_t count, bool random_init) {
-	//this->entities.resize(this->entities.size() + count);
-	//if(random_init) {
-	//	InitsRandom(this->entities, 0.0f, 2 * this->screen_center_x, 0.0f, 2 * this->screen_center_y);
-	//	if(entity_index < this->entities.size()) {
-	//		this->entity_controller.entity = this->entities[entity_index];
-	//	}
-	//}
-}
 
 void Level::SetScreenCenter(float screen_center_x, float screen_center_y) {
 	this->screen_center_x = screen_center_x;

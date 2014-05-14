@@ -6,29 +6,20 @@ all: base game
 base:
 	$(CC) -c base.cpp -o debug/base.o
 
-game: viewer_sdl level
+game: viewer_sdl map map_factory map_viewer
 	$(CC) -c game.cpp -o debug/game.o
 
 viewer_sdl:
 	$(CC) -c viewer_sdl.cpp -o debug/viewer_sdl.o
 
-level: map entity entity_viewer entity_controller collision_controller
-	$(CC) -c level.cpp -o debug/level.o
-
 map:
 	$(CC) -c map.cpp -o debug/map.o
 
-entity_viewer: entity
-	$(CC) -c entity_viewer.cpp -o debug/entity_viewer.o
+map_factory: map
+	$(CC) -c map_factory.cpp -o debug/map_factory.o
 
-entity_controller: entity
-	$(CC) -c entity_controller.cpp -o debug/entity_controller.o
-
-collision_controller: entity
-	$(CC) -c collision_controller.cpp -o debug/collision_controller.o
-
-entity:
-	$(CC) -c entity.cpp -o debug/entity.o
+map_viewer: map
+	$(CC) -c map_viewer.cpp -o debug/map_viewer.o
 
 clean:
 	@echo Cleaning up...
