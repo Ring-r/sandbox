@@ -1,7 +1,7 @@
 #include "map.hpp"
 
 Map::Map()
-  : count_x(0), count_y(0), cells(0), entities(0), cells_entities(0) {
+	: count_x(0), count_y(0), cells(0), entities(0), cells_entities(0) {
 }
 
 void Map::AddEntity(uint32_t id) {
@@ -9,7 +9,7 @@ void Map::AddEntity(uint32_t id) {
 }
 
 void Map::RemoveEntity(uint32_t id) {
-	 // TODO:
+	// TODO:
 }
 
 void Map::Update() {

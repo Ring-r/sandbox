@@ -12,33 +12,33 @@ Level::~Level() {
 }
 
 void Level::DoStep() {
-  //this->collision_controller.Updates(this->entities);
-  //Updates(this->entities, 0.0f, 2 * this->screen_center_x, 0.0f, 2 * this->screen_center_y);
+	//this->collision_controller.Updates(this->entities);
+	//Updates(this->entities, 0.0f, 2 * this->screen_center_x, 0.0f, 2 * this->screen_center_y);
 }
 
 void Level::Draw(SDL_Renderer* renderer, SDL_Texture* texture) const {
-  Entity entity;
-  MapViewer mapViewer;
-  mapViewer.Draw(renderer, this->map, entity, this->screen_center_x, this->screen_center_y);
+	//Entity entity;
+	//MapViewer mapViewer;
+	//mapViewer.Draw(renderer, this->map, entity, this->screen_center_x, this->screen_center_y);
 	// if(renderer) {
 	// 	const Entity& entity = this->entity_controller.entity;
 	// 	MapViewer mapViewer;
 	// 	mapViewer.Draw(renderer, this->map, entity, this->screen_center_x, this->screen_center_y);
 
-		//float angle_rad = entity.angle * TO_RAD;
-		//float sin_angle_rad = std::sin(angle_rad);
-		//float cos_angle_rad = std::cos(angle_rad);
+	//float angle_rad = entity.angle * TO_RAD;
+	//float sin_angle_rad = std::sin(angle_rad);
+	//float cos_angle_rad = std::cos(angle_rad);
 
-		//EntityViewer entity_viewer;
-		//for(auto it = this->entities.begin(); it < this->entities.end(); ++it) {
-		//	entity_viewer.r = it->r;
-		//	float x = it->px - entity.px;
-		//	float y = it->py - entity.py;
-		//	entity_viewer.px = this->screen_center_x + sin_angle_rad * x - cos_angle_rad * y;
-		//	entity_viewer.py = this->screen_center_y + cos_angle_rad * x + sin_angle_rad * y;
-		//	entity_viewer.angle = it->angle - entity.angle;
-		//	entity_viewer.Draw(renderer, texture);
-		//}
+	//EntityViewer entity_viewer;
+	//for(auto it = this->entities.begin(); it < this->entities.end(); ++it) {
+	//	entity_viewer.r = it->r;
+	//	float x = it->px - entity.px;
+	//	float y = it->py - entity.py;
+	//	entity_viewer.px = this->screen_center_x + sin_angle_rad * x - cos_angle_rad * y;
+	//	entity_viewer.py = this->screen_center_y + cos_angle_rad * x + sin_angle_rad * y;
+	//	entity_viewer.angle = it->angle - entity.angle;
+	//	entity_viewer.Draw(renderer, texture);
+	//}
 	// }
 }
 

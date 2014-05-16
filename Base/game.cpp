@@ -38,8 +38,8 @@ void Game::Run() {
 	//level.LoadMap(viewer, "./resources/map.txt");
 	// level.AddBots(50, true);
 
-	int w, h;
-	SDL_GetWindowSize(viewer.GetWindow(), &w, &h);
+	int screen_size_x, screen_size_y;
+	SDL_GetWindowSize(viewer.GetWindow(), &screen_size_x, &screen_size_y);
 	//level.SetScreenCenter(w >> 1, h >> 1);
 
 	Map map;
@@ -67,19 +67,19 @@ void Game::Run() {
 
 		// TODO: somes.DoStep();
 		//level.DoStep();
-		
+
 		if(renderer) {
-		        //level.Draw(renderer, texture);
+			//level.Draw(renderer, texture);
 			// TODO: somes.Draw(viewer);
-MapFactory::InitsRandom(map, 1000, 1000, MapFactory::DEFAULT_FILL_PERCENT);
+MapFactory::InitsRandom(map, 500, 500, MapFactory::DEFAULT_FILL_PERCENT);
 mapViewer.SetCellSize(1);
-		  mapViewer.Draw(renderer, map, w, h, mapViewer.GetSizeX(map) >> 1, mapViewer.GetSizeY(map) >> 1);
+			mapViewer.Draw(renderer, map, screen_size_x, screen_size_y, mapViewer.GetSizeX(map) >> 1, mapViewer.GetSizeY(map) >> 1);
 		}
 
 		viewer.EndDraw();
 	}
 	//client.Clear();
 	//if(texture) {
-	      //viewer.ReleaseTexture(texture);	texture = nullptr;
+	//viewer.ReleaseTexture(texture);	texture = nullptr;
 	//}
 }

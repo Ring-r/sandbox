@@ -1,5 +1,7 @@
 #include "map_factory.hpp"
 
+#include <random>
+
 void MapFactory::Inits(Map& map, const std::string& filename)
 {
 	std::ifstream input(filename);
@@ -13,16 +15,18 @@ void MapFactory::Inits(Map& map, const std::string& filename)
 }
 
 void MapFactory::InitsRandom(Map& map, uint32_t count_x, uint32_t count_y, uint8_t percent) {
-  map.count_x = count_x;
-  map.count_y = count_y;
-  uint32_t count = count_x * count_y;
-  uint32_t count_percent = count * percent / 100; // TODO: Magic number.
-  map.cells.resize(count);
-  fill(map.cells.begin(), map.cells.begin() + count_percent, 1);
-  fill(map.cells.begin() + count_percent, map.cells.end(), 0);
-  for(uint32_t i = 0; i < count; ++i) { // TODO: Find right value instead of count.
-    std::swap(map.cells[rand() % count], map.cells[rand() % count]);
-  }
+	map.count_x = count_x;
+	map.count_y = count_y;
+	uint32_t count = count_x * count_y;
+	uint32_t count_percent = count * percent / 100; // TODO: Magic number.
+	map.cells.resize(count);
+	fill(map.cells.begin(), map.cells.begin() + count_percent, 1);
+	fill(map.cells.begin() + count_percent, map.cells.end(), 0);
+	for(uint32_t i = 0; i < 2 * count; ++i) { // TODO: Find right value instead of count.
+		size_t index_i = rand() % count;
+		size_t index_j = rand() % count;
+		std::swap(map.cells[index_i], map.cells[index_j]);
+	}
 }
 
 //void MapFactory::Inits(const ViewerSdl& viewer, const std::string& filename)
