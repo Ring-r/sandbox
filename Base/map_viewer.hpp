@@ -29,7 +29,7 @@ public:
   }
 
   void Load(const ViewerSdl& viewer, const std::string& filename);
-  void Draw(SDL_Renderer* renderer, const Map& map, uint32_t screen_size_x, uint32_t screen_size_y, float x, float y) const;
+  void Draw(SDL_Renderer* renderer, const Map& map, uint32_t screen_size_x, uint32_t screen_size_y, float x, float y, float angle) const;
 };
 
 #endif // MAP_VIEWER_HPP
