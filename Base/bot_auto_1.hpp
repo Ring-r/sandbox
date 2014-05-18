@@ -22,7 +22,7 @@ public:
     this->py = rand() % (max_y - min_y) + min_y;
 
     this->angle = rand() % 360 * TO_RAD;
-    this->speed = 5; // WARNING: Magic number.
+    this->speed = 3; // WARNING: Magic number.
     this->vx = this->speed * cos(this->angle);
     this->vy = this->speed * sin(this->angle);
   }

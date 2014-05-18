@@ -1,6 +1,7 @@
 #include "game.hpp"
 
-//#include "level.hpp"
+#include <ctime>
+
 #include "map.hpp"
 #include "map_factory.hpp"
 #include "map_viewer.hpp"
@@ -8,6 +9,8 @@
 #include "bot_auto_1.hpp"
 
 Game::Game() {
+  SDL_LogSetAllPriority(SDL_LOG_PRIORITY_WARN); // TODO: Run only in debug?
+
 	if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		LogSdlError("SDL_Init");
 		return;
@@ -45,6 +48,8 @@ void Game::Run() {
 	BotAuto1 bot_auto_1(0, mapViewer.GetSizeX(map), 0, mapViewer.GetSizeY(map));
 
 	while(!quit) {
+	  std::clock_t time = clock();
+
 		SDL_Event sdl_event;
 		while(SDL_PollEvent(&sdl_event)) {
 			if(sdl_event.type == SDL_QUIT) {
@@ -70,5 +75,12 @@ void Game::Run() {
 		}
 
 		viewer.EndDraw();
+
+		const bool cap = true;
+		const int frame_per_second = 60;
+		int delay = 1000 / frame_per_second - (time - clock()) / CLOCKS_PER_SEC;
+		if(cap && delay > 0) {
+		  SDL_Delay(delay);
+		}
 	}
 }
