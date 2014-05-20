@@ -15,10 +15,13 @@ MapViewer::~MapViewer() {
 
 void MapViewer::Draw(SDL_Renderer* renderer, const Map& map, uint32_t screen_size_x, uint32_t screen_size_y, float x, float y, float angle) const {
 	if(renderer) {
-	  uint8_t r = 0; // TODO: Add to resorces.
-	  uint8_t g = 0; // TODO: Add to resorces.
-	  uint8_t b = 255; // TODO: Add to resorces.
-	  uint8_t a = 0; // TODO: Add to resorces.
+	  const uint8_t r = 0; // TODO: Add to resorces.
+	  const uint8_t g = 0; // TODO: Add to resorces.
+	  const uint8_t b = 255; // TODO: Add to resorces.
+	  const uint8_t a = 0; // TODO: Add to resorces.
+
+	  const float sin_a = sin(angle);
+	  const float cos_a = cos(angle);
 
 		float px, py;
 		auto it = map.cells.begin();
@@ -28,9 +31,11 @@ void MapViewer::Draw(SDL_Renderer* renderer, const Map& map, uint32_t screen_siz
 			for (uint32_t ix = 0; ix < map.count_x; ++ix) {
 				if(*it) {
 				  SDL_SetRenderDrawColor(renderer, r, g, b, a);
+				  float px_x = px - x;
+				  float py_y = py - y;
 					SDL_Rect rect;
-					rect.x = (screen_size_x >> 1) + (int)(px - x);
-					rect.y = (screen_size_y >> 1) + (int)(py - y);
+					rect.x = (screen_size_x >> 1) + (int)(px_x * cos_a + py_y * sin_a);
+					rect.y = (screen_size_y >> 1) + (int)(px_x * sin_a - py_y * cos_a);
 					rect.w = rect.h = cell_size;
 					SDL_RenderFillRect(renderer, &rect);
 

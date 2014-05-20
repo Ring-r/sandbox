@@ -44,20 +44,24 @@ public:
     if(this->px < min_x) {
       this->px = min_x + min_x - this->px;
       this->vx = fabs(this->vx);
+      this->angle = atan2(this->vy, this->vx);
     }
     if(this->px > max_x) {
       this->px = max_x + max_x - this->px;
       this->vx = -fabs(this->vx);
+      this->angle = atan2(this->vy, this->vx);
     }
 
     this->py += this->vy;
     if(this->py < min_y) {
       this->py = min_y + min_y - this->py;
       this->vy = fabs(this->vy);
+      this->angle = atan2(this->vy, this->vx);
     }
     if(this->py > max_y) {
       this->py = max_y + max_y - this->py;
       this->vy = -fabs(this->vy);
+      this->angle = atan2(this->vy, this->vx);
     }
   }
 };

@@ -7,12 +7,13 @@
 #include "map_viewer.hpp"
 
 #include "bot_auto_1.hpp"
+#include "bot_auto_2.hpp"
 
 Game::Game() {
   SDL_LogSetAllPriority(SDL_LOG_PRIORITY_WARN); // TODO: Run only in debug?
 
 	if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		LogSdlError("SDL_Init");
+		LogError("SDL_Init");
 		return;
 	}
 	if(SDLNet_Init() < 0) {
@@ -45,7 +46,7 @@ void Game::Run() {
 	MapViewer mapViewer;
 	mapViewer.SetCellSize(MapViewer::DEFAULT_CELL_SIZE);
 
-	BotAuto1 bot_auto_1(0, mapViewer.GetSizeX(map), 0, mapViewer.GetSizeY(map));
+	BotAuto2 bot_auto(0, mapViewer.GetSizeX(map), 0, mapViewer.GetSizeY(map));
 
 	while(!quit) {
 	  std::clock_t time = clock();
@@ -67,11 +68,11 @@ void Game::Run() {
 		viewer.ClearViewer();
 
 		// TODO: somes.DoStep();
-		bot_auto_1.DoStep();
+		bot_auto.DoStep();
 
 		if(renderer) {
 		  // TODO: somes.Draw(viewer);
-		  mapViewer.Draw(renderer, map, screen_size_x, screen_size_y, bot_auto_1.GetPx(), bot_auto_1.GetPy(), bot_auto_1.GetAngle());
+		  mapViewer.Draw(renderer, map, screen_size_x, screen_size_y, bot_auto.GetPx(), bot_auto.GetPy(), bot_auto.GetAngle());
 		}
 
 		viewer.EndDraw();
