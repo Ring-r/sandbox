@@ -46,7 +46,7 @@ void Game::Run() {
 	MapViewer mapViewer;
 	mapViewer.SetCellSize(MapViewer::DEFAULT_CELL_SIZE);
 
-	BotAuto2 bot_auto(0, mapViewer.GetSizeX(map), 0, mapViewer.GetSizeY(map));
+	BotAuto1 bot_auto(0, mapViewer.GetSizeX(map), 0, mapViewer.GetSizeY(map));
 
 	while(!quit) {
 	  std::clock_t time = clock();

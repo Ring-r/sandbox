@@ -102,6 +102,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\base.hpp" />
+    <ClInclude Include="..\bot_auto_1.hpp" />
+    <ClInclude Include="..\bot_auto_2.hpp" />
     <ClInclude Include="..\collision_controller.hpp" />
     <ClInclude Include="..\entity.hpp" />
     <ClInclude Include="..\entity_controller.hpp" />

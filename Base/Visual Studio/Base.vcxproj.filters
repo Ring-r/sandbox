@@ -131,6 +131,12 @@
     <ClInclude Include="..\map_viewer.hpp">
       <Filter>Screen</Filter>
     </ClInclude>
+    <ClInclude Include="..\bot_auto_1.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\bot_auto_2.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile" />
