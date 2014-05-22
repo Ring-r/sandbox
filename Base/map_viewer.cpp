@@ -23,34 +23,25 @@ void MapViewer::Draw(SDL_Renderer* renderer, const Map& map, uint32_t screen_siz
 		const float sin_a = sin(angle);
 		const float cos_a = cos(angle);
 
-		float px0 = -x;
-		float py0 = -y;
-
-		float px0_ = + px0 * cos_a + py0 * sin_a;
-		float py0_ = - px0 * sin_a + py0 * cos_a;
-
-		float vx = cell_size * (+ cos_a + sin_a);
-		float vy = cell_size * (- sin_a + cos_a);
-
 		float px, py;
 
 		auto it = map.cells.begin();
-		py = py0_;
+		py = 0;
 		for (uint32_t iy = 0; iy < map.count_y; ++iy) {
-			px = px0_;
+			px = 0;
 			for (uint32_t ix = 0; ix < map.count_x; ++ix) {
 				if(*it) {
 					SDL_SetRenderDrawColor(renderer, r, g, b, a);
 					SDL_Rect rect;
-					rect.x = (screen_size_x >> 1) + (int)(px);
-					rect.y = (screen_size_y >> 1) + (int)(py);
+					rect.x = (screen_size_x >> 1) + (int)( + (px - x) * cos_a + (py - y) * sin_a);
+					rect.y = (screen_size_y >> 1) + (int)( - (px - x) * sin_a + (py - y) * cos_a);
 					rect.w = rect.h = cell_size;
 					SDL_RenderFillRect(renderer, &rect);
 				}
 				++it;
-				px += vx;
+				px += cell_size;
 			}
-			py += vy;
+			py += cell_size;
 		}
 	}
 }
