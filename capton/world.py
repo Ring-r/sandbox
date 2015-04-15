@@ -21,13 +21,11 @@ class World:
 			j = random.randint(0, self.j_count)
 			if self.data[i][j] == 0:
 				return (i, j)
-	def draw(self, screen, color_back, color_front, cell_size, cell_border_size):
+	def draw(self, screen, cell_size, cell_border_size, colors):
 		for j in range(self.j_count):
 			for i in range(self.i_count):
+				color = colors[self.data[i][j]]
 				x = i * cell_size + cell_border_size
 				y = j * cell_size + cell_border_size
-				color = color_back
-				if self.data[i][j] > 0:
-					color = color_front
 				pygame.draw.rect(screen, color, [x, y, cell_size - 2 * cell_border_size, cell_size - 2 * cell_border_size])
 
