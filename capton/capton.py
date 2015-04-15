@@ -3,9 +3,9 @@
 import sys
 import os
 import pygame
+import random
 import time
 import world
-import entity
 
 title = "capton"
 resolution = (600, 600)
@@ -22,15 +22,17 @@ j_count = 30
 fill_percent = 20
 cell_size = 20
 cell_border_size = 1
-colors = ((12, 12, 12), (192, 192, 192))
-color_entity = (0, 0, 255)
+block_colors = ((12, 12, 12), (192, 192, 192))
+
+entity_count = 10 
+entity_colors = []
+for i in range(entity_count):
+	entity_colors += [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))]
 
 world = world.World()
-world.init(i_count, j_count)
-world.fill_random(fill_percent)
+world.init(i_count, j_count, entity_count)
 
-entity = entity.Entity()
-(entity.i, entity.j) = world.find_empty()
+world.fill_random(fill_percent)
 
 while True:
 	for event in pygame.event.get():
@@ -42,17 +44,16 @@ while True:
 				pygame.quit()
 				os._exit(0) # sys.exit(0)
 
-	entity.update(world)
+	world.update()
 
 	screen.fill(color_back)
 
-	world.draw(screen, cell_size, cell_border_size, colors)
-
-	entity.draw(screen, cell_size, cell_border_size, color_entity)
+	world.draw(screen, cell_size, cell_border_size, block_colors, entity_colors)
 
 	pygame.display.update()
 
-	time.sleep(1.0 / 60)
+	# time.sleep(1.0 / 60)
+	time.sleep(1.0 / 10)
 
 #if __name__ == "__main__":
 #  main()
