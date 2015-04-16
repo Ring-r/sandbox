@@ -24,6 +24,7 @@ cell_size = 20
 cell_border_size = 1
 block_colors = ((12, 12, 12), (192, 192, 192))
 
+border_color = (250, 0, 0)
 entity_count = 10 
 entity_colors = []
 for i in range(entity_count):
@@ -48,21 +49,24 @@ while True:
 			if event.key == pygame.K_ESCAPE:
 				pygame.quit()
 				os._exit(0) # sys.exit(0)
-		if event.type == pygame.KEYUP:
 			if event.key == pygame.K_LEFT:
-				entities[entity_index].K_LEFT();
-		 	if event.key == pygame.K_RIGHT:
-				entities[entity_index].K_RIGHT();
+				world.entities[entity_index].K_LEFT();
+			if event.key == pygame.K_RIGHT:
+				world.entities[entity_index].K_RIGHT();
 			if event.key == pygame.K_UP:
-				entities[entity_index].K_UP();
+				world.entities[entity_index].K_UP();
 			if event.key == pygame.K_DOWN:
-				entities[entity_index].K_DOWN();
+				world.entities[entity_index].K_DOWN();
 
 	world.update()
 
 	screen.fill(color_back)
 
 	world.draw(screen, cell_size, cell_border_size, block_colors, entity_colors)
+
+	x = world.entities[entity_index].i * cell_size
+	y = world.entities[entity_index].j * cell_size
+	pygame.draw.rect(screen, border_color, [x, y, cell_size, cell_size], cell_border_size)
 
 	pygame.display.update()
 
