@@ -19,7 +19,7 @@ screen = pygame.display.set_mode(resolution, flag, depth)
 
 i_count = 30
 j_count = 30
-fill_percent = 20
+fill_percent = 10
 cell_size = 20
 cell_border_size = 1
 block_colors = ((12, 12, 12), (192, 192, 192))
@@ -33,9 +33,14 @@ world = world.World()
 world.init(i_count, j_count, entity_count)
 
 world.fill_random(fill_percent)
+###############
 
+entity_index = 0
+
+###############
 while True:
 	for event in pygame.event.get():
+
 		if event.type == pygame.QUIT:
 			pygame.quit()
 			os._exit(0) # sys.exit(0)
@@ -43,6 +48,15 @@ while True:
 			if event.key == pygame.K_ESCAPE:
 				pygame.quit()
 				os._exit(0) # sys.exit(0)
+		if event.type == pygame.KEYUP:
+			if event.key == pygame.K_LEFT:
+				entities[entity_index].K_LEFT();
+		 	if event.key == pygame.K_RIGHT:
+				entities[entity_index].K_RIGHT();
+			if event.key == pygame.K_UP:
+				entities[entity_index].K_UP();
+			if event.key == pygame.K_DOWN:
+				entities[entity_index].K_DOWN();
 
 	world.update()
 

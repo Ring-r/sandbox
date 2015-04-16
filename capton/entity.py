@@ -24,4 +24,15 @@ class Entity:
 		x = self.i * cell_size + cell_border_size
 		y = self.j * cell_size + cell_border_size
 		pygame.draw.rect(screen, color, [x, y, cell_size - 2 * cell_border_size, cell_size - 2 * cell_border_size])
-		
+	def K_LEFT(self):
+		self.i_ = -1
+		self.j_ = -0
+	def K_RIGHT(self):
+		self.i_ = +1
+		self.j_ = +0
+	def K_UP(self):
+		self.i_ = -0
+		self.j_ = -1
+	def K_DOWN(self):
+		self.i_ = +0
+		self.j_ = +1
