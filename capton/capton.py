@@ -28,6 +28,7 @@ cell_colors = ((12, 12, 12), (192, 192, 192))
 
 world = world.World((i_count, j_count))
 
+border_color = (250, 0, 0)
 entity_count = 10 
 entity_colors = []
 for i in range(entity_count):
@@ -59,15 +60,15 @@ while True:
 			if event.key == pygame.K_F5:
 				init(world, entities)
 
-		if event.type == pygame.KEYUP:
-			if event.key == pygame.K_LEFT:
-				entities[entity_index].K_LEFT();
-		 	if event.key == pygame.K_RIGHT:
-				entities[entity_index].K_RIGHT();
-			if event.key == pygame.K_UP:
-				entities[entity_index].K_UP();
-			if event.key == pygame.K_DOWN:
-				entities[entity_index].K_DOWN();
+#		if event.type == pygame.KEYUP:
+#			if event.key == pygame.K_LEFT:
+#				world.entities[entity_index].K_LEFT();
+#			if event.key == pygame.K_RIGHT:
+#				world.entities[entity_index].K_RIGHT();
+#			if event.key == pygame.K_UP:
+#				world.entities[entity_index].K_UP();
+#			if event.key == pygame.K_DOWN:
+#				world.entities[entity_index].K_DOWN();
 
 	screen.fill(color_back)
 
@@ -89,6 +90,10 @@ while True:
 		color = entity_colors[entity_index]
 		drawer.draw_entity(screen, entity, cell_size, cell_border_size, color, coef)
 	# ====< Test code for client entities update.
+
+	x = entities[entity_index].i * cell_size
+	y = entities[entity_index].j * cell_size
+	pygame.draw.rect(screen, border_color, [x, y, cell_size, cell_size], cell_border_size)
 
 	pygame.display.update()
 
