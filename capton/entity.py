@@ -16,7 +16,7 @@ class Entity:
 	def update(self, world):
 		i_new = self.i + self.i_
 		j_new = self.j + self.j_
-		if 0 <= i_new and i_new < world.i_count and 0 <= j_new and j_new < world.j_count and world.data[i_new][j_new] == 0:
+		if 0 <= i_new and i_new < world.i_count and 0 <= j_new and j_new < world.j_count and world.cells[i_new][j_new] == 0:
 			self.move()
 		else:
 			self.rotate()
