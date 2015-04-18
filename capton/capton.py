@@ -6,6 +6,7 @@ import pygame
 import random
 import time
 import world
+import entity
 import drawer
 
 title = "capton"
@@ -23,21 +24,28 @@ j_count = 30
 fill_percent = 20
 cell_size = 20
 cell_border_size = 1
-colors = ((12, 12, 12), (192, 192, 192))
+cell_colors = ((12, 12, 12), (192, 192, 192))
+
+world = world.World((i_count, j_count))
 
 entity_count = 10 
 entity_colors = []
 for i in range(entity_count):
 	entity_colors += [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))]
 
-world = world.World((i_count, j_count))
+entities = [entity.Entity() for i in range(entity_count)]
 
 entity_index = 0
 
-def init(world):
+def init(world, entities):
 	world.fill_random(fill_percent)
+	for entity in entities:
+		(entity.i, entity.j) = world.find_random_empty()
 
-init(world)
+init(world, entities)
+
+frame_duration = 0.5 # seconds
+frame_start_time = time.time() # TODO: Use in python3: time.perf_counter()
 
 while True:
 	for event in pygame.event.get():
@@ -49,7 +57,7 @@ while True:
 				pygame.quit()
 				os._exit(0) # sys.exit(0)
 			if event.key == pygame.K_F5:
-				init(world)
+				init(world, entities)
 
 		if event.type == pygame.KEYUP:
 			if event.key == pygame.K_LEFT:
@@ -61,11 +69,26 @@ while True:
 			if event.key == pygame.K_DOWN:
 				entities[entity_index].K_DOWN();
 
-#	world.update()
-
 	screen.fill(color_back)
 
-	drawer.draw(screen, world, cell_size, cell_border_size, colors)
+	drawer.draw_grid(screen, world, cell_size, cell_border_size, cell_colors)
+
+	frame_elapsed_time = time.time() - frame_start_time # TODO: Use in python3: time.perf_counter()
+
+	# Test code for client entities update.====>
+	if frame_elapsed_time >= frame_duration:
+		for entity in entities:
+			entity.update(world)
+		frame_elapsed_time -= frame_duration
+		frame_start_time += frame_duration
+
+	coef = frame_elapsed_time / frame_duration if frame_elapsed_time < frame_duration else 1.0
+
+	for entity_index in range(len(entities)):
+		entity = entities[entity_index]
+		color = entity_colors[entity_index]
+		drawer.draw_entity(screen, entity, cell_size, cell_border_size, color, coef)
+	# ====< Test code for client entities update.
 
 	pygame.display.update()
 

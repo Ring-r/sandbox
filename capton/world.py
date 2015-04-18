@@ -15,12 +15,6 @@ class World:
 		for fill_index in range(fill_count):
 			(i, j) = self.find_random_empty()
 			self.cells[i][j] = 1
-#		for entity_index in range(len(self.entities)):
-#			(i, j) = self.find_random_empty()
-#			self.cells[i][j] = entity_index + self._max_block_count
-#			entity = self.entities[entity_index]
-#			entity.i = i
-#			entity.j = j
 	
 	def find_random_empty(self):
 		while True:
