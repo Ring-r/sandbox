@@ -37,6 +37,7 @@ for i in range(entity_count):
 entities = [entity.Entity() for i in range(entity_count)]
 
 entity_index = 0
+entity_colors[entity_index] = (255, 255, 255)
 
 def init(world, entities):
 	world.fill_random(fill_percent)
@@ -90,10 +91,6 @@ while True:
 		color = entity_colors[entity_index]
 		drawer.draw_entity(screen, entity, cell_size, cell_border_size, color, coef)
 	# ====< Test code for client entities update.
-
-	x = entities[entity_index].i * cell_size
-	y = entities[entity_index].j * cell_size
-	pygame.draw.rect(screen, border_color, [x, y, cell_size, cell_size], cell_border_size)
 
 	pygame.display.update()
 
