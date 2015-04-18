@@ -7,6 +7,8 @@ class Entity:
 
 		self.i_old = self.i
 		self.j_old = self.j
+		self.i__old = self.i_
+		self.j__old = self.j_
 
 	def move(self):
 		self.i += self.i_
@@ -20,6 +22,8 @@ class Entity:
 	def update(self, world):
 		self.i_old = self.i
 		self.j_old = self.j
+		self.i__old = self.i_
+		self.j__old = self.j_
 
 		i_new = self.i + self.i_
 		j_new = self.j + self.j_
