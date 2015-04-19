@@ -56,7 +56,11 @@ class World:
 			self.entity_commands[entity_index] = 0
 
 			entity.save_state()
-			entity.move() # TODO: Can use unbordered world there.
+			entity.move()
+
+			# TODO: Use for unbordered world.
+			#entity.i = entity.i % self.i_count
+			#entity.j = entity.j % self.j_count
 
 			if not self.check_range(entity.i, entity.j) or self.cells[entity.i][entity.j] > 0:
 				entity.can_move = False
