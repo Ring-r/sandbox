@@ -1,35 +1,38 @@
 class Entity:
+	DIRECTION_NUMBER = 4
+
 	def __init__(self):
 		self.i = 0
 		self.j = 0
-		self.i_ = 1
-		self.j_ = 0
+		self.d = 0
 
-		self.i_old = self.i
-		self.j_old = self.j
-		self.i__old = self.i_
-		self.j__old = self.j_
+		self.save_state()
+
+	def get_direction(self):
+		if self.d == 0:
+			return (1, 0)
+		if self.d == 1:
+			return (0, 1)
+		if self.d == 2:
+			return (-1, 0)
+		if self.d == 3:
+			return (0, -1)
 
 	def move(self):
-		self.i += self.i_
-		self.j += self.j_
+		(i, j) = self.get_direction()
+		self.i += i
+		self.j += j
 
 	def rotate(self):
-		t = self.i_
-		self.i_ = -self.j_
-		self.j_ = t
+		self.d = (self.d + 1) % Entity.DIRECTION_NUMBER
 
-	def update(self, world):
-		self.i_old = self.i
-		self.j_old = self.j
-		self.i__old = self.i_
-		self.j__old = self.j_
+	def save_state(self):
+		self.i_ = self.i
+		self.j_ = self.j
+		self.d_ = self.d
 
-		i_new = self.i + self.i_
-		j_new = self.j + self.j_
-
-		if 0 <= i_new and i_new < world.i_count and 0 <= j_new and j_new < world.j_count and world.cells[i_new][j_new] == 0:
-			self.move()
-		else:
-			self.rotate()
+	def restore_state(self):
+		self.i = self.i_
+		self.j = self.j_
+		self.d = self.d_
 
