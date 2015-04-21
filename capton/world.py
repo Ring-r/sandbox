@@ -27,7 +27,7 @@ class World:
 				return (i, j)
 
 	def fill_random(self, fill_percent):
-		fill_count = self.i_count * self.j_count * fill_percent / 100
+		fill_count = (int)(self.i_count * self.j_count * fill_percent / 100)
 		for fill_index in range(fill_count):
 			(i, j) = self.find_random_empty()
 			self.cells[i][j] = 1
