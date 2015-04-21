@@ -1,104 +1,56 @@
 #!/usr/bin/python
 
-import sys
-import os
+import os # import sys?
+from server import Server
+from client import Client
 import pygame
-import random
-import time
-import world
-import entity
 import drawer
+import time
 
-title = "capton"
-resolution = (600, 600)
-flag = 0 # pygame.FULLSCREEN
-depth = 32
-color_back = (0, 0, 0)
+def main():
+	server = Server()
 
-pygame.init()
-pygame.display.set_caption(title)
-screen = pygame.display.set_mode(resolution, flag, depth)
+	title = "capton"
+	resolution = (600, 600)
+	flag = 0 # pygame.FULLSCREEN
+	depth = 32
 
-i_count = 30
-j_count = 30
-fill_percent = 20
-cell_size = 20
-cell_border_size = 1
-cell_colors = ((12, 12, 12), (192, 192, 192))
+	pygame.init()
+	pygame.display.set_caption(title)
+	screen = pygame.display.set_mode(resolution, flag, depth)
 
-world = world.World((i_count, j_count))
+	client = Client()
 
-border_color = (250, 0, 0)
-entity_count = 20
-entity_colors = []
-for i in range(entity_count):
-	entity_colors.append((random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+#	ENTITY_COLOR = (255, 255, 255)
+#	client.entity_colors[0] = ENTITY_COLOR
 
-entities = [entity.Entity() for i in range(entity_count)]
+	client.send_connect(server)
 
-current_entity_index = 0
-entity_colors[current_entity_index] = (255, 255, 255)
+	I_COUNT = 30
+	J_COUNT = 30
+	FILL_PERCENT = 20
+	client.send_create_random_world(I_COUNT, J_COUNT, FILL_PERCENT)
 
-def init(world, entities):
-	world.clear()
-	world.fill_random(fill_percent)
-	for entity in entities:
-		(entity.i, entity.j) = world.find_random_empty()
-		entity.save_state() # TODO: Comment to see interesting effect.
-		world.connect(entity)
+	BOT_COUNT = 20
+	client.send_add_bot(BOT_COUNT)
 
-init(world, entities)
+	client.send_restart_game()
 
-frame_duration = 0.5 # seconds
-frame_start_time = time.time() # TODO: Use in python3: time.perf_counter()
-
-while True:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			pygame.quit()
-			os._exit(0) # sys.exit(0)
-		if event.type == pygame.KEYUP:
-			if event.key == pygame.K_ESCAPE:
+	frame_start_time = time.time() # TODO: Use in python3: time.perf_counter()
+	while True:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
 				pygame.quit()
 				os._exit(0) # sys.exit(0)
-			if event.key == pygame.K_F5:
-				init(world, entities)
 
-		if event.type == pygame.KEYUP:
-			if event.key == pygame.K_RIGHT:
-				world.send_command_to_entity(current_entity_index, 1)
-			if event.key == pygame.K_DOWN:
-				world.send_command_to_entity(current_entity_index, 2)
-			if event.key == pygame.K_LEFT:
-				world.send_command_to_entity(current_entity_index, 3)
-			if event.key == pygame.K_UP:
-				world.send_command_to_entity(current_entity_index, 4)
+			client.update(event)
 
-	frame_elapsed_time = time.time() - frame_start_time # TODO: Use in python3: time.perf_counter()
+		frame_elapsed_time = time.time() - frame_start_time # TODO: Use in python3: time.perf_counter()
+		server.update(frame_elapsed_time)
+		client.draw(screen, frame_elapsed_time)
 
-	# Server part. ====>
-	if frame_elapsed_time >= frame_duration:
-		world.update()
-		frame_elapsed_time -= frame_duration
-		frame_start_time += frame_duration
-	# ====< Server part.
+		time.sleep(1.0 / 60)
 
-	# Client part. ====>
-	screen.fill(color_back)
-
-	drawer.draw_grid(screen, world, cell_size, cell_border_size, cell_colors)
-
-	coef = frame_elapsed_time / frame_duration if frame_elapsed_time < frame_duration else 1.0
-	for entity_index in range(len(entities)):
-		entity = entities[entity_index]
-		color = entity_colors[entity_index]
-		drawer.draw_entity(screen, entity, cell_size, cell_border_size, color, coef)
-
-	pygame.display.update()
-	# ====< Client part.
-
-	time.sleep(1.0 / 60)
-
-#if __name__ == "__main__":
-#  main()
+if __name__ == "__main__":
+	main()
 

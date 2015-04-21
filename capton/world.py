@@ -5,6 +5,7 @@ class World:
 		self.i_count = count[0]
 		self.j_count = count[1]
 		self.cells = [[0 for i in range(self.i_count)] for j in range(self.j_count)]
+		self.fill_percent = 0
 
 		self.clear()
 
@@ -31,6 +32,7 @@ class World:
 		for fill_index in range(fill_count):
 			(i, j) = self.find_random_empty()
 			self.cells[i][j] = 1
+		self.fill_percent = fill_percent
 
 	def connect(self, entity):
 		self.entities.append(entity)
