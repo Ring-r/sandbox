@@ -108,6 +108,7 @@ Backup*/
 UpgradeLog*.XML
 
 # Python temporary files
+__pycache__
 *.pyc
 
 # Vim temporary files
