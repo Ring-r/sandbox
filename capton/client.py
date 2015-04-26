@@ -19,7 +19,7 @@ class Client:
 
 		self.server = None
 
-		self.frame_duration = 0.5 # seconds
+		self.frame_duration = 0.0 # seconds
 		self.frame_start_time = time.time() # TODO: Use in python3: time.perf_counter()
 		self.frame_elapsed_time = 0
 
@@ -61,6 +61,12 @@ class Client:
 
 	def check_permission(self, server):
 		return self.server == server
+
+	def receive_base(self, server, frame_duration):
+		if not self.check_permission(server):
+			return
+
+		self.frame_duration = frame_duration
 
 	def receive_world(self, server, world):
 		if not self.check_permission(server):

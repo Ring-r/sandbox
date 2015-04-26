@@ -33,6 +33,7 @@ class Server:
 
 			self.clients[client] = index
 
+			self.send_base(client, self.frame_duration)
 			self.send_world(client)
 			self.send_entities_all()
 
@@ -70,6 +71,9 @@ class Server:
 
 		index = self.clients[client]
 		self.world.entity_commands[index] = command
+
+	def send_base(self, client, frame_duration):
+		client.receive_base(self, self.frame_duration)
 
 	def send_world(self, client):
 		client.receive_world(self, self.world)
