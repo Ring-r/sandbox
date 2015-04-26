@@ -22,7 +22,7 @@ def main():
 	client = Client()
 
 #	ENTITY_COLOR = (255, 255, 255)
-#	client.entity_colors[0] = ENTITY_COLOR
+#	client.set_entity_color(ENTITY_COLOR)
 
 	client.send_connect(server)
 
@@ -36,18 +36,12 @@ def main():
 
 	client.send_restart_game()
 
-	frame_start_time = time.time() # TODO: Use in python3: time.perf_counter()
 	while True:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				pygame.quit()
-				os._exit(0) # sys.exit(0)
+		server.update()
 
-			client.update(event)
+		client.update()
 
-		frame_elapsed_time = time.time() - frame_start_time # TODO: Use in python3: time.perf_counter()
-		server.update(frame_elapsed_time)
-		client.draw(screen, frame_elapsed_time)
+		client.draw(screen)
 
 		time.sleep(1.0 / 60)
 
