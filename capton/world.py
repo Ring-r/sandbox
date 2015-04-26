@@ -26,7 +26,7 @@ class World:
 	def fill_random(self, i_count, j_count, fill_percent):
 		self.i_count = i_count
 		self.j_count = j_count
-		self.cells = [[0 for i in range(self.i_count)] for j in range(self.j_count)]
+		self.cells = [[0 for j in range(self.j_count)] for i in range(self.i_count)]
 		self.fill_percent = fill_percent
 
 		fill_count = (int)(self.i_count * self.j_count * self.fill_percent / 100)
