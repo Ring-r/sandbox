@@ -17,67 +17,38 @@ namespace RegionFilter
 
 		private readonly Random random = new Random();
 
-		private const int defaultPointCount = 10;
+		private const int defaultPointCount = 100;
 		private const int defaultRegionCount = 10;
 
 		private readonly List<List<Point3D>> region = new List<List<Point3D>>();
-		private IRegionFilter regionFilter = new RegionFilter_Fast();
+		private IRegionFilter regionFilter = new RegionFilter();
+
+		private long updateRegionTime = 0L;
+		private long updatePointsTime = 0L;
 
 		private Bitmap bitmap = new Bitmap(1, 1);
+		private readonly Color pointInRegionColor = Color.Green;
+		private readonly Color pointOutRegionColor = Color.FromArgb(0);
 
-		private long updateTime = 0L;
-		private long calculationTime = 0L;
+		private bool isDrawContour = true;
+		private readonly Color contourColor = Color.Red;
+		private readonly int contourPartAlpha = 100;
+		private readonly float contourPartWidth = 1.0f;
+		private readonly int currentContourPartAlpha = 255;
+		private readonly float currentContourPartWidth = 2.0f;
+		private readonly float pointSize = 20.0f;
 
-		private bool isDrawLines = true;
-		private bool isDrawPoints = true;
 		private bool isDrawStrings = true;
+		private readonly Brush stringsBrush = Brushes.Yellow;
 
 		private int indexPart = -1;
 		private int indexLine = -1;
 		private int indexPoint = -1;
 
-		private Color drawColor = Color.Red;
-		private int alpha = 100;
-		private int alphaCurrent = 255;
-		private float penWidth = 1.0f;
-		private float penWidthCurrent = 2.0f;
-		private readonly float pointSize = 10.0f;
-
 		private Point mousePoint = new Point();
-		private bool updateAfterMouseMove = false;
+		private bool updateOnMouseUp = false;
 
 		#endregion Private fields.
-
-		private void UpdateRegion()
-		{
-			Stopwatch stopwatch = new Stopwatch();
-			stopwatch.Start();
-			this.regionFilter.Update(this.region);
-			stopwatch.Stop();
-			this.updateTime = stopwatch.ElapsedMilliseconds;
-		}
-
-		private void UpdatePoints()
-		{
-			Stopwatch stopwatch = new Stopwatch();
-			stopwatch.Start();
-			int[] array = new int[this.ClientSize.Width * this.ClientSize.Height];
-			int index = 0;
-			for (int y = 0; y < this.ClientSize.Height; ++y)
-			{
-				for (int x = 0; x < this.ClientSize.Width; ++x)
-				{
-					array[index] = (this.regionFilter.Contains(x, y) ? Color.Green : Color.Blue).ToArgb();
-					++index;
-				}
-			}
-			stopwatch.Stop();
-			this.calculationTime = stopwatch.ElapsedMilliseconds;
-
-			BitmapData imageData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
-			Marshal.Copy(array, 0, imageData.Scan0, array.Length);
-			bitmap.UnlockBits(imageData);
-		}
 
 		private void CreateRandomPoints()
 		{
@@ -91,22 +62,51 @@ namespace RegionFilter
 			}
 		}
 
-		private void DrawLines(Graphics graphics)
+		private void PreCalculate()
 		{
-			if (!this.isDrawLines)
-			{
-				return;
-			}
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
+			this.regionFilter.Update(this.region);
+			stopwatch.Stop();
+			this.updateRegionTime = stopwatch.ElapsedMilliseconds;
+		}
 
+		private void Calculate()
+		{
+			Stopwatch stopwatch = new Stopwatch();
+			stopwatch.Start();
+			int[] array = new int[this.ClientSize.Width * this.ClientSize.Height];
+			int index = 0;
+			for (int y = 0; y < this.ClientSize.Height; ++y)
+			{
+				for (int x = 0; x < this.ClientSize.Width; ++x)
+				{
+					array[index] = (this.regionFilter.Contains(x, y) ? pointInRegionColor : pointOutRegionColor).ToArgb();
+					++index;
+				}
+			}
+			stopwatch.Stop();
+			this.updatePointsTime = stopwatch.ElapsedMilliseconds;
+
+			BitmapData imageData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
+			Marshal.Copy(array, 0, imageData.Scan0, array.Length);
+			bitmap.UnlockBits(imageData);
+		}
+
+		private void DrawContour(Graphics graphics)
+		{
 			for (int j = 0; j < this.region.Count; ++j)
 			{
-				Pen pen = new Pen(Color.FromArgb(j == this.indexPart ? this.alphaCurrent : this.alpha, this.drawColor));
+				Pen pen = new Pen(Color.FromArgb(j == this.indexPart ? this.currentContourPartAlpha : this.contourPartAlpha, this.contourColor));
 
 				List<Point3D> regionPart = this.region[j];
 				for (int i = 0; i < regionPart.Count; ++i)
 				{
-					pen.Width = j == this.indexPart && i == this.indexLine ? this.penWidthCurrent : this.penWidth;
+					pen.Width = j == this.indexPart && i == this.indexPoint ? this.currentContourPartWidth : this.contourPartWidth;
+					Point3D regionPoint = regionPart[i];
+					graphics.DrawRectangle(pen, (float)(regionPoint.X) - this.pointSize / 2, (float)(regionPoint.Y) - this.pointSize / 2, this.pointSize, this.pointSize);
 
+					pen.Width = j == this.indexPart && i == this.indexLine ? this.currentContourPartWidth : this.contourPartWidth;
 					Point3D regionPointSource = regionPart[i];
 					Point3D regionPointTarget = regionPart[i != regionPart.Count - 1 ? i + 1 : 0];
 					graphics.DrawLine(pen, (float)(regionPointSource.X), (float)(regionPointSource.Y), (float)(regionPointTarget.X), (float)(regionPointTarget.Y));
@@ -114,114 +114,104 @@ namespace RegionFilter
 			}
 		}
 
-		private void DrawPoints(Graphics graphics)
-		{
-			if (!this.isDrawPoints)
-			{
-				return;
-			}
-
-			for (int j = 0; j < this.region.Count; ++j)
-			{
-				Pen pen = new Pen(Color.FromArgb(j == this.indexPart ? this.alphaCurrent : this.alpha, this.drawColor));
-
-				List<Point3D> regionPart = this.region[j];
-				for (int i = 0; i < regionPart.Count; ++i)
-				{
-					pen.Width = j == this.indexPart && i == this.indexPoint ? this.penWidthCurrent : this.penWidth;
-
-					Point3D regionPoint = regionPart[i];
-					graphics.DrawRectangle(pen, (float)(regionPoint.X) - this.pointSize / 2, (float)(regionPoint.Y) - this.pointSize / 2, this.pointSize, this.pointSize);
-				}
-			}
-		}
-
 		private void DrawStrings(Graphics graphics)
 		{
 			float textY = 0;
-			graphics.DrawString("F1 - help", this.Font, Brushes.Yellow, 0.0f, textY);
+			graphics.DrawString("F1 - help", this.Font, stringsBrush, 0.0f, textY);
 			if (this.isDrawStrings)
 			{
 				float textHeight = graphics.MeasureString(" ", this.Font).Height;
 
+				textY += textHeight; graphics.DrawString("F2 - show contour", this.Font, stringsBrush, 0.0f, textY);
+				textY += textHeight; graphics.DrawString("F5 - clean", this.Font, stringsBrush, 0.0f, textY);
+				textY += textHeight; graphics.DrawString("F6 - create random points", this.Font, stringsBrush, 0.0f, textY);
 				textY += textHeight;
-				graphics.DrawString("F2 - show lines", this.Font, Brushes.Yellow, 0.0f, textY);
+				textY += textHeight; graphics.DrawString("To add point (points count in current part less then 3) click mouse left button in any place.", this.Font, stringsBrush, 0.0f, textY);
+				textY += textHeight; graphics.DrawString("To add point (points count in current part more then 3) click mouse left button on edge.", this.Font, stringsBrush, 0.0f, textY);
+				textY += textHeight; graphics.DrawString("To move point click mouse left button on point, hold and move.", this.Font, stringsBrush, 0.0f, textY);
+				textY += textHeight; graphics.DrawString("To delete point click mouse right button on point.", this.Font, stringsBrush, 0.0f, textY);
+				textY += textHeight; graphics.DrawString("To delete part delete all points in part.", this.Font, stringsBrush, 0.0f, textY);
 				textY += textHeight;
-				graphics.DrawString("F5 - clean", this.Font, Brushes.Yellow, 0.0f, textY);
+				textY += textHeight; graphics.DrawString(string.Format("Count of region points: {0}", this.region.Sum(part => part.Count)), this.Font, stringsBrush, 0.0f, textY);
+				textY += textHeight; graphics.DrawString(string.Format("PreCalculate time: {0} milliseconds", this.updateRegionTime), this.Font, stringsBrush, 0.0f, textY);
 				textY += textHeight;
-				graphics.DrawString("F6 - create random points", this.Font, Brushes.Yellow, 0.0f, textY);
+				textY += textHeight; graphics.DrawString(string.Format("Count of verificated points: {0}", this.ClientSize.Width * this.ClientSize.Height), this.Font, stringsBrush, 0.0f, textY);
+				textY += textHeight; graphics.DrawString(string.Format("Calculation time: {0} milliseconds", this.updatePointsTime), this.Font, stringsBrush, 0.0f, textY);
 				textY += textHeight;
-				graphics.DrawString("Mouse left button - add point", this.Font, Brushes.Yellow, 0.0f, textY);
-				textY += textHeight;
-				graphics.DrawString("Mouse right button - del point", this.Font, Brushes.Yellow, 0.0f, textY);
-				textY += textHeight;
-				graphics.DrawString(string.Format("Region points count: {0}", this.region.Sum(part => part.Count)), this.Font, Brushes.Yellow, 0.0f, textY);
-				textY += textHeight;
-				graphics.DrawString(string.Format("Update time: {0} milliseconds", this.updateTime), this.Font, Brushes.Yellow, 0.0f, textY);
-				textY += textHeight;
-				graphics.DrawString(string.Format("Verificated points count: {0}", this.ClientSize.Width * this.ClientSize.Height), this.Font, Brushes.Yellow, 0.0f, textY);
-				textY += textHeight;
-				graphics.DrawString(string.Format("Calculation time: {0} milliseconds", this.calculationTime), this.Font, Brushes.Yellow, 0.0f, textY);
+				textY += textHeight; graphics.DrawString("Exc - close", this.Font, stringsBrush, 0.0f, textY);
 			}
 		}
 
-		private bool UpdateCurrentLinePointIndex()
+		#region Find current point and line indexes.
+
+		private bool UpdateCurrentIndexes()
 		{
-			bool isDone = false;
-
-			int indexLine = -1;
-			int indexPoint = -1;
-			indexLine = this.FindCurrentLineIndex();
-			indexPoint = this.FindCurrentPointIndex();
-			if (this.indexLine != indexLine || this.indexPoint != indexPoint)
+			Tuple<int, int> currentPointIndex = this.FindCurrentPointIndex();
+			if (currentPointIndex.Item2 >= 0)
 			{
-				this.indexLine = indexLine;
-				this.indexPoint = indexPoint;
-				isDone = true;
-			}
-
-			return isDone;
-		}
-
-		private int FindCurrentLineIndex()
-		{
-			if (!this.isDrawLines || this.indexPart < 0)
-			{
-				return -1;
-			}
-
-			int indexLine = -1;
-			List<Point3D> regionPart = this.region[this.indexPart];
-			for (int i = 0; i < regionPart.Count; ++i)
-			{
-				Point3D regionPointSource = regionPart[i];
-				Point3D regionPointTarget = regionPart[i != regionPart.Count - 1 ? i + 1 : 0];
-				double vx = regionPointTarget.X - regionPointSource.X;
-				double vy = regionPointTarget.Y - regionPointSource.Y;
-				double d = Math.Sqrt(vx * vx + vy * vy);
-				if (d != 0)
+				if (this.indexPart != currentPointIndex.Item1 || this.indexPoint != currentPointIndex.Item2)
 				{
-					vx /= d;
-					vy /= d;
-					if (Math.Abs((this.mousePoint.X - regionPointSource.X) * vy - (this.mousePoint.Y - regionPointSource.Y) * vx) <= this.pointSize / 2)
-					{
-						indexLine = i;
-						break;
-					}
+					this.indexPart = currentPointIndex.Item1;
+					this.indexPoint = currentPointIndex.Item2;
+					this.indexLine = -1;
+					return true;
+				}
+				return false;
+			}
+
+			Tuple<int, int> currentLineIndex = this.FindCurrentLineIndex();
+			if (currentLineIndex.Item2 >= 0)
+			{
+				if (this.indexPart != currentLineIndex.Item1 || this.indexLine != currentLineIndex.Item2)
+				{
+					this.indexPart = currentLineIndex.Item1;
+					this.indexLine = currentLineIndex.Item2;
+					this.indexPoint = -1;
+					return true;
+				}
+				return false;
+			}
+
+			if (this.indexPoint != -1 || this.indexLine != -1)
+			{
+				this.indexPoint = -1;
+				this.indexLine = -1;
+			}
+
+			return true;
+		}
+
+		private Tuple<int, int> FindCurrentPointIndex()
+		{
+			int indexPart = -1;
+			int indexPoint = -1;
+
+			if (0 < this.indexPart && this.indexPart < this.region.Count)
+			{
+				int i = this.indexPart;
+				indexPoint = this.FindCurrentPointIndex(i);
+				if (indexPoint >= 0)
+				{
+					indexPart = i;
 				}
 			}
-			return indexLine;
-		}
 
-		private int FindCurrentPointIndex()
-		{
-			if (!this.isDrawPoints || this.indexPart < 0)
+			for (int i = 0; i < this.region.Count && indexPoint < 0; ++i)
 			{
-				return -1;
+				indexPoint = this.FindCurrentPointIndex(i);
+				if (indexPoint >= 0)
+				{
+					indexPart = i;
+				}
 			}
 
+			return Tuple.Create(indexPart, indexPoint);
+		}
+
+		private int FindCurrentPointIndex(int indexPart)
+		{
 			int indexPoint = -1;
-			List<Point3D> regionPart = this.region[this.indexPart];
+			List<Point3D> regionPart = this.region[indexPart];
 			for (int i = 0; i < regionPart.Count; ++i)
 			{
 				Point3D regionPoint = regionPart[i];
@@ -234,28 +224,102 @@ namespace RegionFilter
 			return indexPoint;
 		}
 
+		private Tuple<int, int> FindCurrentLineIndex()
+		{
+			int indexPart = -1;
+			int indexLine = -1;
+
+			if (0 < this.indexPart && this.indexPart < this.region.Count)
+			{
+				int i = this.indexPart;
+				indexLine = this.FindCurrentLineIndex(i);
+				if (indexLine >= 0)
+				{
+					indexPart = i;
+				}
+			}
+
+			for (int i = 0; i < this.region.Count && indexLine < 0; ++i)
+			{
+				indexLine = this.FindCurrentLineIndex(i);
+				if (indexLine >= 0)
+				{
+					indexPart = i;
+				}
+			}
+
+			return Tuple.Create(indexPart, indexLine);
+		}
+
+		private int FindCurrentLineIndex(int indexPart)
+		{
+			int indexLine = -1;
+			List<Point3D> regionPart = this.region[indexPart];
+			for (int i = 0; i < regionPart.Count; ++i)
+			{
+				Point3D regionPointSource = regionPart[i];
+				Point3D regionPointTarget = regionPart[i != regionPart.Count - 1 ? i + 1 : 0];
+				if (
+					Math.Abs(this.mousePoint.X - (regionPointSource.X + regionPointTarget.X) / 2) < Math.Abs(regionPointSource.X - regionPointTarget.X) / 2 &&
+					Math.Abs(this.mousePoint.Y - (regionPointSource.Y + regionPointTarget.Y) / 2) < Math.Abs(regionPointSource.Y - regionPointTarget.Y) / 2)
+				{
+					double vx = regionPointTarget.X - regionPointSource.X;
+					double vy = regionPointTarget.Y - regionPointSource.Y;
+					double d = Math.Sqrt(vx * vx + vy * vy);
+					if (d != 0)
+					{
+						vx /= d;
+						vy /= d;
+						if (Math.Abs((this.mousePoint.X - regionPointSource.X) * vy - (this.mousePoint.Y - regionPointSource.Y) * vx) <= this.pointSize / 2)
+						{
+
+							indexLine = i;
+							break;
+						}
+					}
+				}
+			}
+			return indexLine;
+		}
+
+		#endregion Find current point and line indexes.
+
 		private bool AddPoint(double x, double y)
 		{
-			bool isDone = false;
-
 			if (this.indexPart < 0)
 			{
-				this.region.Add(new List<Point3D>());
+				List<Point3D> regionPart = new List<Point3D>();
+				regionPart.Add(new Point3D(x, y, 0.0));
+				this.region.Add(regionPart);
 				this.indexPart = 0;
 			}
-
-			List<Point3D> regionPart = this.region[this.indexPart];
-			if (regionPart.Count < 3)
+			else
 			{
-				regionPart.Add(new Point3D(x, y, 0.0));
-				isDone = true;
+				List<Point3D> regionPart = this.region[this.indexPart];
+				if (regionPart.Count < 3)
+				{
+					regionPart.Add(new Point3D(x, y, 0.0));
+				}
+				else
+				{
+					if (this.indexLine >= 0)
+					{
+						regionPart.Insert(this.indexLine + 1, new Point3D(x, y, 0.0));
+					}
+					else
+					{
+						regionPart = this.region[this.region.Count - 1];
+						if (regionPart.Count >= 3)
+						{
+							regionPart = new List<Point3D>();
+						}
+						regionPart.Add(new Point3D(x, y, 0.0));
+						this.region.Add(regionPart);
+						this.indexPart = this.region.Count - 1;
+					}
+				}
 			}
-			else if (this.indexLine >= 0)
-			{
-				regionPart.Insert(this.indexLine + 1, new Point3D(x, y, 0.0));
-				isDone = true;
-			}
-			return isDone;
+			return true;
 		}
 
 		private bool DelPoint()
@@ -285,7 +349,7 @@ namespace RegionFilter
 		{
 			this.bitmap.Dispose();
 			this.bitmap = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
-			this.UpdatePoints();
+			this.Calculate();
 			this.Invalidate();
 		}
 
@@ -297,11 +361,15 @@ namespace RegionFilter
 
 			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-			this.DrawLines(e.Graphics);
+			if (this.isDrawContour)
+			{
+				this.DrawContour(e.Graphics);
+			}
 
-			this.DrawPoints(e.Graphics);
-
-			this.DrawStrings(e.Graphics);
+			if (this.isDrawStrings)
+			{
+				this.DrawStrings(e.Graphics);
+			}
 		}
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -318,21 +386,18 @@ namespace RegionFilter
 			}
 			if (e.KeyData == Keys.F2)
 			{
-				this.isDrawLines = !this.isDrawLines;
-
-				this.Invalidate();
-			}
-			if (e.KeyData == Keys.F3)
-			{
-				this.isDrawPoints = !this.isDrawPoints;
+				this.isDrawContour = !this.isDrawContour;
 
 				this.Invalidate();
 			}
 			if (e.KeyData == Keys.F5)
 			{
 				this.region.Clear();
-				this.UpdateRegion();
-				this.UpdatePoints();
+				this.PreCalculate();
+				this.Calculate();
+
+				this.indexPart = -1;
+				this.UpdateCurrentIndexes();
 
 				this.Invalidate();
 			}
@@ -340,52 +405,9 @@ namespace RegionFilter
 			{
 				this.region.Clear();
 				this.CreateRandomPoints();
-				this.UpdateRegion();
-				this.UpdatePoints();
+				this.PreCalculate();
+				this.Calculate();
 
-				this.Invalidate();
-			}
-			if (e.KeyData == Keys.PageDown)
-			{
-				this.indexPart -= 1;
-				if (this.indexPart < 0)
-				{
-					this.indexPart = this.region.Count - 1;
-				}
-
-				this.Invalidate();
-			}
-			if (e.KeyData == Keys.PageUp)
-			{
-				this.indexPart += 1;
-				if (this.indexPart >= this.region.Count)
-				{
-					this.indexPart = 0;
-				}
-
-				this.Invalidate();
-			}
-			if (e.KeyData == Keys.Enter)
-			{
-				if (this.region.Count == 0)
-				{
-					this.region.Add(new List<Point3D>());
-					this.indexPart = 0;
-				}
-
-				List<Point3D> regionPart = this.region[this.indexPart];
-				if (regionPart.Count < 3)
-				{
-					regionPart.Clear();
-				}
-				else
-				{
-					this.indexPart += 1;
-					this.region.Insert(this.indexPart, new List<Point3D>());
-				}
-
-				this.UpdateRegion();
-				this.UpdatePoints();
 				this.Invalidate();
 			}
 		}
@@ -394,23 +416,27 @@ namespace RegionFilter
 		{
 			bool isInvalidate = false;
 
-			if (e.Button == MouseButtons.Left)
+			if (e.Button == MouseButtons.Left && this.indexPoint < 0)
 			{
-				if (this.indexPoint < 0)
-				{
-					isInvalidate = this.AddPoint(e.X, e.Y);
-				}
+				isInvalidate = this.AddPoint(e.X, e.Y);
 			}
-			if (e.Button == MouseButtons.Right)
+			if (e.Button == MouseButtons.Right && this.indexPoint >= 0)
 			{
-				isInvalidate = this.DelPoint();
+				if (this.DelPoint())
+				{
+					if (this.region[this.indexPart].Count == 0)
+					{
+						this.region.RemoveAt(this.indexPart);
+					}
+					isInvalidate = true;
+				}
 			}
 
 			if (isInvalidate)
 			{
-				this.UpdateCurrentLinePointIndex();
-				this.UpdateRegion();
-				this.UpdatePoints();
+				this.UpdateCurrentIndexes();
+				this.PreCalculate();
+				this.Calculate();
 				this.Invalidate();
 			}
 		}
@@ -428,14 +454,14 @@ namespace RegionFilter
 
 			if (e.Button == MouseButtons.None)
 			{
-				isInvalidate = this.UpdateCurrentLinePointIndex();
+				isInvalidate = this.UpdateCurrentIndexes();
 			}
 
 			if (e.Button == MouseButtons.Left && this.indexPoint >= 0)
 			{
 				List<Point3D> regionPart = this.region[this.indexPart];
 				regionPart[this.indexPoint] = new Point3D(e.X, e.Y, 0.0);
-				this.updateAfterMouseMove = true;
+				this.updateOnMouseUp = true;
 				isInvalidate = true;
 			}
 
@@ -447,11 +473,11 @@ namespace RegionFilter
 
 		private void MainForm_MouseUp(object sender, MouseEventArgs e)
 		{
-			if (this.updateAfterMouseMove)
+			if (this.updateOnMouseUp)
 			{
-				this.updateAfterMouseMove = false;
-				this.UpdateRegion();
-				this.UpdatePoints();
+				this.updateOnMouseUp = false;
+				this.PreCalculate();
+				this.Calculate();
 				this.Invalidate();
 			}
 		}
