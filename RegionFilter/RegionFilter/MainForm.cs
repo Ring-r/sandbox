@@ -95,6 +95,11 @@ namespace RegionFilter
 
 		private void DrawContour(Graphics graphics)
 		{
+			if (!this.isDrawContour)
+			{
+				return;
+			}
+
 			for (int j = 0; j < this.region.Count; ++j)
 			{
 				Pen pen = new Pen(Color.FromArgb(j == this.indexPart ? this.currentContourPartAlpha : this.contourPartAlpha, this.contourColor));
@@ -118,31 +123,32 @@ namespace RegionFilter
 		{
 			float textY = 0;
 			graphics.DrawString("F1 - help", this.Font, stringsBrush, 0.0f, textY);
-			if (this.isDrawStrings)
+
+			if (!this.isDrawStrings)
 			{
-				float textHeight = graphics.MeasureString(" ", this.Font).Height;
-
-				textY += textHeight; graphics.DrawString("F2 - show contour", this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight; graphics.DrawString("F5 - clean", this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight; graphics.DrawString("F6 - create random points", this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight;
-				textY += textHeight; graphics.DrawString("To add point (points count in current part less then 3) click mouse left button in any place.", this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight; graphics.DrawString("To add point (points count in current part more then 3) click mouse left button on edge.", this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight; graphics.DrawString("To move point click mouse left button on point, hold and move.", this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight; graphics.DrawString("To delete point click mouse right button on point.", this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight; graphics.DrawString("To delete part delete all points in part.", this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight;
-				textY += textHeight; graphics.DrawString(string.Format("Count of region points: {0}", this.region.Sum(part => part.Count)), this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight; graphics.DrawString(string.Format("PreCalculate time: {0} milliseconds", this.updateRegionTime), this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight;
-				textY += textHeight; graphics.DrawString(string.Format("Count of verificated points: {0}", this.ClientSize.Width * this.ClientSize.Height), this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight; graphics.DrawString(string.Format("Calculation time: {0} milliseconds", this.updatePointsTime), this.Font, stringsBrush, 0.0f, textY);
-				textY += textHeight;
-				textY += textHeight; graphics.DrawString("Exc - close", this.Font, stringsBrush, 0.0f, textY);
+				return;
 			}
-		}
 
-		#region Find current point and line indexes.
+			float textHeight = graphics.MeasureString(" ", this.Font).Height;
+
+			textY += textHeight; graphics.DrawString("F2 - show/hide contour", this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight; graphics.DrawString("F5 - clean", this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight; graphics.DrawString("F6 - create random points", this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight;
+			textY += textHeight; graphics.DrawString("To add point (points count in current part less then 3) click mouse left button in any place.", this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight; graphics.DrawString("To add point (points count in current part more then 3) click mouse left button on edge.", this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight; graphics.DrawString("To move point click mouse left button on point, hold and move.", this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight; graphics.DrawString("To delete point click mouse right button on point.", this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight; graphics.DrawString("To delete part delete all points in part.", this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight;
+			textY += textHeight; graphics.DrawString(string.Format("Count of region points: {0}", this.region.Sum(part => part.Count)), this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight; graphics.DrawString(string.Format("PreCalculation time: {0} milliseconds", this.updateRegionTime), this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight;
+			textY += textHeight; graphics.DrawString(string.Format("Count of verificated points: {0}", this.ClientSize.Width * this.ClientSize.Height), this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight; graphics.DrawString(string.Format("Calculation time: {0} milliseconds", this.updatePointsTime), this.Font, stringsBrush, 0.0f, textY);
+			textY += textHeight;
+			textY += textHeight; graphics.DrawString("Exc - close", this.Font, stringsBrush, 0.0f, textY);
+		}
 
 		private bool UpdateCurrentIndexes()
 		{
@@ -282,8 +288,6 @@ namespace RegionFilter
 			return indexLine;
 		}
 
-		#endregion Find current point and line indexes.
-
 		private bool AddPoint(double x, double y)
 		{
 			if (this.indexPart < 0)
@@ -340,11 +344,6 @@ namespace RegionFilter
 			return isDone;
 		}
 
-		public MainForm()
-		{
-			InitializeComponent();
-		}
-
 		private void MainForm_Resize(object sender, EventArgs e)
 		{
 			this.bitmap.Dispose();
@@ -361,15 +360,9 @@ namespace RegionFilter
 
 			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
-			if (this.isDrawContour)
-			{
-				this.DrawContour(e.Graphics);
-			}
+			this.DrawContour(e.Graphics);
 
-			if (this.isDrawStrings)
-			{
-				this.DrawStrings(e.Graphics);
-			}
+			this.DrawStrings(e.Graphics);
 		}
 
 		private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -408,6 +401,9 @@ namespace RegionFilter
 				this.PreCalculate();
 				this.Calculate();
 
+				this.indexPart = -1;
+				this.UpdateCurrentIndexes();
+
 				this.Invalidate();
 			}
 		}
@@ -445,7 +441,7 @@ namespace RegionFilter
 		{
 			this.mousePoint = e.Location;
 
-			if (this.indexPart < 0)
+			if (this.region.Count == 0)
 			{
 				return;
 			}
@@ -485,6 +481,11 @@ namespace RegionFilter
 		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			this.bitmap.Dispose();
+		}
+
+		public MainForm()
+		{
+			InitializeComponent();
 		}
 	}
 }

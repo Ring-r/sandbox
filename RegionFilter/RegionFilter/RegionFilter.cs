@@ -7,31 +7,21 @@ namespace RegionFilter
 {
 	public class RegionFilter: IRegionFilter
 	{
-		private double[] pxArray = new double[0];
-		private double[][][] pyArrays = new double[0][][];
+		private double[] xs = new double[0];
+		private double[][][] xEdges = new double[0][][];
 
-		private double[] GetSortedXArray(List<List<Point3D>> pointListList)
+		public void Update(List<List<Point3D>> pointListList)
 		{
 			SortedSet<double> sortedSet = new SortedSet<double>();
-			foreach (List<Point3D> pointList in pointListList)
-			{
-				foreach (Point3D point in pointList)
-				{
-					sortedSet.Add(point.X);
-				}
-			}
-			return sortedSet.ToArray();
-		}
+			pointListList.ForEach(pointList => pointList.ForEach(point => sortedSet.Add(point.X)));
 
-		private void FillStrips(List<List<Point3D>> pointListList)
-		{
-			this.pxArray = this.GetSortedXArray(pointListList);
-			this.pyArrays = new double[this.pxArray.Length][][];
+			this.xs = sortedSet.ToArray();
+			this.xEdges = new double[this.xs.Length][][];
 
-			List<double[]>[] pyLists = new List<double[]>[this.pxArray.Length];
-			for (int i = 0; i < pyLists.Length; ++i)
+			List<double[]>[] xEdgeList = new List<double[]>[this.xs.Length];
+			for (int i = 0; i < xEdgeList.Length; ++i)
 			{
-				pyLists[i] = new List<double[]>();
+				xEdgeList[i] = new List<double[]>();
 			}
 
 			foreach (List<Point3D> pointList in pointListList)
@@ -39,7 +29,7 @@ namespace RegionFilter
 				List<int> indexList = new List<int>(pointList.Count);
 				for (int j = 0; j < pointList.Count; ++j)
 				{
-					indexList.Add(Array.BinarySearch(this.pxArray, pointList[j].X) - 1);
+					indexList.Add(Array.BinarySearch(this.xs, pointList[j].X) - 1);
 				}
 				for (int i = pointList.Count - 1, j = 0; j < pointList.Count; i = j, ++j)
 				{
@@ -60,15 +50,15 @@ namespace RegionFilter
 
 					for (int xIndex = xIndex1 + 1; xIndex <= xIndex2; ++xIndex)
 					{
-						pyLists[xIndex].Add(new double[2] { y1 + (this.pxArray[xIndex] - x1) * slope, slope });
+						xEdgeList[xIndex].Add(new double[2] { y1 + (this.xs[xIndex] - x1) * slope, slope });
 					}
 				}
 			}
 
-			for (int xIndex = 0; xIndex < pyLists.Length; ++xIndex)
+			for (int xIndex = 0; xIndex < xEdgeList.Length; ++xIndex)
 			{
-				pyLists[xIndex].Sort((t1, t2) => Math.Sign(t1[0] == t2[0] ? t1[1] - t2[1] : t1[0] - t2[0]));
-				this.pyArrays[xIndex] = pyLists[xIndex].ToArray();
+				xEdgeList[xIndex].Sort((t1, t2) => Math.Sign(t1[0] == t2[0] ? t1[1] - t2[1] : t1[0] - t2[0]));
+				this.xEdges[xIndex] = xEdgeList[xIndex].ToArray();
 			}
 		}
 
@@ -77,22 +67,15 @@ namespace RegionFilter
 			this.Update(pointListList.AsEnumerable().ToList());
 		}
 
-		public void Update(List<List<Point3D>> pointListList)
-		{
-			this.pxArray = new double[0];
-			this.pyArrays = new double[0][][];
-			this.FillStrips(pointListList);
-		}
-
 		public bool Contains(double x, double y)
 		{
 			int xBegin = -1;
-			int xEnd = this.pxArray.Length;
+			int xEnd = this.xs.Length;
 			int xMiddle;
 			while (xEnd - xBegin > 1)
 			{
 				xMiddle = (xEnd + xBegin) >> 1;
-				if (this.pxArray[xMiddle] < x)
+				if (this.xs[xMiddle] < x)
 					xBegin = xMiddle;
 				else
 					xEnd = xMiddle;
@@ -102,29 +85,30 @@ namespace RegionFilter
 				return false;
 			}
 
-			double dx = x - this.pxArray[xBegin];
-			double[][] pyList = this.pyArrays[xBegin];
-			int yBegin = -1;
-			int yEnd = pyList.Length;
-			int yMiddle;
-			while (yEnd - yBegin > 1)
+			double dx = x - this.xs[xBegin];
+			double[][] edges = this.xEdges[xBegin];
+			int edgeBegin = -1;
+			int edgeEnd = edges.Length;
+			int edgeMiddle;
+			while (edgeEnd - edgeBegin > 1)
 			{
-				yMiddle = (yEnd + yBegin) >> 1;
-				if (pyList[yMiddle][0] + dx * pyList[yMiddle][1] < y)
-					yBegin = yMiddle;
+				edgeMiddle = (edgeEnd + edgeBegin) >> 1;
+				if (edges[edgeMiddle][0] + dx * edges[edgeMiddle][1] < y)
+					edgeBegin = edgeMiddle;
 				else
-					yEnd = yMiddle;
+					edgeEnd = edgeMiddle;
 			}
-			if (yBegin < 0)
+			if (edgeBegin < 0)
 			{
 				return false;
 			}
-			if (pyList[yBegin][0] + dx * pyList[yBegin][1] == y)
+
+			if (edges[edgeBegin][0] + dx * edges[edgeBegin][1] == y)
 			{
 				return true;
 			}
 
-			return yBegin % 2 == 0;
+			return edgeBegin % 2 == 0;
 		}
 	}
 }
