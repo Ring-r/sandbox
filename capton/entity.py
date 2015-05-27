@@ -1,13 +1,14 @@
 class Entity:
 	DIRECTION_NUMBER = 4
 
-	def __init__(self, position = (0, 0), direction_index = 0, save_state = True):
+	def __init__(self, position = (0, 0), direction_index = 0):
 		self.i = position[0]
 		self.j = position[1]
 		self.d = direction_index
 
-		if save_state:
-			self.save_state()
+		self.save_state()
+
+		self.command = 0
 
 	def get_direction(self):
 		if self.d == 0:
@@ -36,4 +37,7 @@ class Entity:
 		self.i = self.i_
 		self.j = self.j_
 		self.d = self.d_
+
+	def is_moved(self):
+		return self.i != self.i_ or self.j != self.j_
 

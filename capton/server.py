@@ -70,7 +70,7 @@ class Server:
 			return
 
 		index = self.clients[client]
-		self.world.entity_commands[index] = command
+		self.world.entities[index].command = command
 
 	def send_base(self, client, frame_duration):
 		client.receive_base(self, self.frame_duration)

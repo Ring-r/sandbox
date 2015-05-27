@@ -14,7 +14,6 @@ class World:
 		self.fill_percent = 0
 
 		self.entities = []
-		self.entity_commands = []
 
 		self.blocks = [Block(0), Block(-1)]
 		count = len(self.blocks)
@@ -25,7 +24,7 @@ class World:
 		return self.i_count == 0 and self.j_count == 0
 
 	def check_range(self, i, j):
-		return 0 <= i and i < self.i_count and 0 <= j and j < self.j_count
+		return 0 <= i < self.i_count and 0 <= j < self.j_count
 
 	def check_free(self, i, j):
 		index = self.cells[i][j]
@@ -57,17 +56,14 @@ class World:
 
 	def connect(self, entity):
 		self.entities.append(entity)
-		self.entity_commands.append(0)
 
 		return len(self.entities) - 1
 
 	def raise_commands(self):
-		for entity_index in range(len(self.entities)):
-			entity = self.entities[entity_index]
-			command = self.entity_commands[entity_index]
-			if command > 0:
-				entity.d = command - 1
-			self.entity_commands[entity_index] = 0
+		for entity in self.entities:
+			if entity.command > 0:
+				entity.d = entity.command - 1
+			entity.command = 0
 
 	def create_temp_block_index(self):
 		if self.blocks_count_max == len(self.blocks):

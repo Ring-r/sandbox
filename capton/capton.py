@@ -9,13 +9,11 @@ def main():
 	server = Server()
 
 	title = "capton"
-	resolution = (600, 600)
-	flag = 0 # pygame.FULLSCREEN
-	depth = 32
+	mode = (600, 600, 0, 32)
 
 	pygame.init()
 	pygame.display.set_caption(title)
-	screen = pygame.display.set_mode(resolution, flag, depth)
+	screen = pygame.display.set_mode(mode[:2], mode[2], mode[3])
 
 	client = Client()
 
@@ -38,7 +36,6 @@ def main():
 		server.update()
 
 		client.update()
-
 		client.draw(screen)
 
 		time.sleep(1.0 / 60)
