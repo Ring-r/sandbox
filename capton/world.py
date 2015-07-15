@@ -1,18 +1,11 @@
+import block
+import grid
 import random
 
-class Block:
-	def __init__(self, entities_count = 0):
-		self.entities_count = entities_count
-		self.position = (-1, -1)
-		pass
-
 class World:
-	def __init__(self, count = (0, 0)):
-		self.i_count = count[0]
-		self.j_count = count[1]
-		self.cells = [[0 for j in range(self.j_count)] for i in range(self.i_count)]
-		self.fill_percent = 0
-
+	def __init__(self):
+		self.grid = Grid()
+		self.blocks = []
 		self.entities = []
 
 		self.blocks = [Block(0), Block(-1)]
@@ -20,39 +13,23 @@ class World:
 		self.blocks_count_min = count
 		self.blocks_count_max = count
 
-	def is_empty(self):
-		return self.i_count == 0 and self.j_count == 0
-
-	def check_range(self, i, j):
-		return 0 <= i < self.i_count and 0 <= j < self.j_count
-
-	def check_free(self, i, j):
-		index = self.cells[i][j]
-		block = self.blocks[index]
-		return block.entities_count >= 0
-
-	def find_random_empty(self):
-		while True:
-			i = random.randint(0, self.i_count - 1)
-			j = random.randint(0, self.j_count - 1)
-			if self.cells[i][j] == 0:
-				return (i, j)
+	def _can_move_to(self, i, j):
+		if not self.grid.check_range(entity.i, entity.j) or self.grid.cells[i][j] is None:
+			return False
+		return self.grid.cells[i][j].entities_count >= 0
 
 	def fill_random(self, i_count, j_count, fill_percent):
-		self.i_count = i_count
-		self.j_count = j_count
-		self.cells = [[0 for j in range(self.j_count)] for i in range(self.i_count)]
-		self.fill_percent = fill_percent
+		fill_random(self.grid, fill_percent)
 
-		fill_count = (int)(self.i_count * self.j_count * self.fill_percent / 100)
-		for fill_index in range(fill_count):
-			(i, j) = self.find_random_empty()
-			self.cells[i][j] = 1
 		for entity in self.entities:
-			(entity.i, entity.j) = self.find_random_empty()
-			self.cells[entity.i][entity.j] = 1
-		for entity in self.entities:
-			self.cells[entity.i][entity.j] = 0
+			(entity.i, entity.j) = find_empty_random(self.grid)
+			self.grid.cells[entity.i][entity.j] = True
+		for i in range(self.grid.i_count):
+			for j in range(self.grid.j_count):
+				if self.grid.cells[i][j] is None:
+					self.grid.cells[i][j] = self.blocks[0]
+				else
+					self.grid.cells[i][j] = self.blocks[1]
 
 	def connect(self, entity):
 		self.entities.append(entity)
@@ -75,13 +52,18 @@ class World:
 	def update(self):
 		self.raise_commands()
 
+# Check old block.
+# Check entity.
+# Check grid range.
+# Check new block.
+
 		for entity in self.entities:
 			entity.can_move = True
 			entity.save_state()
 			entity.move() # CANDO: entity.move_unbordered(self.i_count, self.j_count)
 
 		for entity in self.entities:
-			if not self.check_range(entity.i, entity.j) or not self.check_free(entity.i, entity.j):
+			if not self._can_move_to(entity.i, entity.j):
 				entity.can_move = False
 				entity.restore_state()
 
