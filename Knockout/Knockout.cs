@@ -20,16 +20,18 @@ namespace Knockout {
 
 	static class Options {
 		public const int needFPS = 60;
+		public const float toSeconds = 0.001f;
 
-		public const int blockCount = 100;
+		public const int blockCount = 12;
 
-		public const int ballRadius = 10;
-		public const int blockRadius = 10;
-		public const int centerRadius = 10;
+		public const float ballRadius = 0.01f;
+		public const float blockRadius = 0.01f;
+		public const float centerRadius = 0.01f;
 
 		public const float ballOrbitSpeed = -0.1f;
 		public const float ballOrbitSpeedStep = -0.05f;
 		public const float blockAngleSpeed = 0.5f;
+		public const float blockAngleSpeedStep = 0.1f;
 
 		public static readonly Color backgroundColor = Color.White;
 
@@ -41,6 +43,8 @@ namespace Knockout {
 		public static readonly Pen orbitPen = Pens.Silver;
 
 		public const float angleStepKey = 0.05f;
+
+		public static readonly Font font = new Font("Comic", 30);
 	}
 
 	public partial class MainForm : Form {
@@ -61,12 +65,9 @@ namespace Knockout {
 			this.StartPosition = FormStartPosition.CenterScreen;
 			this.WindowState = FormWindowState.Maximized;
 			this.Paint += this.MainForm_Paint;
-			this.Resize += this.MainForm_Resize;
+			this.Resize += (sender, e) => this.Invalidate();
 			this.KeyDown += this.MainForm_KeyDown;
 			this.KeyUp += this.MainForm_KeyUp;
-			this.MouseDown += this.MainForm_MouseDown;
-			this.MouseMove += this.MainForm_MouseMove;
-			this.MouseUp += this.MainForm_MouseUp;
 			this.timer.Tick += this.Timer_Tick;
 			this.ResumeLayout(false);
 
@@ -74,9 +75,9 @@ namespace Knockout {
 
 			this.timer.Interval = 1000 / Options.needFPS;
 			this.timer.Start();
-		}
 
-		private readonly Stopwatch stopwatch = new Stopwatch();
+			this.StartLevel();
+		}
 
 		private readonly Entity ball = new Entity() {
 			brush = Options.ballBrush,
@@ -89,30 +90,33 @@ namespace Knockout {
 			radius = Options.centerRadius,
 		};
 
-		private float angle = 0.0f;
-		private float scale = 0.0f;
-
 		private bool isLeftKey = false;
 		private bool isRightKey = false;
-		private bool isMouse = false;
-		private float angleMouse = 0.0f;
 
 		private bool isEnd = false;
-		private bool isPause = true;
 		private bool isShowInfo = true;
 
 		private void StartLevel() {
-			this.ball.Fill(0.75f, 0.75f);
+			this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
+			this.ball.orbit = 0.5f;
 			this.ball.orbitSpeed = Options.ballOrbitSpeed;
+
 			this.blockList.Clear();
+			for (int i = 0; i < Options.blockCount / 4; ++i) {
+				for (int orbitLevel = 0; orbitLevel < 4; ++orbitLevel) {
+					var block = new Entity() {
+						brush = Options.blockBrush,
+						pen = Options.blockPen,
+						radius = Options.blockRadius,
+						angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble(),
+						angleSpeed = Options.blockAngleSpeed * (float)(Program.rand.NextDouble() - 0.5f),
+						orbit = 0.1f + 0.1f * orbitLevel,
+					};
+					this.blockList.Add(block);
+				}
+			}
 
 			this.isEnd = false;
-			this.isPause = false;
-		}
-
-		private void MainForm_Resize(object sender, EventArgs e) {
-			this.scale = Math.Min(this.ClientSize.Width, this.ClientSize.Height);
-			this.Invalidate();
 		}
 
 		private void MainForm_Paint(object sender, PaintEventArgs e) {
@@ -121,24 +125,26 @@ namespace Knockout {
 
 			e.Graphics.TranslateTransform(this.ClientSize.Width / 2, this.ClientSize.Height / 2);
 
-			this.center.Draw(e.Graphics, this.angle, this.scale);
+			float scale = Math.Min(this.ClientSize.Width, this.ClientSize.Height);
 
-			foreach (var circle in this.blockList) {
-				circle.DrawOrbit(e.Graphics, this.angle, this.scale);
+			foreach (var block in this.blockList) {
+				block.DrawOrbit(e.Graphics, scale);
 			}
 
-			this.ball.Draw(e.Graphics, 0.0f, scale);
+			this.ball.Draw(e.Graphics, scale);
 
-			foreach (var circle in this.blockList) {
-				circle.Draw(e.Graphics, this.angle, this.scale);
+			foreach (var block in this.blockList) {
+				block.Draw(e.Graphics, scale);
 			}
+
+			this.center.Draw(e.Graphics, scale);
 
 			e.Graphics.ResetTransform();
 
 			if (this.isEnd) {
 				string str = "BOOM";
-				SizeF strSize = e.Graphics.MeasureString(str, this.Font);
-				e.Graphics.DrawString(str, this.Font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+				SizeF strSize = e.Graphics.MeasureString(str, Options.font);
+				e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
 			}
 		}
 
@@ -147,48 +153,37 @@ namespace Knockout {
 				return;
 			}
 
-			float timeEllapsed = 0.001f * this.stopwatch.ElapsedMilliseconds;
-			this.stopwatch.Restart();
-
+			float angle = 0.0f;
 			if (this.isLeftKey) {
-				this.angle += Options.angleStepKey;
+				angle += Options.angleStepKey;
 			}
 			if (this.isRightKey) {
-				this.angle -= Options.angleStepKey;
+				angle -= Options.angleStepKey;
+			}
+			foreach (var block in this.blockList) {
+				block.angle += angle;
 			}
 
-			if (!this.isPause) {
-				this.ball.Update(timeEllapsed);
-				if (this.ball.orbit == 0.0f) {
-					this.ball.Fill(0.75f, 0.75f);
-					var block = new Entity() {
-						brush = Options.blockBrush,
-						pen = Options.blockPen,
-						radius = Options.blockRadius,
-						angleSpeed = Options.blockAngleSpeed * (float)(Program.rand.NextDouble() - 0.5f),
-					};
-					block.Fill(0.5f);
-					float x = this.center.GetX(0.0f, this.scale) - block.GetX(this.angle, this.scale);
-					float y = this.center.GetY(0.0f, this.scale) - block.GetY(this.angle, this.scale);
-					double dd = Math.Sqrt(x * x + y * y);
-					if (dd > this.center.radius + block.radius) {
-						this.blockList.Add(block);
-					} else {
-						this.ball.orbitSpeed += Options.ballOrbitSpeedStep;
-					} 
-				}
-				foreach (var block in this.blockList) {
-					block.Update(timeEllapsed);
-				}
+			this.ball.Update(this.timer.Interval * Options.toSeconds);
+			if (this.ball.orbit == 0.0f) {
+				this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
+				this.ball.orbit = 0.5f;
 
-				foreach (var block in this.blockList) {
-					float x = this.ball.GetX(0.0f, this.scale) - block.GetX(this.angle, this.scale);
-					float y = this.ball.GetY(0.0f, this.scale) - block.GetY(this.angle, this.scale);
-					double dd = Math.Sqrt(x * x + y * y);
-					if (dd < this.ball.radius + block.radius) {
-						this.isEnd = true;
-						this.isPause = true;
+				if (Program.rand.NextDouble() < 0.5) {
+					this.ball.orbitSpeed += Options.ballOrbitSpeedStep;
+				} else {
+					foreach (var block in this.blockList) {
+						block.angleSpeed += Math.Sign(block.angleSpeed) * Options.blockAngleSpeedStep;
 					}
+				}
+			}
+			foreach (var block in this.blockList) {
+				block.Update(this.timer.Interval * Options.toSeconds);
+			}
+
+			foreach (var block in this.blockList) {
+				if (block.GetDistance(this.ball) < this.ball.radius + block.radius) {
+					this.isEnd = true;
 				}
 			}
 
@@ -227,28 +222,6 @@ namespace Knockout {
 					break;
 			}
 		}
-
-		private void MainForm_MouseDown(object sender, MouseEventArgs e) {
-			float x = e.X - this.ClientSize.Width / 2;
-			float y = e.Y - this.ClientSize.Height / 2;
-			this.angleMouse = (float)Math.Atan2(y, x) - this.angle;
-			this.isMouse = true;
-		}
-
-		private void MainForm_MouseMove(object sender, MouseEventArgs e) {
-			if (!this.isMouse) {
-				return;
-			}
-
-			float x = e.X - this.ClientSize.Width / 2;
-			float y = e.Y - this.ClientSize.Height / 2;
-			this.angle = (float)Math.Atan2(y, x) - this.angleMouse;
-		}
-
-		private void MainForm_MouseUp(object sender, MouseEventArgs e) {
-			this.isMouse = false;
-		}
-
 	}
 
 	class Entity {
@@ -263,11 +236,6 @@ namespace Knockout {
 		public float radius = 0.0f;
 		public float radiusSpeed = 0.0f;
 
-		public void Fill(float orbitFrom, float orbitTo = 0.0f) {
-			this.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
-			this.orbit = (float)Program.rand.NextDouble() * (orbitFrom - orbitTo) + orbitTo;
-		}
-
 		public void Update(float timeEllapsed) {
 			this.angle += this.angleSpeed * timeEllapsed;
 			this.orbit += this.orbitSpeed * timeEllapsed;
@@ -276,25 +244,31 @@ namespace Knockout {
 			this.radius = Math.Max(this.radius, 0.0f);
 		}
 
-		public void Draw(Graphics g, float angle, float scale) {
-			float x = this.GetX(angle, scale);
-			float y = this.GetY(angle, scale);
-			g.FillEllipse(this.brush, x - this.radius, y - this.radius, 2 * this.radius, 2 * this.radius);
-			g.DrawEllipse(this.pen, x - this.radius, y - this.radius, 2 * this.radius, 2 * this.radius);
+		public void Draw(Graphics g, float scale) {
+			float x = scale * this.GetX();
+			float y = scale * this.GetY();
+			float r = scale * this.radius;
+			g.FillEllipse(this.brush, x - r, y - r, 2 * r, 2 * r);
+			g.DrawEllipse(this.pen, x - r, y - r, 2 * r, 2 * r);
 		}
 
-		public void DrawOrbit(Graphics g, float angle, float scale) {
-			angle += this.angle;
-			scale *= this.orbit;
-			g.DrawEllipse(this.penOrbit, -scale, -scale, 2 * scale, 2 * scale);
+		public void DrawOrbit(Graphics g, float scale) {
+			float orbit = scale * this.orbit;
+			g.DrawEllipse(this.penOrbit, -orbit, -orbit, 2 * orbit, 2 * orbit);
 		}
 
-		public float GetX(float angle, float scale) {
-			return scale * this.orbit * (float)Math.Cos(angle + this.angle);
+		public float GetX() {
+			return this.orbit * (float)Math.Cos(this.angle);
 		}
 
-		public float GetY(float angle, float scale) {
-			return scale * this.orbit * (float)Math.Sin(angle + this.angle);
+		public float GetY() {
+			return this.orbit * (float)Math.Sin(this.angle);
+		}
+
+		public float GetDistance(Entity entity) {
+			float x = this.GetX() - entity.GetX();
+			float y = this.GetY() - entity.GetY();
+			return (float)Math.Sqrt(x * x + y * y);
 		}
 	}
 }
