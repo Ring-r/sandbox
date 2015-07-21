@@ -46,11 +46,12 @@ namespace Knockout {
 
 		public static readonly Font font = new Font("Comic", 30);
 
-		public const float orbitBall = 0.5f;
-		public const float orbitBlockMin = 0.1f;
-		public const float orbitBlockMax = 0.4f;
-		public const int orbitBlockCount = 4;
-		public const float orbitBlockStep = (orbitBlockMax - orbitBlockMin) / orbitBlockCount;
+		public const float ballOrbit = 0.7f;
+		public const float ballOrbitMax = 0.5f;
+		public const float blockOrbitMin = 0.1f;
+		public const float blockOrbitMax = 0.4f;
+		public const int blockOrbitCount = 4;
+		public const float blockOrbitStep = (blockOrbitMax - blockOrbitMin) / blockOrbitCount;
 	}
 
 	public partial class MainForm : Form {
@@ -89,6 +90,7 @@ namespace Knockout {
 			brush = Options.ballBrush,
 			radius = Options.ballRadius,
 			orbitSpeed = Options.ballOrbitSpeed,
+			orbitMax = Options.ballOrbitMax,
 		};
 		private readonly List<Entity> blockList = new List<Entity>();
 		private readonly Entity center = new Entity() {
@@ -104,19 +106,20 @@ namespace Knockout {
 
 		private void StartLevel() {
 			this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
-			this.ball.orbit = Options.orbitBall;
+			this.ball.orbit = Options.ballOrbit;
 			this.ball.orbitSpeed = Options.ballOrbitSpeed;
 
 			this.blockList.Clear();
-			for (int orbitIndex = 0; orbitIndex < Options.orbitBlockCount; ++orbitIndex) {
-				for (int i = 0; i < Options.blockCount / Options.orbitBlockCount; ++i) {
+			for (int orbitIndex = 0; orbitIndex < Options.blockOrbitCount; ++orbitIndex) {
+				for (int i = 0; i < Options.blockCount / Options.blockOrbitCount; ++i) {
 					var block = new Entity() {
 						brush = Options.blockBrush,
 						pen = Options.blockPen,
 						radius = Options.blockRadius,
 						angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble(),
 						angleSpeed = Options.blockAngleSpeed * (float)(Program.rand.NextDouble() - 0.5f),
-						orbit = Options.orbitBlockMin + Options.orbitBlockStep * orbitIndex,
+						orbit = Options.blockOrbitMin + Options.blockOrbitStep * orbitIndex,
+						orbitMax = Options.blockOrbitMax,
 					};
 					this.blockList.Add(block);
 				}
@@ -173,7 +176,7 @@ namespace Knockout {
 			this.ball.Update(this.timer.Interval * Options.toSeconds);
 			if (this.ball.orbit == 0.0f) {
 				this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
-				this.ball.orbit = Options.orbitBall;
+				this.ball.orbit = Options.ballOrbit;
 
 				if (Program.rand.NextDouble() < 0.5) {
 					this.ball.orbitSpeed += Options.ballOrbitSpeedStep;
@@ -242,6 +245,8 @@ namespace Knockout {
 		public float radius = 0.0f;
 		public float radiusSpeed = 0.0f;
 
+		public float orbitMax = 0.0f;
+
 		public void Update(float timeEllapsed) {
 			this.angle += this.angleSpeed * timeEllapsed;
 			this.orbit += this.orbitSpeed * timeEllapsed;
@@ -256,6 +261,22 @@ namespace Knockout {
 			float r = scale * this.radius;
 			g.FillEllipse(this.brush, x - r, y - r, 2 * r, 2 * r);
 			g.DrawEllipse(this.pen, x - r, y - r, 2 * r, 2 * r);
+			if (this.orbit > this.orbitMax) {
+				var text = (this.orbit - this.orbitMax).ToString("F2");
+				var font = new Font("Comic", 12); // TODO: Remove magic.
+				var size = g.MeasureString(text, font);
+				if (x > 0) {
+					x -= r + size.Width;
+				} else {
+					x += r;
+				}
+				if (y > 0) {
+					y -= r + size.Height;
+				} else {
+					y += r;
+				}
+				g.DrawString(text, font, this.brush, x, y);
+			}
 		}
 
 		public void DrawOrbit(Graphics g, float scale) {
@@ -264,11 +285,13 @@ namespace Knockout {
 		}
 
 		public float GetX() {
-			return this.orbit * (float)Math.Cos(this.angle);
+			float orbit = Math.Min(this.orbit, this.orbitMax);
+			return orbit * (float)Math.Cos(this.angle);
 		}
 
 		public float GetY() {
-			return this.orbit * (float)Math.Sin(this.angle);
+			float orbit = Math.Min(this.orbit, this.orbitMax);
+			return orbit * (float)Math.Sin(this.angle);
 		}
 
 		public float GetDistance(Entity entity) {
