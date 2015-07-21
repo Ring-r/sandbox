@@ -45,6 +45,12 @@ namespace Knockout {
 		public const float angleStepKey = 0.05f;
 
 		public static readonly Font font = new Font("Comic", 30);
+
+		public const float orbitBall = 0.5f;
+		public const float orbitBlockMin = 0.1f;
+		public const float orbitBlockMax = 0.4f;
+		public const int orbitBlockCount = 4;
+		public const float orbitBlockStep = (orbitBlockMax - orbitBlockMin) / orbitBlockCount;
 	}
 
 	public partial class MainForm : Form {
@@ -98,19 +104,19 @@ namespace Knockout {
 
 		private void StartLevel() {
 			this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
-			this.ball.orbit = 0.5f;
+			this.ball.orbit = Options.orbitBall;
 			this.ball.orbitSpeed = Options.ballOrbitSpeed;
 
 			this.blockList.Clear();
-			for (int i = 0; i < Options.blockCount / 4; ++i) {
-				for (int orbitLevel = 0; orbitLevel < 4; ++orbitLevel) {
+			for (int orbitIndex = 0; orbitIndex < Options.orbitBlockCount; ++orbitIndex) {
+				for (int i = 0; i < Options.blockCount / Options.orbitBlockCount; ++i) {
 					var block = new Entity() {
 						brush = Options.blockBrush,
 						pen = Options.blockPen,
 						radius = Options.blockRadius,
 						angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble(),
 						angleSpeed = Options.blockAngleSpeed * (float)(Program.rand.NextDouble() - 0.5f),
-						orbit = 0.1f + 0.1f * orbitLevel,
+						orbit = Options.orbitBlockMin + Options.orbitBlockStep * orbitIndex,
 					};
 					this.blockList.Add(block);
 				}
@@ -167,7 +173,7 @@ namespace Knockout {
 			this.ball.Update(this.timer.Interval * Options.toSeconds);
 			if (this.ball.orbit == 0.0f) {
 				this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
-				this.ball.orbit = 0.5f;
+				this.ball.orbit = Options.orbitBall;
 
 				if (Program.rand.NextDouble() < 0.5) {
 					this.ball.orbitSpeed += Options.ballOrbitSpeedStep;
