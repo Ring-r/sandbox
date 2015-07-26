@@ -22,13 +22,13 @@ namespace Knockout {
 		public const int needFPS = 60;
 		public const float toSeconds = 0.001f;
 
-		public const int blockCount = 12;
+		public const int blockCount = 4;
 
 		public const float ballRadius = 0.01f;
 		public const float blockRadius = 0.01f;
 		public const float centerRadius = 0.01f;
 
-		public const float ballOrbitSpeed = -0.1f;
+		public const float ballOrbitSpeed = -0.5f;
 		public const float ballOrbitSpeedStep = -0.05f;
 		public const float blockAngleSpeed = 0.5f;
 		public const float blockAngleSpeedStep = 0.1f;
@@ -92,7 +92,7 @@ namespace Knockout {
 			orbitSpeed = Options.ballOrbitSpeed,
 			orbitMax = Options.ballOrbitMax,
 		};
-		private readonly List<Entity> blockList = new List<Entity>();
+		private readonly List<List<Entity>> blockList = new List<List<Entity>>();
 		private readonly Entity center = new Entity() {
 			brush = Options.centerBrush,
 			radius = Options.centerRadius,
@@ -111,6 +111,7 @@ namespace Knockout {
 
 			this.blockList.Clear();
 			for (int orbitIndex = 0; orbitIndex < Options.blockOrbitCount; ++orbitIndex) {
+				var blockList = new List<Entity>();
 				for (int i = 0; i < Options.blockCount / Options.blockOrbitCount; ++i) {
 					var block = new Entity() {
 						brush = Options.blockBrush,
@@ -121,8 +122,9 @@ namespace Knockout {
 						orbit = Options.blockOrbitMin + Options.blockOrbitStep * orbitIndex,
 						orbitMax = Options.blockOrbitMax,
 					};
-					this.blockList.Add(block);
+					blockList.Add(block);
 				}
+				this.blockList.Add(blockList);
 			}
 
 			this.isEnd = false;
@@ -136,14 +138,18 @@ namespace Knockout {
 
 			float scale = Math.Min(this.ClientSize.Width, this.ClientSize.Height);
 
-			foreach (var block in this.blockList) {
-				block.DrawOrbit(e.Graphics, scale);
+			foreach (var blockList in this.blockList) {
+				foreach (var block in blockList) {
+					block.DrawOrbit(e.Graphics, scale);
+				}
 			}
 
 			this.ball.Draw(e.Graphics, scale);
 
-			foreach (var block in this.blockList) {
-				block.Draw(e.Graphics, scale);
+			foreach (var blockList in this.blockList) {
+				foreach (var block in blockList) {
+					block.Draw(e.Graphics, scale);
+				}
 			}
 
 			this.center.Draw(e.Graphics, scale);
@@ -169,8 +175,10 @@ namespace Knockout {
 			if (this.isRightKey) {
 				angle -= Options.angleStepKey;
 			}
-			foreach (var block in this.blockList) {
-				block.angle += angle;
+			foreach (var blockList in this.blockList) {
+				foreach (var block in blockList) {
+					block.angle += angle;
+				}
 			}
 
 			this.ball.Update(this.timer.Interval * Options.toSeconds);
@@ -181,18 +189,37 @@ namespace Knockout {
 				if (Program.rand.NextDouble() < 0.5) {
 					this.ball.orbitSpeed += Options.ballOrbitSpeedStep;
 				} else {
-					foreach (var block in this.blockList) {
-						block.angleSpeed += Math.Sign(block.angleSpeed) * Options.blockAngleSpeedStep;
+					foreach (var blockList in this.blockList) {
+						foreach (var block in blockList) {
+							block.angleSpeed += Math.Sign(block.angleSpeed) * Options.blockAngleSpeedStep;
+						}
 					}
 				}
 			}
-			foreach (var block in this.blockList) {
-				block.Update(this.timer.Interval * Options.toSeconds);
+
+			foreach (var blockList in this.blockList) {
+				foreach (var block in blockList) {
+					block.Update(this.timer.Interval * Options.toSeconds);
+				}
 			}
 
-			foreach (var block in this.blockList) {
-				if (block.GetDistance(this.ball) < this.ball.radius + block.radius) {
-					this.isEnd = true;
+			foreach (var blockList in this.blockList) {
+				for (int i = blockList.Count - 1, j = 0; j < blockList.Count; i = j, j += 1) {
+					var iBlock = blockList[i];
+					var jBlock = blockList[j];
+					if (iBlock.GetDistance(jBlock) < iBlock.radius + jBlock.radius) {
+						var temp = iBlock.angleSpeed;
+						iBlock.angleSpeed = jBlock.angleSpeed;
+						jBlock.angleSpeed = temp;
+					}
+				}
+			}
+
+			foreach (var blockList in this.blockList) {
+				foreach (var block in blockList) {
+					if (block.GetDistance(this.ball) < this.ball.radius + block.radius) {
+						this.isEnd = true;
+					}
 				}
 			}
 
