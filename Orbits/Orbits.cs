@@ -27,7 +27,7 @@ namespace Orbits {
 		public const float ballRadius = 0.01f;
 		public const float blockRadius = 0.02f;
 
-		public const float ballSpeed = 0.05f;
+		public const float ballSpeed = 0.1f;
 
 		public static readonly Color backgroundColor = Color.White;
 
@@ -77,7 +77,7 @@ namespace Orbits {
 			radius = Options.ballRadius,
 			speed = Options.ballSpeed,
 		};
-		private readonly List<Circle> blockList = new List<Circle>();
+		private readonly List<Entity> blockList = new List<Entity>();
 
 		private bool isEnd = false;
 		private bool isShowInfo = true;
@@ -85,7 +85,7 @@ namespace Orbits {
 		private void StartLevel() {
 			this.blockList.Clear();
 			for (int i = 0; i < Options.blockCount; ++i) {
-				this.blockList.Add(new Circle() {
+				this.blockList.Add(new Entity() {
 					brush = Options.blockBrush,
 					pen = Options.blockPen,
 					radius = Options.blockRadius,
@@ -111,7 +111,7 @@ namespace Orbits {
 				block.Draw(e.Graphics, scale);
 			}
 
-			this.ball.Draw(e.Graphics, scale);
+			this.ball.Draw(e.Graphics, scale, true);
 
 			e.Graphics.ResetTransform();
 
@@ -169,27 +169,16 @@ namespace Orbits {
 		}
 	}
 
-	class Circle {
+	class Entity {
 		public Brush brush = Brushes.Black;
 		public Pen pen = Pens.Black;
+		public Pen penOrbit = Pens.Silver;
 
 		public float px = 0.0f;
 		public float py = 0.0f;
 		public float radius = 0.0f;
 
-		public void Draw(Graphics g, float scale) {
-			float x = scale * this.px;
-			float y = scale * this.py;
-			float r = scale * this.radius;
-			g.FillEllipse(this.brush, x - r, y - r, 2 * r, 2 * r);
-			g.DrawEllipse(this.pen, x - r, y - r, 2 * r, 2 * r);
-		}
-	}
-
-	class Entity : Circle {
-		public Pen penOrbit = Pens.Silver;
-
-		public Circle center = null;
+		public Entity center = null;
 
 		public float speed = 0.0f;
 
@@ -197,7 +186,7 @@ namespace Orbits {
 		private float angleSpeed = 0.0f;
 		private float orbit = 0.0f;
 
-		public void SetCenter(Circle center) {
+		public void SetCenter(Entity center) {
 			this.center = center;
 			float x = this.px - this.center.px;
 			float y = this.py - this.center.py;
@@ -216,18 +205,29 @@ namespace Orbits {
 			}
 			this.px = this.center.px + this.orbit * (float)Math.Cos(this.angle);
 			this.py = this.center.py + this.orbit * (float)Math.Sin(this.angle);
+
+			if (this.px < 0 || 1.0f < this.px || this.py < 0 || 1.0f < this.py) {
+				this.speed = -this.speed;
+				this.angleSpeed = -this.angleSpeed;
+			}
 		}
 
-		public new void Draw(Graphics g, float scale) {
-			float x = scale * this.center.px;
-			float y = scale * this.center.py;
-			float orbit = scale * this.orbit;
-			g.DrawEllipse(this.penOrbit, x - orbit, y - orbit, 2 * orbit, 2 * orbit);
+		public void Draw(Graphics g, float scale, bool withOrbit = false) {
+			if (withOrbit && this.center != null) {
+				float orbitX = scale * this.center.px;
+				float orbitY = scale * this.center.py;
+				float orbitR = scale * this.orbit;
+				g.DrawEllipse(this.penOrbit, orbitX - orbitR, orbitY - orbitR, 2 * orbitR, 2 * orbitR);
+			}
 
-			base.Draw(g, scale);
+			float x = scale * this.px;
+			float y = scale * this.py;
+			float r = scale * this.radius;
+			g.FillEllipse(this.brush, x - r, y - r, 2 * r, 2 * r);
+			g.DrawEllipse(this.pen, x - r, y - r, 2 * r, 2 * r);
 		}
 
-		public float GetDistance(Circle circle) {
+		public float GetDistance(Entity circle) {
 			float x = this.px - circle.px;
 			float y = this.py - circle.py;
 			return (float)Math.Sqrt(x * x + y * y);
