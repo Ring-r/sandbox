@@ -23,11 +23,15 @@ namespace Orbits {
 		public const float toSeconds = 0.001f;
 
 		public const int blockCount = 10;
+		public const int bonusCount = 10;
 
 		public const float ballRadius = 0.01f;
 		public const float blockRadius = 0.02f;
 
 		public const float ballSpeed = 0.1f;
+
+		public const int startTouchCount = 2;
+		public const int usedTouchCount = 2;
 
 		public static readonly Color backgroundColor = Color.White;
 		public static readonly Pen backgroundPen = Pens.Black;
@@ -75,12 +79,14 @@ namespace Orbits {
 		}
 
 		private readonly Entity ball = new Entity() {
+			type = -1,
 			brush = Options.ballBrush,
 			pen = Options.ballPen,
 			radius = Options.ballRadius,
 			speed = Options.ballSpeed,
 		};
 		private readonly List<Entity> blockList = new List<Entity>();
+		private int avalableTouchCount = 0;
 
 		private bool isEnd = false;
 		private bool isShowInfo = true;
@@ -89,6 +95,17 @@ namespace Orbits {
 			this.blockList.Clear();
 			for (int i = 0; i < Options.blockCount; ++i) {
 				this.blockList.Add(new Entity() {
+					type = 0,
+					brush = Options.blockBrush,
+					pen = Options.blockPen,
+					radius = Options.blockRadius,
+					px = (float)Program.rand.NextDouble(),
+					py = (float)Program.rand.NextDouble(),
+				});
+			}
+			for (int i = 0; i < Options.bonusCount; ++i) {
+				this.blockList.Add(new Entity() {
+					type = 1,
 					brush = Options.blockBrush,
 					pen = Options.blockPen,
 					radius = Options.blockRadius,
@@ -100,6 +117,8 @@ namespace Orbits {
 			this.ball.px = (float)Program.rand.NextDouble();
 			this.ball.py = (float)Program.rand.NextDouble();
 			this.ball.SetCenter(this.blockList[Program.rand.Next(this.blockList.Count)]);
+
+			this.avalableTouchCount = Options.startTouchCount;
 
 			this.isEnd = false;
 		}
@@ -130,6 +149,9 @@ namespace Orbits {
 		}
 
 		private void Timer_Tick(object sender, EventArgs e) {
+			if (this.avalableTouchCount < Options.usedTouchCount) {
+				this.isEnd = true;
+			}
 			if (this.isEnd) {
 				return;
 			}
@@ -137,7 +159,14 @@ namespace Orbits {
 			this.ball.Update(this.timer.Interval * Options.toSeconds);
 			foreach (var block in this.blockList) {
 				if (this.ball.GetDistance(block) < this.ball.radius + block.radius) {
-					this.isEnd = true;
+					if (block.type == 0) {
+						this.isEnd = true;
+					}
+					if (block.type == 1) {
+						this.avalableTouchCount += Options.usedTouchCount;
+						block.px = (float)Program.rand.NextDouble();
+						block.py = (float)Program.rand.NextDouble();
+					}
 				}
 			}
 				
@@ -168,12 +197,15 @@ namespace Orbits {
 				float d = (float)Math.Sqrt(x * x + y * y);
 				if (d < block.radius) {
 					this.ball.SetCenter(block);
+					this.avalableTouchCount -= Options.usedTouchCount;
 				}
 			}
 		}
 	}
 
 	class Entity {
+		public int type = 0;
+
 		public Brush brush = Brushes.Black;
 		public Pen pen = Pens.Black;
 		public Pen penOrbit = Pens.Silver;
