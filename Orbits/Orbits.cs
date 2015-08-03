@@ -27,20 +27,23 @@ namespace Orbits {
 
 		public const float ballRadius = 0.01f;
 		public const float blockRadius = 0.02f;
+		public const float bonusRadius = 0.02f;
 
 		public const float ballSpeed = 0.1f;
 
-		public const int startTouchCount = 2;
-		public const int usedTouchCount = 2;
+		public const int startTouchCount = 3;
+		public const int usedTouchCount = 1;
 
 		public static readonly Color backgroundColor = Color.White;
 		public static readonly Pen backgroundPen = Pens.Black;
 
 		public static readonly Brush ballBrush = Brushes.Black;
 		public static readonly Brush blockBrush = Brushes.Red;
+		public static readonly Brush bonusBrush = Brushes.Yellow;
 
 		public static readonly Pen ballPen = Pens.Black;
 		public static readonly Pen blockPen = Pens.Black;
+		public static readonly Pen bonusPen = Pens.Black;
 		public static readonly Pen orbitPen = Pens.Silver;
 
 		public static readonly Font font = new Font("Comic", 30);
@@ -88,7 +91,7 @@ namespace Orbits {
 		private readonly List<Entity> blockList = new List<Entity>();
 		private int avalableTouchCount = 0;
 
-		private bool isEnd = false;
+		private int state = 0;
 		private bool isShowInfo = true;
 
 		private void StartLevel() {
@@ -106,9 +109,9 @@ namespace Orbits {
 			for (int i = 0; i < Options.bonusCount; ++i) {
 				this.blockList.Add(new Entity() {
 					type = 1,
-					brush = Options.blockBrush,
-					pen = Options.blockPen,
-					radius = Options.blockRadius,
+					brush = Options.bonusBrush,
+					pen = Options.bonusPen,
+					radius = Options.bonusRadius,
 					px = (float)Program.rand.NextDouble(),
 					py = (float)Program.rand.NextDouble(),
 				});
@@ -116,11 +119,11 @@ namespace Orbits {
 
 			this.ball.px = (float)Program.rand.NextDouble();
 			this.ball.py = (float)Program.rand.NextDouble();
-			this.ball.SetCenter(this.blockList[Program.rand.Next(this.blockList.Count)]);
+			this.ball.SetCenter(this.blockList[Program.rand.Next(Options.blockCount)]);
 
 			this.avalableTouchCount = Options.startTouchCount;
 
-			this.isEnd = false;
+			this.state = 0;
 		}
 
 		private void MainForm_Paint(object sender, PaintEventArgs e) {
@@ -137,22 +140,38 @@ namespace Orbits {
 
 			this.ball.Draw(e.Graphics, scale, true);
 			
-			e.Graphics.DrawRectangle(Options.backgroundPen, 0.0f, 0.0f, 1.0f, 1.0f);
+			e.Graphics.DrawRectangle(Options.backgroundPen, 0.0f, 0.0f, scale, scale);
 
 			e.Graphics.ResetTransform();
 
-			if (this.isEnd) {
-				string str = "BOOM";
-				SizeF strSize = e.Graphics.MeasureString(str, Options.font);
-				e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+			string str;
+			SizeF strSize;
+			switch (this.state) {
+				case 0:
+					str = this.avalableTouchCount.ToString();
+					strSize = e.Graphics.MeasureString(str, Options.font);
+					e.Graphics.DrawString(str, Options.font, Brushes.Black, this.ClientSize.Width - strSize.Width, 0.0f);
+					break;
+				case 1:
+					str = "BOOM";
+					strSize = e.Graphics.MeasureString(str, Options.font);
+					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+					break;
+				case 2:
+					str = "No power points.";
+					strSize = e.Graphics.MeasureString(str, Options.font);
+					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+					break;
+				default:
+					str = "Something wrong!";
+					strSize = e.Graphics.MeasureString(str, Options.font);
+					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+					break;
 			}
 		}
 
 		private void Timer_Tick(object sender, EventArgs e) {
-			if (this.avalableTouchCount < Options.usedTouchCount) {
-				this.isEnd = true;
-			}
-			if (this.isEnd) {
+			if (this.state != 0) {
 				return;
 			}
 
@@ -160,7 +179,7 @@ namespace Orbits {
 			foreach (var block in this.blockList) {
 				if (this.ball.GetDistance(block) < this.ball.radius + block.radius) {
 					if (block.type == 0) {
-						this.isEnd = true;
+						this.state = 1;
 					}
 					if (block.type == 1) {
 						this.avalableTouchCount += Options.usedTouchCount;
@@ -171,6 +190,10 @@ namespace Orbits {
 			}
 				
 			this.Invalidate();
+
+			if (this.avalableTouchCount < 0) {
+				this.state = 2;
+			}
 		}
 
 		private void MainForm_KeyUp(object sender, KeyEventArgs e) {
@@ -192,12 +215,15 @@ namespace Orbits {
 			float ex = (e.X - (this.ClientSize.Width - scale) / 2) / scale;
 			float ey = (e.Y - (this.ClientSize.Height - scale) / 2) / scale;
 			foreach (var block in this.blockList) {
-				float x = block.px - ex;
-				float y = block.py - ey;
-				float d = (float)Math.Sqrt(x * x + y * y);
-				if (d < block.radius) {
-					this.ball.SetCenter(block);
-					this.avalableTouchCount -= Options.usedTouchCount;
+				if (block.type == 0) {
+					float x = block.px - ex;
+					float y = block.py - ey;
+					float d = (float)Math.Sqrt(x * x + y * y);
+					if (d < block.radius) {
+						if (this.ball.SetCenter(block)) {
+							this.avalableTouchCount -= Options.usedTouchCount;
+						}
+					}
 				}
 			}
 		}
@@ -221,10 +247,12 @@ namespace Orbits {
 		private float angleSpeed = 0.0f;
 		private float orbit = 0.0f;
 
-		public void SetCenter(Entity center) {
+		public bool SetCenter(Entity center) {
+			bool res = true;
 			if (this.center == center) {
 				this.speed = -this.speed;
 				this.angleSpeed = -this.angleSpeed;
+				res = false;
 			} else {
 				this.center = center;
 				float x = this.px - this.center.px;
@@ -233,6 +261,7 @@ namespace Orbits {
 				this.angle = (float)Math.Atan2(y, x);
 				this.angleSpeed = Math.Sign(this.speed) * (float)Math.Asin(Math.Abs(this.speed) / this.orbit);
 			}
+			return res;
 		}
 
 		public void Update(float timeEllapsed) {
@@ -245,22 +274,10 @@ namespace Orbits {
 			}
 			
 			this.px = this.center.px + this.orbit * (float)Math.Cos(this.angle);
-			if (this.px < 0.0f) {
-				this.speed = Math.Abs(this.speed);
-				this.angleSpeed = Math.Abs(this.angleSpeed);
-			}
-			if (this.px > 1.0f) {
-				this.speed = -Math.Abs(this.speed);
-				this.angleSpeed = -Math.Abs(this.angleSpeed);
-			}
 			this.py = this.center.py + this.orbit * (float)Math.Sin(this.angle);
-			if (this.py < 0.0f) {
-				this.speed = Math.Abs(this.speed);
-				this.angleSpeed = Math.Abs(this.angleSpeed);
-			}
-			if (this.py > 1.0f) {
-				this.speed = -Math.Abs(this.speed);
-				this.angleSpeed = -Math.Abs(this.angleSpeed);
+			if (this.px < 0.0f || this.px > 1.0f || this.py < 0.0f || this.py > 1.0f) {
+				this.speed = -this.speed;
+				this.angleSpeed = -this.angleSpeed;
 			}
 		}
 
