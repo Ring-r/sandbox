@@ -30,6 +30,7 @@ namespace Orbits {
 		public const float ballSpeed = 0.1f;
 
 		public static readonly Color backgroundColor = Color.White;
+		public static readonly Pen backgroundPen = Pens.Black;
 
 		public static readonly Brush ballBrush = Brushes.Black;
 		public static readonly Brush blockBrush = Brushes.Red;
@@ -116,6 +117,8 @@ namespace Orbits {
 			}
 
 			this.ball.Draw(e.Graphics, scale, true);
+			
+			e.Graphics.DrawRectangle(Options.backgroundPen, 0.0f, 0.0f, 1.0f, 1.0f);
 
 			e.Graphics.ResetTransform();
 
