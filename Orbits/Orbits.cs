@@ -34,6 +34,7 @@ namespace Orbits {
 		public static readonly Brush ballBrush = Brushes.Black;
 		public static readonly Brush blockBrush = Brushes.Red;
 
+		public static readonly Pen ballPen = Pens.Black;
 		public static readonly Pen blockPen = Pens.Black;
 		public static readonly Pen orbitPen = Pens.Silver;
 
@@ -74,6 +75,7 @@ namespace Orbits {
 
 		private readonly Entity ball = new Entity() {
 			brush = Options.ballBrush,
+			pen = Options.ballPen,
 			radius = Options.ballRadius,
 			speed = Options.ballSpeed,
 		};
@@ -106,6 +108,8 @@ namespace Orbits {
 			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
 			float scale = Math.Min(this.ClientSize.Width, this.ClientSize.Height);
+			
+			e.Graphics.TranslateTransform((this.ClientSize.Width - scale) / 2, (this.ClientSize.Height - scale) / 2);
 
 			foreach (var block in this.blockList) {
 				block.Draw(e.Graphics, scale);
@@ -153,16 +157,13 @@ namespace Orbits {
 
 		private void MainForm_MouseClick(object sender, MouseEventArgs e) {
 			float scale = Math.Min(this.ClientSize.Width, this.ClientSize.Height);
-			float ex = e.X / scale;
-			float ey = e.Y / scale;
+			float ex = (e.X - (this.ClientSize.Width - scale) / 2) / scale;
+			float ey = (e.Y - (this.ClientSize.Height - scale) / 2) / scale;
 			foreach (var block in this.blockList) {
 				float x = block.px - ex;
 				float y = block.py - ey;
 				float d = (float)Math.Sqrt(x * x + y * y);
 				if (d < block.radius) {
-					if (this.ball.center == block) {
-						this.ball.speed = -this.ball.speed;
-					}
 					this.ball.SetCenter(block);
 				}
 			}
@@ -178,37 +179,53 @@ namespace Orbits {
 		public float py = 0.0f;
 		public float radius = 0.0f;
 
-		public Entity center = null;
-
 		public float speed = 0.0f;
 
+		private Entity center = null;
 		private float angle = 0.0f;
 		private float angleSpeed = 0.0f;
 		private float orbit = 0.0f;
 
 		public void SetCenter(Entity center) {
-			this.center = center;
-			float x = this.px - this.center.px;
-			float y = this.py - this.center.py;
-			this.orbit = (float)Math.Sqrt(x * x + y * y);
-			this.angle = (float)Math.Atan2(y, x);
-			this.angleSpeed = Math.Sign(this.speed) * (float)Math.Asin(Math.Abs(this.speed) / this.orbit);
+			if (this.center == center) {
+				this.speed = -this.speed;
+				this.angleSpeed = -this.angleSpeed;
+			} else {
+				this.center = center;
+				float x = this.px - this.center.px;
+				float y = this.py - this.center.py;
+				this.orbit = (float)Math.Sqrt(x * x + y * y);
+				this.angle = (float)Math.Atan2(y, x);
+				this.angleSpeed = Math.Sign(this.speed) * (float)Math.Asin(Math.Abs(this.speed) / this.orbit);
+			}
 		}
 
 		public void Update(float timeEllapsed) {
 			this.angle += this.angleSpeed * timeEllapsed;
-			if (this.angle > 2 * Math.PI) {
-				this.angle -= 2 * (float)Math.PI;
-			}
 			if (this.angle < 0) {
 				this.angle += 2 * (float)Math.PI;
 			}
+			if (this.angle > 2 * Math.PI) {
+				this.angle -= 2 * (float)Math.PI;
+			}
+			
 			this.px = this.center.px + this.orbit * (float)Math.Cos(this.angle);
+			if (this.px < 0.0f) {
+				this.speed = Math.Abs(this.speed);
+				this.angleSpeed = Math.Abs(this.angleSpeed);
+			}
+			if (this.px > 1.0f) {
+				this.speed = -Math.Abs(this.speed);
+				this.angleSpeed = -Math.Abs(this.angleSpeed);
+			}
 			this.py = this.center.py + this.orbit * (float)Math.Sin(this.angle);
-
-			if (this.px < 0 || 1.0f < this.px || this.py < 0 || 1.0f < this.py) {
-				this.speed = -this.speed;
-				this.angleSpeed = -this.angleSpeed;
+			if (this.py < 0.0f) {
+				this.speed = Math.Abs(this.speed);
+				this.angleSpeed = Math.Abs(this.angleSpeed);
+			}
+			if (this.py > 1.0f) {
+				this.speed = -Math.Abs(this.speed);
+				this.angleSpeed = -Math.Abs(this.angleSpeed);
 			}
 		}
 
@@ -227,9 +244,9 @@ namespace Orbits {
 			g.DrawEllipse(this.pen, x - r, y - r, 2 * r, 2 * r);
 		}
 
-		public float GetDistance(Entity circle) {
-			float x = this.px - circle.px;
-			float y = this.py - circle.py;
+		public float GetDistance(Entity entity) {
+			float x = this.px - entity.px;
+			float y = this.py - entity.py;
 			return (float)Math.Sqrt(x * x + y * y);
 		}
 	}
