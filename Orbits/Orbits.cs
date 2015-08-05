@@ -78,7 +78,7 @@ namespace Orbits {
 			this.timer.Interval = 1000 / Options.needFPS;
 			this.timer.Start();
 
-			this.StartLevel();
+			this.CreateGame();
 		}
 
 		private readonly Entity ball = new Entity() {
@@ -94,7 +94,7 @@ namespace Orbits {
 		private int state = 0;
 		private bool isShowInfo = true;
 
-		private void StartLevel() {
+		private void CreateGame() {
 			this.blockList.Clear();
 			for (int i = 0; i < Options.blockCount; ++i) {
 				this.blockList.Add(new Entity() {
@@ -102,8 +102,6 @@ namespace Orbits {
 					brush = Options.blockBrush,
 					pen = Options.blockPen,
 					radius = Options.blockRadius,
-					px = (float)Program.rand.NextDouble(),
-					py = (float)Program.rand.NextDouble(),
 				});
 			}
 			for (int i = 0; i < Options.bonusCount; ++i) {
@@ -112,17 +110,29 @@ namespace Orbits {
 					brush = Options.bonusBrush,
 					pen = Options.bonusPen,
 					radius = Options.bonusRadius,
-					px = (float)Program.rand.NextDouble(),
-					py = (float)Program.rand.NextDouble(),
 				});
 			}
 
+			this.RelocateBall();
+			this.RelocateBlocks();
+			this.StartLevel();
+		}
+
+		private void RelocateBall() {
 			this.ball.px = (float)Program.rand.NextDouble();
 			this.ball.py = (float)Program.rand.NextDouble();
-			this.ball.SetCenter(this.blockList[Program.rand.Next(Options.blockCount)]);
+		}
 
+		private void RelocateBlocks() {
+			foreach (var item in this.blockList) {
+				item.px = (float)Program.rand.NextDouble();
+				item.py = (float)Program.rand.NextDouble();
+			}
+		}
+
+		private void StartLevel() {
+			this.ball.center = null;
 			this.avalableTouchCount = Options.startTouchCount;
-
 			this.state = 0;
 		}
 
