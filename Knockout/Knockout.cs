@@ -101,6 +101,7 @@ namespace Knockout {
 		private bool isLeftKey = false;
 		private bool isRightKey = false;
 
+		private float score = 0;
 		private bool isEnd = false;
 		private bool isShowInfo = true;
 
@@ -181,7 +182,23 @@ namespace Knockout {
 				}
 			}
 
+			float prevBallOrbit = this.ball.orbit;
 			this.ball.Update(this.timer.Interval * Options.toSeconds);
+
+			float waitedOrbit = this.orbits[this.waitedOrbitIndex];
+			if (prevBallOrbit < waitedOrbit && waitedOrbit <= this.ball.orbit) {
+				var blockList = this.blockList[this.waitedOrbitIndex];
+				var dist = float.PositiveInfinity;
+				foreach (var block in blockList) {
+					var minAngle = Math.Min(this.ball.angle, block.angle);
+					var maxAngle = Math.Max(this.ball.angle, block.angle);
+					var angle = maxAngle - minAngle;
+					angle = Math.Min(angle, (float)Math.Pi - angle);
+					dist = Math.Min(dist, angle * waitedOrbit);
+				}
+				this.score += dist;
+				this.waitedOrbitIndex += 1;
+			}
 			if (this.ball.orbit == 0.0f) {
 				this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
 				this.ball.orbit = Options.ballOrbit;
