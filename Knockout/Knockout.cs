@@ -22,7 +22,7 @@ namespace Knockout {
 		public const int needFPS = 60;
 		public const float toSeconds = 0.001f;
 
-		public const int blockCount = 4;
+		public const int blockCount = 8;
 
 		public const float ballRadius = 0.01f;
 		public const float blockRadius = 0.01f;
@@ -83,7 +83,7 @@ namespace Knockout {
 			this.timer.Interval = 1000 / Options.needFPS;
 			this.timer.Start();
 
-			this.StartLevel();
+			this.CreateGame();
 		}
 
 		private readonly Entity ball = new Entity() {
@@ -92,43 +92,71 @@ namespace Knockout {
 			orbitSpeed = Options.ballOrbitSpeed,
 			orbitMax = Options.ballOrbitMax,
 		};
-		private readonly List<List<Entity>> blockList = new List<List<Entity>>();
+		private readonly List<Entity> blockList = new List<Entity>();
 		private readonly Entity center = new Entity() {
 			brush = Options.centerBrush,
 			radius = Options.centerRadius,
 		};
 
+		private int waitedOrbitIndex = 0;
+
 		private bool isLeftKey = false;
 		private bool isRightKey = false;
 
 		private float score = 0;
-		private bool isEnd = false;
+		private int state = 0;
 		private bool isShowInfo = true;
 
-		private void StartLevel() {
-			this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
-			this.ball.orbit = Options.ballOrbit;
-			this.ball.orbitSpeed = Options.ballOrbitSpeed;
-
+		private void CreateGame() {
 			this.blockList.Clear();
-			for (int orbitIndex = 0; orbitIndex < Options.blockOrbitCount; ++orbitIndex) {
-				var blockList = new List<Entity>();
-				for (int i = 0; i < Options.blockCount / Options.blockOrbitCount; ++i) {
-					var block = new Entity() {
-						brush = Options.blockBrush,
-						pen = Options.blockPen,
-						radius = Options.blockRadius,
-						angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble(),
-						angleSpeed = Options.blockAngleSpeed * (float)(Program.rand.NextDouble() - 0.5f),
-						orbit = Options.blockOrbitMin + Options.blockOrbitStep * orbitIndex,
-						orbitMax = Options.blockOrbitMax,
-					};
-					blockList.Add(block);
-				}
-				this.blockList.Add(blockList);
+			for (int i = 0; i < Options.blockCount; ++i) {
+				this.blockList.Add(new Entity() {
+					brush = Options.blockBrush,
+					pen = Options.blockPen,
+					radius = Options.blockRadius,
+					orbitMax = Options.blockOrbitMax,
+				});
 			}
 
-			this.isEnd = false;
+			this.RelocateBall();
+			this.ball.orbitSpeed = Options.ballOrbitSpeed;
+
+			this.RelocateBlocks();
+
+			this.score = 0.0f;
+			this.StartLevel();
+		}
+
+		private void RelocateBall() {
+			this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
+			this.ball.orbit = Options.ballOrbit;
+
+			this.waitedOrbitIndex = 0;
+		}
+
+		private void RelocateBlocks() {
+			int blockIndex = 0;
+			int blockCount = Options.blockCount / Options.blockOrbitCount;
+			int orbitIndex = Options.blockOrbitCount - 1;
+			for (int i = 0; i < this.blockList.Count; ++i) {
+				blockIndex += 1;
+				if (blockIndex == blockCount) {
+					blockIndex = 0;
+					orbitIndex -= 1;
+				}
+
+				var block = this.blockList[i];
+				block.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
+				block.angleSpeed = Options.blockAngleSpeed * (float)(Program.rand.NextDouble() - 0.5f);
+				block.orbit = Options.blockOrbitMin + Options.blockOrbitStep * orbitIndex;
+
+				block.next = blockIndex != 0 ? this.blockList[i + 1] : block.next = this.blockList[i + 1 - blockCount];
+
+			}
+		}
+
+		private void StartLevel() {
+			this.state = 0;
 		}
 
 		private void MainForm_Paint(object sender, PaintEventArgs e) {
@@ -139,33 +167,45 @@ namespace Knockout {
 
 			float scale = Math.Min(this.ClientSize.Width, this.ClientSize.Height);
 
-			foreach (var blockList in this.blockList) {
-				foreach (var block in blockList) {
-					block.DrawOrbit(e.Graphics, scale);
-				}
+			foreach (var block in this.blockList) {
+				block.DrawOrbit(e.Graphics, scale);
 			}
 
 			this.ball.Draw(e.Graphics, scale);
 
-			foreach (var blockList in this.blockList) {
-				foreach (var block in blockList) {
-					block.Draw(e.Graphics, scale);
-				}
+			foreach (var block in this.blockList) {
+				block.Draw(e.Graphics, scale);
 			}
 
 			this.center.Draw(e.Graphics, scale);
 
 			e.Graphics.ResetTransform();
 
-			if (this.isEnd) {
-				string str = "BOOM";
-				SizeF strSize = e.Graphics.MeasureString(str, Options.font);
-				e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+			string str;
+			SizeF strSize;
+			str = this.score.ToString();
+			strSize = e.Graphics.MeasureString(str, Options.font);
+			e.Graphics.DrawString(str, Options.font, Brushes.Black, this.ClientSize.Width - strSize.Width, 0.0f);
+
+			switch (this.state) {
+				case 0:
+					break;
+				case 1:
+					str = "BOOM";
+					strSize = e.Graphics.MeasureString(str, Options.font);
+					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+					break;
+				default:
+					str = "Something wrong!";
+					strSize = e.Graphics.MeasureString(str, Options.font);
+					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+					break;
 			}
 		}
 
 		private void Timer_Tick(object sender, EventArgs e) {
-			if (this.isEnd) {
+			if (this.state != 0) {
+				this.Invalidate();
 				return;
 			}
 
@@ -176,68 +216,58 @@ namespace Knockout {
 			if (this.isRightKey) {
 				angle -= Options.angleStepKey;
 			}
-			foreach (var blockList in this.blockList) {
-				foreach (var block in blockList) {
-					block.angle += angle;
-				}
+			foreach (var block in this.blockList) {
+				block.angle += angle;
 			}
 
 			float prevBallOrbit = this.ball.orbit;
 			this.ball.Update(this.timer.Interval * Options.toSeconds);
 
-			float waitedOrbit = this.orbits[this.waitedOrbitIndex];
-			if (prevBallOrbit < waitedOrbit && waitedOrbit <= this.ball.orbit) {
-				var blockList = this.blockList[this.waitedOrbitIndex];
-				var dist = float.PositiveInfinity;
-				foreach (var block in blockList) {
-					var minAngle = Math.Min(this.ball.angle, block.angle);
-					var maxAngle = Math.Max(this.ball.angle, block.angle);
-					var angle = maxAngle - minAngle;
-					angle = Math.Min(angle, (float)Math.Pi - angle);
-					dist = Math.Min(dist, angle * waitedOrbit);
+			bool isRun = true;
+			while (this.waitedOrbitIndex < this.blockList.Count && isRun) {
+				var waiteredBlock = this.blockList[this.waitedOrbitIndex];
+				isRun = this.ball.orbit < waiteredBlock.orbit && waiteredBlock.orbit <= prevBallOrbit;
+				if (isRun) {
+					var minAngle = Math.Min(this.ball.angle, waiteredBlock.angle);
+					var maxAngle = Math.Max(this.ball.angle, waiteredBlock.angle);
+					var angleBetween = maxAngle - minAngle;
+					while (angleBetween > 2 * (float)Math.PI) {
+						angleBetween -= 2 * (float)Math.PI;
+					}
+					angleBetween = Math.Min(angleBetween, 2 * (float)Math.PI - angleBetween);
+					var distance = angleBetween * waiteredBlock.orbit;
+					var length = this.ball.radius + waiteredBlock.radius;
+					if (distance < length) {
+						this.state = 1;
+						return;
+					} else if (distance < 2 * length) {
+							this.score += length / (distance - length);
+						}
+					this.waitedOrbitIndex += 1;
 				}
-				this.score += dist;
-				this.waitedOrbitIndex += 1;
 			}
-			if (this.ball.orbit == 0.0f) {
-				this.ball.angle = 2 * (float)Math.PI * (float)Program.rand.NextDouble();
-				this.ball.orbit = Options.ballOrbit;
 
-				if (Program.rand.NextDouble() < 0.5) {
+			foreach (var block in this.blockList) {
+				block.Update(this.timer.Interval * Options.toSeconds);
+			}
+			foreach (var block in this.blockList) {
+				if (block.GetDistance(block.next) < block.radius + block.next.radius) {
+					var temp = block.angleSpeed;
+					block.angleSpeed = block.next.angleSpeed;
+					block.next.angleSpeed = temp;
+				}
+			}
+
+			if (this.ball.orbit == 0.0f) {
+				int blockIndex = Program.rand.Next(this.blockList.Count + 1);
+				if (blockIndex == this.blockList.Count) {
 					this.ball.orbitSpeed += Options.ballOrbitSpeedStep;
 				} else {
-					foreach (var blockList in this.blockList) {
-						foreach (var block in blockList) {
-							block.angleSpeed += Math.Sign(block.angleSpeed) * Options.blockAngleSpeedStep;
-						}
-					}
+					var block = this.blockList[blockIndex];
+					block.angleSpeed += Math.Sign(block.angleSpeed) * Options.blockAngleSpeedStep;
 				}
-			}
 
-			foreach (var blockList in this.blockList) {
-				foreach (var block in blockList) {
-					block.Update(this.timer.Interval * Options.toSeconds);
-				}
-			}
-
-			foreach (var blockList in this.blockList) {
-				for (int i = blockList.Count - 1, j = 0; j < blockList.Count; i = j, j += 1) {
-					var iBlock = blockList[i];
-					var jBlock = blockList[j];
-					if (iBlock.GetDistance(jBlock) < iBlock.radius + jBlock.radius) {
-						var temp = iBlock.angleSpeed;
-						iBlock.angleSpeed = jBlock.angleSpeed;
-						jBlock.angleSpeed = temp;
-					}
-				}
-			}
-
-			foreach (var blockList in this.blockList) {
-				foreach (var block in blockList) {
-					if (block.GetDistance(this.ball) < this.ball.radius + block.radius) {
-						this.isEnd = true;
-					}
-				}
+				this.RelocateBall();
 			}
 
 			this.Invalidate();
@@ -260,7 +290,7 @@ namespace Knockout {
 					this.Close();
 					break;
 				case Keys.Space:
-					this.StartLevel();
+					this.CreateGame();
 					break;
 				case Keys.F1:
 					this.isShowInfo = !this.isShowInfo;
@@ -290,6 +320,8 @@ namespace Knockout {
 		public float radiusSpeed = 0.0f;
 
 		public float orbitMax = 0.0f;
+
+		public Entity next = null;
 
 		public void Update(float timeEllapsed) {
 			this.angle += this.angleSpeed * timeEllapsed;
