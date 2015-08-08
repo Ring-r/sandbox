@@ -20,7 +20,7 @@ namespace Knockout {
 
 	static class Options {
 		public const int needFPS = 60;
-		public const float toSeconds = 0.001f;
+		public const float fromMilli = 0.001f;
 
 		public const int blockCount = 8;
 
@@ -39,6 +39,7 @@ namespace Knockout {
 		public static readonly Brush blockBrush = Brushes.Red;
 		public static readonly Brush centerBrush = Brushes.Silver;
 
+		public static readonly Pen ballPen = Pens.Black;
 		public static readonly Pen blockPen = Pens.Black;
 		public static readonly Pen orbitPen = Pens.Silver;
 
@@ -75,21 +76,21 @@ namespace Knockout {
 			this.Resize += (sender, e) => this.Invalidate();
 			this.KeyDown += this.MainForm_KeyDown;
 			this.KeyUp += this.MainForm_KeyUp;
-			this.timer.Tick += this.Timer_Tick;
 			this.ResumeLayout(false);
 
-			this.Text = "Knockout Game Prototype";
-
+			this.timer.Enabled = true;
 			this.timer.Interval = 1000 / Options.needFPS;
-			this.timer.Start();
+			this.timer.Tick += this.Timer_Tick;
 
+			this.Text = "Knockout Game Prototype";
 			this.CreateGame();
+			this.CreateLevel();
 		}
 
 		private readonly Entity ball = new Entity() {
 			brush = Options.ballBrush,
+			pen = Options.ballPen,
 			radius = Options.ballRadius,
-			orbitSpeed = Options.ballOrbitSpeed,
 			orbitMax = Options.ballOrbitMax,
 		};
 		private readonly List<Entity> blockList = new List<Entity>();
@@ -104,7 +105,7 @@ namespace Knockout {
 		private bool isRightKey = false;
 
 		private float score = 0;
-		private int state = 0;
+		private bool isEnd = true;
 		private bool isShowInfo = true;
 
 		private void CreateGame() {
@@ -117,14 +118,6 @@ namespace Knockout {
 					orbitMax = Options.blockOrbitMax,
 				});
 			}
-
-			this.RelocateBall();
-			this.ball.orbitSpeed = Options.ballOrbitSpeed;
-
-			this.RelocateBlocks();
-
-			this.score = 0.0f;
-			this.StartLevel();
 		}
 
 		private void RelocateBall() {
@@ -155,8 +148,17 @@ namespace Knockout {
 			}
 		}
 
+		private void CreateLevel() {
+			this.ball.orbitSpeed = Options.ballOrbitSpeed;
+			this.RelocateBall();
+
+			this.RelocateBlocks();
+
+			this.score = 0.0f;
+		}
+
 		private void StartLevel() {
-			this.state = 0;
+			this.isEnd = false;
 		}
 
 		private void MainForm_Paint(object sender, PaintEventArgs e) {
@@ -181,34 +183,18 @@ namespace Knockout {
 
 			e.Graphics.ResetTransform();
 
-			string str;
-			SizeF strSize;
-			str = this.score.ToString();
-			strSize = e.Graphics.MeasureString(str, Options.font);
-			e.Graphics.DrawString(str, Options.font, Brushes.Black, this.ClientSize.Width - strSize.Width, 0.0f);
-
-			switch (this.state) {
-				case 0:
-					break;
-				case 1:
-					str = "BOOM";
-					strSize = e.Graphics.MeasureString(str, Options.font);
-					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
-					break;
-				default:
-					str = "Something wrong!";
-					strSize = e.Graphics.MeasureString(str, Options.font);
-					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
-					break;
+			if (this.isEnd) {
+				var strEnd = "BOOM";
+				var strEndSize = e.Graphics.MeasureString(strEnd, Options.font);
+				e.Graphics.DrawString(strEnd, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strEndSize.Width / 2, this.ClientSize.Height / 2 - strEndSize.Height / 2);
 			}
+
+			var strScore = this.score.ToString();
+			var strScoreSize = e.Graphics.MeasureString(strScore, Options.font);
+			e.Graphics.DrawString(strScore, Options.font, Brushes.Black, this.ClientSize.Width - strScoreSize.Width, 0.0f);
 		}
 
 		private void Timer_Tick(object sender, EventArgs e) {
-			if (this.state != 0) {
-				this.Invalidate();
-				return;
-			}
-
 			float angle = 0.0f;
 			if (this.isLeftKey) {
 				angle += Options.angleStepKey;
@@ -220,8 +206,13 @@ namespace Knockout {
 				block.angle += angle;
 			}
 
+			if (this.isEnd) {
+				this.Invalidate();
+				return;
+			}
+
 			float prevBallOrbit = this.ball.orbit;
-			this.ball.Update(this.timer.Interval * Options.toSeconds);
+			this.ball.Update(this.timer.Interval * Options.fromMilli);
 
 			bool isRun = true;
 			while (this.waitedOrbitIndex < this.blockList.Count && isRun) {
@@ -238,7 +229,7 @@ namespace Knockout {
 					var distance = angleBetween * waiteredBlock.orbit;
 					var length = this.ball.radius + waiteredBlock.radius;
 					if (distance < length) {
-						this.state = 1;
+						this.isEnd = true;
 						return;
 					} else if (distance < 2 * length) {
 							this.score += length / (distance - length);
@@ -248,7 +239,7 @@ namespace Knockout {
 			}
 
 			foreach (var block in this.blockList) {
-				block.Update(this.timer.Interval * Options.toSeconds);
+				block.Update(this.timer.Interval * Options.fromMilli);
 			}
 			foreach (var block in this.blockList) {
 				if (block.GetDistance(block.next) < block.radius + block.next.radius) {
@@ -289,8 +280,11 @@ namespace Knockout {
 				case Keys.Escape:
 					this.Close();
 					break;
+				case Keys.Enter:
+					this.CreateLevel();
+					break;
 				case Keys.Space:
-					this.CreateGame();
+					this.StartLevel();
 					break;
 				case Keys.F1:
 					this.isShowInfo = !this.isShowInfo;
@@ -315,11 +309,10 @@ namespace Knockout {
 		public float angle = 0.0f;
 		public float angleSpeed = 0.0f;
 		public float orbit = 0.0f;
-		public float orbitSpeed = 0.0f;
-		public float radius = 0.0f;
-		public float radiusSpeed = 0.0f;
-
 		public float orbitMax = 0.0f;
+		public float orbitSpeed = 0.0f;
+
+		public float radius = 0.0f;
 
 		public Entity next = null;
 
@@ -327,8 +320,6 @@ namespace Knockout {
 			this.angle += this.angleSpeed * timeEllapsed;
 			this.orbit += this.orbitSpeed * timeEllapsed;
 			this.orbit = Math.Max(this.orbit, 0.0f);
-			this.radius += this.radiusSpeed * timeEllapsed;
-			this.radius = Math.Max(this.radius, 0.0f);
 		}
 
 		public void Draw(Graphics g, float scale) {
