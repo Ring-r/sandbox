@@ -70,14 +70,13 @@ namespace Orbits {
 			this.Resize += (sender, e) => this.Invalidate();
 			this.KeyUp += this.MainForm_KeyUp;
 			this.MouseClick += this.MainForm_MouseClick;
-			this.timer.Tick += this.Timer_Tick;
 			this.ResumeLayout(false);
-
-			this.Text = "Orbits Game Prototype";
 
 			this.timer.Interval = 1000 / Options.needFPS;
 			this.timer.Start();
+			this.timer.Tick += this.Timer_Tick;
 
+			this.Text = "Orbits Game Prototype";
 			this.CreateGame();
 		}
 
@@ -198,12 +197,12 @@ namespace Orbits {
 					}
 				}
 			}
-				
-			this.Invalidate();
 
 			if (this.avalableTouchCount < 0) {
 				this.state = 2;
 			}
+
+			this.Invalidate();
 		}
 
 		private void MainForm_KeyUp(object sender, KeyEventArgs e) {
@@ -274,7 +273,7 @@ namespace Orbits {
 			float vy = this.py - this.center.py;
 			this.orbit = (float)Math.Sqrt(vx * vx + vy * vy);
 			this.angle = (float)Math.Atan2(vy, vx);
-			this.angleSpeed = this.speed / this.orbit; // TODO: Fix divide by zero situation.
+			this.angleSpeed = this.orbit > 0.0f ? this.speed / this.orbit : 0.0f;
 			if (vx * vxOld + vy * vyOld < 0.0f) {
 				this.angleSpeed = -this.angleSpeed;
 			}
