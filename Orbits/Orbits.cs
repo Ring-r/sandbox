@@ -133,7 +133,8 @@ namespace Orbits {
 		private void StartLevel() {
 			this.ball.center = null;
 			this.avalableTouchCount = Options.startTouchCount;
-			this.state = 0;
+			this.bonusCount = 0
+			this.state = State.IsRun;
 		}
 
 		private void MainForm_Paint(object sender, PaintEventArgs e) {
@@ -156,19 +157,29 @@ namespace Orbits {
 
 			string str;
 			SizeF strSize;
+
+			str = this.avalableTouchCount.ToString();
+			strSize = e.Graphics.MeasureString(str, Options.font);
+			e.Graphics.DrawString(str, Options.font, Brushes.Black, this.ClientSize.Width - strSize.Width, 0.0f);
+
 			switch (this.state) {
-				case 0:
-					str = this.avalableTouchCount.ToString();
-					strSize = e.Graphics.MeasureString(str, Options.font);
-					e.Graphics.DrawString(str, Options.font, Brushes.Black, this.ClientSize.Width - strSize.Width, 0.0f);
-					break;
-				case 1:
+				case State.CollidedWithBlock:
 					str = "BOOM";
 					strSize = e.Graphics.MeasureString(str, Options.font);
 					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
 					break;
-				case 2:
+				case State.NotEnoughPoints:
 					str = "No power points.";
+					strSize = e.Graphics.MeasureString(str, Options.font);
+					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+					break;
+				case State.NotEnoughScores:
+					str = "Not enough scores.";
+					strSize = e.Graphics.MeasureString(str, Options.font);
+					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
+					break;
+				case State.Win:
+					str = "You win!";
 					strSize = e.Graphics.MeasureString(str, Options.font);
 					e.Graphics.DrawString(str, Options.font, Brushes.Red, this.ClientSize.Width / 2 - strSize.Width / 2, this.ClientSize.Height / 2 - strSize.Height / 2);
 					break;
@@ -181,29 +192,36 @@ namespace Orbits {
 		}
 
 		private void Timer_Tick(object sender, EventArgs e) {
-			if (this.state != 0) {
+			if (this.state != State.IsRun) {
 				return;
 			}
 
 			this.ball.Update(this.timer.Interval * Options.toSeconds);
-			foreach (var block in this.blockList) {
-				if (this.ball.GetDistance(block) < this.ball.radius + block.radius) {
-					if (block.type == 0) {
-						this.state = 1;
-					}
-					if (block.type == 1) {
-						this.avalableTouchCount += Options.usedTouchCount;
-						block.px = (float)Program.rand.NextDouble();
-						block.py = (float)Program.rand.NextDouble();
+			for (int i = 0; i < this.blockList.Count && this.state == State.IsRun; ++i) {
+				var block = this.blockList[i];
+				if (this.ball.IsCollided(block)) {
+					switch (block.type) {
+						case Entity.Block:
+							this.state = State.CollidedWithBlock;
+							break;
+						case Entity.Bonus:
+							this.blockList.RemoveAt(i);
+							this.score += 1;
+							i -= 1;
+							break;
+						case Entity.Finish:
+							var bonusPercent = 1.0 * this.bonusCount / Options.bonusCount;
+							this.state = bonusPercent < Options.bonusPercent ? State.NotEnoughScores : State.Win;
+							break;
 					}
 				}
 			}
-				
-			this.Invalidate();
 
 			if (this.avalableTouchCount < 0) {
-				this.state = 2;
+				this.state = State.NotEnoughPoints;
 			}
+
+			this.Invalidate();
 		}
 
 		private void MainForm_KeyUp(object sender, KeyEventArgs e) {
@@ -306,10 +324,10 @@ namespace Orbits {
 			g.DrawEllipse(this.pen, x - r, y - r, 2 * r, 2 * r);
 		}
 
-		public float GetDistance(Entity entity) {
+		public bool IsCollided(Entity entity) {
 			float x = this.px - entity.px;
 			float y = this.py - entity.py;
-			return (float)Math.Sqrt(x * x + y * y);
+			return (float)Math.Sqrt(x * x + y * y) < this.radius + entity.radius;
 		}
 	}
 }
