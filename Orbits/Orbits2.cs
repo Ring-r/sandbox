@@ -86,7 +86,7 @@ namespace Orbits {
 			brush = Options.ballBrush,
 			pen = Options.ballPen,
 			radius = Options.ballRadius,
-			speed = Options.ballSpeed,
+			Speed = Options.ballSpeed,
 		};
 		private readonly List<Entity> blockList = new List<Entity>();
 		private int avalableTouchCount = 0;
@@ -221,21 +221,15 @@ namespace Orbits {
 		}
 
 		private void MainForm_MouseClick(object sender, MouseEventArgs e) {
+			if (this.ball.center == null) {
+				this.ball.center = new Entity();
+			}
+
 			float scale = Math.Min(this.ClientSize.Width, this.ClientSize.Height);
 			float ex = (e.X - (this.ClientSize.Width - scale) / 2) / scale;
 			float ey = (e.Y - (this.ClientSize.Height - scale) / 2) / scale;
-			foreach (var block in this.blockList) {
-				if (block.type == 0) {
-					float x = block.px - ex;
-					float y = block.py - ey;
-					float d = (float)Math.Sqrt(x * x + y * y);
-					if (d < block.radius) {
-						if (this.ball.SetCenter(block)) {
-							this.avalableTouchCount -= Options.usedTouchCount;
-						}
-					}
-				}
-			}
+			this.ball.SetCenter(ex, ey);
+			this.avalableTouchCount -= Options.usedTouchCount;
 		}
 	}
 
@@ -250,28 +244,40 @@ namespace Orbits {
 		public float py = 0.0f;
 		public float radius = 0.0f;
 
-		public float speed = 0.0f;
+		private float speed = 0.0f;
+		public float Speed {
+			get {
+				return this.speed;
+			}
+			set {
+				this.speed = Math.Abs(value);
+			}
+		}
 
 		private Entity center = null;
 		private float angle = 0.0f;
 		private float angleSpeed = 0.0f;
 		private float orbit = 0.0f;
 
-		public bool SetCenter(Entity center) {
-			bool res = true;
-			if (this.center == center) {
-				this.speed = -this.speed;
-				this.angleSpeed = -this.angleSpeed;
-				res = false;
-			} else {
-				this.center = center;
-				float x = this.px - this.center.px;
-				float y = this.py - this.center.py;
-				this.orbit = (float)Math.Sqrt(x * x + y * y);
-				this.angle = (float)Math.Atan2(y, x);
-				this.angleSpeed = Math.Sign(this.speed) * (float)Math.Asin(Math.Abs(this.speed) / this.orbit);
+		public void SetCenter(float px, float py) {
+			if (this.center == null) {
+				return;
 			}
-			return res;
+
+			float vxOld = this.px - this.center.px;
+			float vyOld = this.py - this.center.py;
+
+			this.center.px = px;
+			this.center.py = py;
+
+			float vx = this.px - this.center.px;
+			float vy = this.py - this.center.py;
+			this.orbit = (float)Math.Sqrt(vx * vx + vy * vy);
+			this.angle = (float)Math.Atan2(vy, vx);
+			this.angleSpeed = this.speed / this.orbit; // TODO: Fix divide by zero situation.
+			if (vx * vxOld + vy * vyOld < 0.0f) {
+				this.angleSpeed = -this.angleSpeed;
+			}
 		}
 
 		public void Update(float timeEllapsed) {
@@ -286,7 +292,6 @@ namespace Orbits {
 			this.px = this.center.px + this.orbit * (float)Math.Cos(this.angle);
 			this.py = this.center.py + this.orbit * (float)Math.Sin(this.angle);
 			if (this.px < 0.0f || this.px > 1.0f || this.py < 0.0f || this.py > 1.0f) {
-				this.speed = -this.speed;
 				this.angleSpeed = -this.angleSpeed;
 			}
 		}
