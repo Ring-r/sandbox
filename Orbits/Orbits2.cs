@@ -187,7 +187,7 @@ namespace Orbits {
 
 			this.ball.Update(this.timer.Interval * Options.toSeconds);
 			foreach (var block in this.blockList) {
-				if (this.ball.GetDistance(block) < this.ball.radius + block.radius) {
+				if (this.ball.IsCollided(block)) {
 					if (block.type == 0) {
 						this.state = 1;
 					}
@@ -306,10 +306,10 @@ namespace Orbits {
 			g.DrawEllipse(this.pen, x - r, y - r, 2 * r, 2 * r);
 		}
 
-		public float GetDistance(Entity entity) {
+		public bool IsCollided(Entity entity) {
 			float x = this.px - entity.px;
 			float y = this.py - entity.py;
-			return (float)Math.Sqrt(x * x + y * y);
+			return (float)Math.Sqrt(x * x + y * y) < this.radius + entity.radius;
 		}
 	}
 }
