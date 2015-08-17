@@ -299,6 +299,10 @@ namespace Knockout {
 					break;
 			}
 		}
+	
+		private static int CalculateMaxCount(float radiusEntity, float radiusOrbit) {
+			return (int)(Math.Pi / Math.Atan2(2 * radiusEntity, radiusOrbit));
+		}
 	}
 
 	class Entity {
