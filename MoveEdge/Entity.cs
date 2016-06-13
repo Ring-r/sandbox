@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Dogonyalki
+namespace Prototype
 {
-    public class Hero
+    public class Entity
     {
         public float r = 10;
         public float x_, _x, y_, _y;
