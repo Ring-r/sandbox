@@ -1,6 +1,6 @@
 using System;
 
-namespace MoveInCells
+namespace Prototype
 {
     public static class Helper
     {

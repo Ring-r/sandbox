@@ -1,4 +1,4 @@
-﻿namespace MoveInCells
+﻿namespace Prototype
 {
     public class Entity
     {

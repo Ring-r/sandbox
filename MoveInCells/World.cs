@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace MoveInCells
+namespace Prototype
 {
     public class World
     {
