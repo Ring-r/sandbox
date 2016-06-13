@@ -2,156 +2,84 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GridSegmentation
 {
-    public partial class MainForm : Form
+  public class MainForm : Form
+  {
+    private const int GRID_I_COUNT = 100;
+    private const int GRID_J_COUNT = 100;
+    private const int GRID_FILLED_COUNT_PERCENTS = 50;
+    private const int GRID_MIN_CELLS_COUNT = 100;
+
+    private const int GRID_VIEW_CELL_SIZE = 5;
+    private const int GRID_VIEW_VECTOR_ALPHA = 100;
+    private static readonly Color GRID_VIEW_BORDER_COLOR = Color.Yellow;
+    private static readonly Color GRID_VIEW_FILLED_COLOR = Color.Silver;
+
+    private const int AFTER_STEP_INTERVAL = 1;
+
+    private readonly Grid grid = new Grid(GRID_I_COUNT, GRID_J_COUNT);
+    private readonly List<List<int>> gridVectors = new List<List<int>>();
+    private readonly GridView gridView = new GridView(GRID_VIEW_CELL_SIZE, GRID_VIEW_BORDER_COLOR, GRID_VIEW_FILLED_COLOR, GRID_VIEW_VECTOR_ALPHA);
+
+    private bool isExit = false;
+
+    public MainForm()
     {
-        private readonly Random random = new Random();
+      this.SuspendLayout();
 
-		private readonly Grid grid = new Grid();
-		private readonly List<List<int>> gridVectors = new List<List<int>>();
+      this.DoubleBuffered = true;
+      this.Name = this.Text = "MainForm";
+      this.StartPosition = FormStartPosition.CenterScreen;
+      this.WindowState = FormWindowState.Maximized;
 
-        private int cellSize;
-        private int minGridCount;
+      this.KeyDown += this.MainForm_KeyDown;
+      this.Paint += this.MainForm_Paint;
+      this.Resize += this.MainForm_Resize;
 
-        private int filedCount;
-        private int interval;
-
-        private bool isExit = false;
-
-        private void Init()
-        {
-			this.grid.Init(100, 100);
-
-            this.cellSize = 5;
-            this.minGridCount = 100;
-
-            this.filedCount = this.grid.cellsCount / 2;
-
-            this.interval = 1;
-        }
-
-        private void InitCells()
-        {
-            for (int i = 0; i < this.grid.cellsCount; ++i)
-            {
-                this.grid.cells[i] = 0;
-            }
-            for (int i = 0; i < this.filedCount; ++i)
-            {
-				int index = this.grid.Index(this.random.Next(this.grid.iCount), this.random.Next(this.grid.jCount));
-                this.grid.cells[index] = 1;
-            }
-        }
-
-        private bool Afterstep()
-        {
-            this.Invalidate();
-            Application.DoEvents();
-            System.Threading.Thread.Sleep(this.interval);
-            return this.isExit;
-        }
-
-        public MainForm()
-        {
-            InitializeComponent();
-
-            this.Init();
-        }
-
-        private void MainForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Escape)
-            {
-                this.isExit = true;
-                this.Close();
-            }
-
-            if (e.KeyData == Keys.F5)
-            {
-				this.InitCells();
-				Task.Factory.StartNew(() =>
-					{
-						Utils.RunAlgorithm(this.grid, gridVectors, this.cellSize, this.minGridCount, this.Afterstep);
-					});
-                this.Invalidate();
-            }
-        }
-
-        private static void DrawCells(Graphics g, Grid grid, float cellSize)
-        {
-            for (int i = 0; i < grid.iCount; ++i)
-            {
-                for (int j = 0; j < grid.jCount; ++j)
-                {
-                    int index = grid.Index(i, j);
-                    if (grid.cells[index] > 0)
-                    {
-                        g.FillRectangle(new SolidBrush(Color.FromArgb(255 * grid.cells[index] / 10, Color.Black)), i * cellSize, j * cellSize, cellSize, cellSize);
-                    }
-                }
-            }
-        }
-
-        private static void DrawGridVector(Graphics g, Grid grid, List<int> gridVector, float cellSize, Color color)
-        {
-            Brush brush = new SolidBrush(color);
-            int count = gridVector.Count;
-            for (int i = 0; i < count; i += 2)
-            {
-                for (int index = gridVector[i]; index <= gridVector[i + 1]; ++index)
-                {
-                    int index_i, index_j; grid.Index(index, out index_i, out index_j);
-                    g.FillRectangle(brush, index_i * cellSize, index_j * cellSize, cellSize, cellSize);
-                }
-            }
-        }
-
-        private static void DrawGridVector_(Graphics g, Grid grid, List<int> gridVector, float cellSize, Color color)
-        {
-            Brush brush = new SolidBrush(color);
-            int count = gridVector.Count;
-            for (int i = 0; i < count; ++i)
-            {
-                int index_i, index_j; grid.Index(gridVector[i], out index_i, out index_j);
-                g.FillRectangle(brush, index_i * cellSize, index_j * cellSize, cellSize, cellSize);
-            }
-        }
-
-        private static void DrawGridVectors(Graphics g, Grid grid, List<List<int>> gridVectors, float cellSize)
-        {
-            Random random = new Random(0);
-            int count = gridVectors.Count;
-            for (int i = 0; i < count - 1; ++i)
-            {
-                List<int> gridVector = gridVectors[i];
-                Color color = Color.FromArgb(random.Next(255), random.Next(255), random.Next(255));
-                DrawGridVector(g, grid, gridVector, cellSize, color);
-            }
-            if (count > 0)
-            {
-                DrawGridVector_(g, grid, gridVectors[count - 1], cellSize, Color.Yellow);
-            }
-        }
-
-        private void MainForm_Paint (object sender, PaintEventArgs e)
-		{
-			e.Graphics.Clear (Color.White);
-			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-
-			try {
-				DrawGridVectors (e.Graphics, this.grid, this.gridVectors, this.cellSize);
-				DrawCells (e.Graphics, this.grid, this.cellSize);
-			} catch {
-			}
-        }
-
-        private void MainForm_Resize(object sender, EventArgs e)
-        {
-            this.Invalidate();
-        }
+      this.ResumeLayout(false);
     }
+
+    private bool Afterstep()
+    {
+      this.Invalidate();
+      Application.DoEvents();
+      Thread.Sleep(AFTER_STEP_INTERVAL);
+      return this.isExit;
+    }
+
+    private void MainForm_KeyDown(object sender, KeyEventArgs e)
+    {
+      if (e.KeyData == Keys.Escape)
+      {
+        this.isExit = true;
+        this.Close();
+      }
+
+      if (e.KeyData == Keys.F5)
+      {
+        this.grid.InitCells(GRID_FILLED_COUNT_PERCENTS);
+        Task.Factory.StartNew(() => Utils.RunAlgorithm(this.grid, this.gridVectors, GRID_MIN_CELLS_COUNT, this.Afterstep));
+        this.Invalidate();
+      }
+    }
+
+    private void MainForm_Paint(object sender, PaintEventArgs e)
+    {
+      e.Graphics.Clear(Color.White);
+      e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+      this.gridView.DrawGrid(e.Graphics, this.grid);
+      this.gridView.DrawGridVectors(e.Graphics, this.grid, this.gridVectors);
+    }
+
+    private void MainForm_Resize(object sender, EventArgs e)
+    {
+      this.Invalidate();
+    }
+  }
 }
