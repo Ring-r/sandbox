@@ -29,14 +29,14 @@ namespace GridSegmentation
         bool bNext =
             0 <= iNext && iNext < grid.iCount &&
             0 <= jNext && jNext < grid.jCount &&
-            grid.cells[indexNext] > 0;
+            grid[indexNext] > 0;
 
         int iLeft = iNext - jv; int jLeft = jNext + iv;
         int indexLeft = grid.Index(iLeft, jLeft);
         bool bLeft =
             0 <= iLeft && iLeft < grid.iCount &&
             0 <= jLeft && jLeft < grid.jCount &&
-            grid.cells[indexLeft] > 0;
+            grid[indexLeft] > 0;
 
         if (bLeft)
         {
@@ -72,7 +72,7 @@ namespace GridSegmentation
         {
           for (int j = gridVector[i]; j <= gridVector[i + 1]; ++j)
           {
-            grid.cells[j] = 0;
+            grid[j] = 0;
           }
         }
       }
@@ -97,7 +97,7 @@ namespace GridSegmentation
       {
         for (int j = gridVector[i]; j <= gridVector[i + 1]; j++)
         {
-          grid.cells[j] = 0;
+          grid[j] = 0;
         }
       }
       return gridCount;
@@ -117,22 +117,21 @@ namespace GridSegmentation
       return atBorder;
     }
 
-    public static void RunAlgorithm(Grid grid, List<List<int>> gridVectors, int minGridCount, Func<bool> afterstep)
+    public static void Segmentate(Grid grid, List<List<int>> gridVectors, int minGridCount, bool minGridClear, Func<bool> afterstep)
     {
-      Grid grid_temp = new Grid(grid.iCount, grid.jCount);
-      Array.Copy(grid.cells, grid_temp.cells, grid.cellsCount);
+      Grid grid_temp = grid.Copy();
 
       gridVectors.Clear();
 
       int vectIndex = -1;
       for (int index = 0; index < grid_temp.cellsCount; ++index)
       {
-        if (grid_temp.cells[index] != 0)
+        if (grid_temp[index] != 0)
         {
           if (vectIndex < 0 || gridVectors[vectIndex].Count > 0)
           {
             gridVectors.Add(new List<int>());
-            ++vectIndex;
+            vectIndex += 1;
           }
 
           List<int> gridVector = gridVectors[vectIndex];
@@ -140,7 +139,10 @@ namespace GridSegmentation
 
           if (GridCount(gridVector) < minGridCount)// && !AtBorder(gridVector, grid))
           {
-            GridClear(grid, gridVector);
+            if (minGridClear)
+            {
+              GridClear(grid, gridVector);
+            }
             gridVector.Clear();
           }
 

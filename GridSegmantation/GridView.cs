@@ -25,8 +25,7 @@ namespace GridSegmentation
       {
         for (int j = 0; j < grid.jCount; ++j)
         {
-          int index = grid.Index(i, j);
-          if (grid.cells[index] > 0)
+          if (grid[grid.Index(i, j)] > 0)
           {
             g.FillRectangle(this.filledBrush, i * this.cellSize, j * this.cellSize, this.cellSize, this.cellSize);
           }

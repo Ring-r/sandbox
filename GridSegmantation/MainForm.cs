@@ -12,8 +12,9 @@ namespace GridSegmentation
   {
     private const int GRID_I_COUNT = 100;
     private const int GRID_J_COUNT = 100;
-    private const int GRID_FILLED_COUNT_PERCENTS = 50;
+    private const int GRID_FILLED_COUNT_PERCENTS = 45;
     private const int GRID_MIN_CELLS_COUNT = 100;
+    private const bool GRID_MIN_CLEAR = true;
 
     private const int GRID_VIEW_CELL_SIZE = 5;
     private const int GRID_VIEW_VECTOR_ALPHA = 100;
@@ -27,6 +28,7 @@ namespace GridSegmentation
     private readonly GridView gridView = new GridView(GRID_VIEW_CELL_SIZE, GRID_VIEW_BORDER_COLOR, GRID_VIEW_FILLED_COLOR, GRID_VIEW_VECTOR_ALPHA);
 
     private bool isExit = false;
+    private Task task = null;
 
     public MainForm()
     {
@@ -37,6 +39,7 @@ namespace GridSegmentation
       this.StartPosition = FormStartPosition.CenterScreen;
       this.WindowState = FormWindowState.Maximized;
 
+      this.FormClosing += this.MainForm_FormClosing;
       this.KeyDown += this.MainForm_KeyDown;
       this.Paint += this.MainForm_Paint;
       this.Resize += this.MainForm_Resize;
@@ -52,19 +55,37 @@ namespace GridSegmentation
       return this.isExit;
     }
 
+    private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+      this.KeyDown -= this.MainForm_KeyDown;
+      this.Paint -= this.MainForm_Paint;
+      this.isExit = true;
+    }
+
     private void MainForm_KeyDown(object sender, KeyEventArgs e)
     {
       if (e.KeyData == Keys.Escape)
       {
-        this.isExit = true;
         this.Close();
       }
 
       if (e.KeyData == Keys.F5)
       {
-        this.grid.InitCells(GRID_FILLED_COUNT_PERCENTS);
-        Task.Factory.StartNew(() => Utils.RunAlgorithm(this.grid, this.gridVectors, GRID_MIN_CELLS_COUNT, this.Afterstep));
-        this.Invalidate();
+        if (this.task == null || this.task.IsCompleted)
+        {
+          this.isExit = false;
+          this.task = Task.Factory.StartNew(() =>
+          {
+            this.grid.InitCells(GRID_FILLED_COUNT_PERCENTS);
+            Utils.Segmentate(this.grid, this.gridVectors, GRID_MIN_CELLS_COUNT, GRID_MIN_CLEAR, this.Afterstep);
+          });
+          this.task.ContinueWith((complitedTask) => this.Invoke((Action)(() => this.Invalidate())));
+        }
+        else
+        {
+          this.isExit = true;
+          this.task.ContinueWith((complitedTask) => this.Invoke((Action)(() => this.MainForm_KeyDown(this, new KeyEventArgs(Keys.F5)))));
+        }
       }
     }
 
