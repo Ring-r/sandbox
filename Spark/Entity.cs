@@ -52,21 +52,21 @@ namespace Prototype.Spark
 
       bool changeLine = false;
       int prevOffsetIndex = -1;
-      if (this.offset < prevLine.ts[0].Item1)
+      if (this.offset < prevLine.ts[0].offset)
       {
-        this.offset = prevLine.ts[0].Item1;
+        this.offset = prevLine.ts[0].offset;
         prevOffsetIndex = 0;
         changeLine = true;
       }
-      if (this.offset > prevLine.ts[prevLine.ts.Count - 1].Item1)
+      if (this.offset > prevLine.ts[prevLine.ts.Count - 1].offset)
       {
-        this.offset = prevLine.ts[prevLine.ts.Count - 1].Item1;
+        this.offset = prevLine.ts[prevLine.ts.Count - 1].offset;
         prevOffsetIndex = prevLine.ts.Count - 1;
         changeLine = true;
       }
       if (!changeLine)
       {
-        prevOffsetIndex = prevLine.ts.FindIndex(item => Math.Abs(item.Item1 - this.offset) < stepEps);
+        prevOffsetIndex = prevLine.ts.FindIndex(item => Math.Abs(item.offset - this.offset) < stepEps);
         if (0 <= prevOffsetIndex && prevOffsetIndex < prevLine.ts.Count)
         {
           this.RecalculateDirection();
@@ -76,10 +76,10 @@ namespace Prototype.Spark
 
       if (changeLine)
       {
-        this.line = prevLine.ts[prevOffsetIndex].Item2;
+        this.line = prevLine.ts[prevOffsetIndex].line;
 
-        int offsetIndex = this.line.ts.FindIndex(item => item.Item2 == prevLine);
-        this.offset = this.line.ts[offsetIndex].Item1;
+        int offsetIndex = this.line.ts.FindIndex(item => item.line == prevLine);
+        this.offset = this.line.ts[offsetIndex].offset;
 
         bool isUseEntityDirection = true;
         if (offsetIndex == 0)
