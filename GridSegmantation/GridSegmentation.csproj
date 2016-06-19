@@ -8,8 +8,10 @@
     <ProjectGuid>{B12EA41F-F926-47D9-8B0A-4DBE17A9C19E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>GridSegmentation</RootNamespace>
-    <AssemblyName>GridVectorizing</AssemblyName>
+    <AssemblyName>GridSegmentation</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -44,6 +46,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Utils.cs" />
     <Compile Include="Grid.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Prototypes\Forms\Forms.csproj">
+      <Project>{B7A0CF99-EE80-4C3A-B880-50DEC1AF7AD1}</Project>
+      <Name>Prototypes.Forms</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
