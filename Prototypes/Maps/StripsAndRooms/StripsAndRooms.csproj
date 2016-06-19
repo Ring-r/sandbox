@@ -45,5 +45,11 @@
     <Compile Include="Map.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Forms\Forms.csproj">
+      <Project>{b7a0cf99-ee80-4c3a-b880-50dec1af7ad1}</Project>
+      <Name>Forms</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

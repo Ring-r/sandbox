@@ -20,7 +20,6 @@ namespace Buildings
 		private readonly float pointBigRadius = 3.0f;
 		private readonly float pointSmallRadius = 1.0f;
 
-		private float scale = 1;
 		private bool showPolygon = true;
 
 		public MainForm()
@@ -29,7 +28,6 @@ namespace Buildings
 
 			this.KeyDown += this.MainForm_KeyDown;
 			this.MouseClick += this.MainForm_MouseClick;
-			this.MouseWheel += this.MainForm_MouseWheel;
 
 			this.ResumeLayout(false);
 		}
@@ -61,14 +59,6 @@ namespace Buildings
 				this.FillPoints();
 				//this.FillPointsRandom();
 			}
-			this.Invalidate();
-		}
-
-		private void MainForm_MouseWheel(object sender, MouseEventArgs e)
-		{
-			this.scale += e.Delta > 0 ? 0.1f : -0.1f;
-			this.scale = Math.Max(this.scale, 1.0f);
-
 			this.Invalidate();
 		}
 
