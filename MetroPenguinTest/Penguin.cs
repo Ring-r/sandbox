@@ -72,5 +72,12 @@ namespace MetroPenguinTest
 				this.vy = -Math.Abs(this.vy);
 			}
 		}
+
+		public void Draw(Graphics graphics, Brush brush, Pen pen)
+		{
+			graphics.FillEllipse(brush, this.x - this.r, this.y - this.r, 2 * this.r, 2 * this.r);
+			graphics.DrawLine(pen, this.x, this.y, this.x + this.r * this.vx, this.y + this.r * this.vy);
+		}
+
 	}
 }

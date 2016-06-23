@@ -127,6 +127,27 @@ namespace MetroPenguinTest
 			this.create();
 		}
 
+		private void MainForm_Paint(object sender, PaintEventArgs e)
+		{
+			e.Graphics.Clear(Color.White);
+			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
+			if (this.penguins.Count > 0)
+			{
+				this.penguins.ForEach(penguin => penguin.Draw(e.Graphics, this.brushPenguins, this.penPenguins));
+				this.penguin.Draw(e.Graphics, this.brushPenguin, this.penPenguin);
+
+				e.Graphics.DrawEllipse(this.penFinish, this.finish.X - 2 * this.penguin.r, this.finish.Y - 2 * this.penguin.r, 4 * this.penguin.r, 4 * this.penguin.r);
+			}
+
+			for (int i = this.currentIndex; i < this.path.Count; ++i)
+			{
+				e.Graphics.FillEllipse(this.brushPenguin, this.path[i].X - Options.pointR, this.path[i].Y - Options.pointR, 2 * Options.pointR, 2 * Options.pointR);
+			}
+
+			e.Graphics.DrawString(string.Format("Collision count: {0}", this.collisionsCount), this.Font, this.brushText, 0, 30);
+		}
+
 		private void Timer_Tick(object sender, EventArgs e)
 		{
 			float timeEllapsed = 0.001f * this.stopwatch.ElapsedMilliseconds;
@@ -190,34 +211,6 @@ namespace MetroPenguinTest
 				this.penguins.ForEach(penguin => penguin.ReturnInBorders(this.ClientSize));
 			}
 			this.Invalidate();
-		}
-
-		private void MainForm_Paint(object sender, PaintEventArgs e)
-		{
-			e.Graphics.Clear(Color.White);
-			e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
-			if (this.penguins.Count > 0)
-			{
-				Penguin penguin;
-				for (int i = 0; i < this.penguins.Count; ++i)
-				{
-					penguin = this.penguins[i];
-					e.Graphics.FillEllipse(this.brushPenguins, penguin.x - penguin.r, penguin.y - penguin.r, 2 * penguin.r, 2 * penguin.r);
-					e.Graphics.DrawLine(this.penPenguins, penguin.x, penguin.y, penguin.x + penguin.r * penguin.vx, penguin.y + penguin.r * penguin.vy);
-				}
-
-				e.Graphics.FillEllipse(this.brushPenguin, this.penguin.x - this.penguin.r, this.penguin.y - this.penguin.r, 2 * this.penguin.r, 2 * this.penguin.r);
-				e.Graphics.DrawLine(this.penPenguin, this.penguin.x, this.penguin.y, this.penguin.x + this.penguin.r * this.penguin.vx, this.penguin.y + this.penguin.r * this.penguin.vy);
-
-				e.Graphics.DrawEllipse(this.penFinish, this.finish.X - 2 * this.penguin.r, this.finish.Y - 2 * this.penguin.r, 4 * this.penguin.r, 4 * this.penguin.r);
-			}
-
-			for (int i = this.currentIndex; i < this.path.Count; ++i)
-			{
-				e.Graphics.FillEllipse(this.brushPenguin, this.path[i].X - Options.pointR, this.path[i].Y - Options.pointR, 2 * Options.pointR, 2 * Options.pointR);
-			}
-
-			e.Graphics.DrawString(string.Format("Collision count: {0}", this.collisionsCount), this.Font, this.brushText, 0, 30);
 		}
 
 		#region EditState.
