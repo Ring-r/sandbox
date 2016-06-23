@@ -17,6 +17,25 @@ namespace MetroPenguinTest
 
 		public bool IsCollided { get; set; }
 
+		public void Init(Size borders)
+		{
+			this.r = Options.Random.Next(Options.minR, Options.maxR);
+			this.x = Options.RandomFloat(r, borders.Width - this.r);
+			this.y = Options.RandomFloat(r, borders.Height - this.r);
+			this.vx = 0;
+			this.vy = 0;
+			this.s = Options.maxS;
+		}
+
+		public void InitRandomDirection()
+		{
+			float a = (float)(2 * Math.PI * Options.Random.NextDouble());
+			//float a = Options.Random.Next(2) != 0 ? (float)Math.PI : 0.0f;
+			this.vx = (float)Math.Cos(a);
+			this.vy = (float)Math.Sin(a);
+			this.s = Options.RandomFloat(Options.minS, Options.maxS);
+		}
+
 		public void Move(float timeEllapsed)
 		{
 			var step = this.s * timeEllapsed;

@@ -7,11 +7,8 @@ using System.Windows.Forms;
 
 namespace MetroPenguinTest
 {
-	public partial class MainForm : Form
+	public class MainForm : Form
 	{
-		private readonly Random rand = new Random();
-		private readonly Stopwatch stopwatch = new Stopwatch();
-
 		private readonly Penguin penguin = new Penguin();
 		private readonly List<Penguin> penguins = new List<Penguin>();
 
@@ -31,57 +28,43 @@ namespace MetroPenguinTest
 
 		private int collisionsCount = 0;
 
-		private void create()
+		private void Start()
 		{
-			int r = this.rand.Next(Options.minR, Options.maxR);
-			float x = r + (this.ClientSize.Width - 2 * r) * (float)this.rand.NextDouble();
-			float y = r + (this.ClientSize.Height - 2 * r) * (float)this.rand.NextDouble();
-			this.penguin.x = x;
-			this.penguin.y = y;
-			this.penguin.vx = 0;
-			this.penguin.vy = 0;
-			this.penguin.r = r;
-			this.penguin.s = Options.maxS;
+			this.penguin.Init(this.ClientSize);
+			this.penguins.ForEach(penguin => penguin.Init(this.ClientSize));
+			this.penguins.ForEach(penguin => penguin.InitRandomDirection());
 
-			float a;
-			float s;
+			this.finish = new PointF(Options.RandomFloat(this.penguin.r, this.ClientSize.Width - this.penguin.r), Options.RandomFloat(this.penguin.r, this.ClientSize.Height - this.penguin.r));
+			this.StartLevel();
+		}
 
-			this.penguins.Clear();
-			for (int i = 0; i < Options.startCount; ++i)
-			{
-				r = this.rand.Next(Options.minR, Options.maxR);
-				x = r + (this.ClientSize.Width - 2 * r) * (float)this.rand.NextDouble();
-				y = r + (this.ClientSize.Height - 2 * r) * (float)this.rand.NextDouble();
-
-				a = (float)(2 * Math.PI * this.rand.NextDouble());
-				//if (this.rand.Next(2) == 0)
-				//{
-				//    a = 0;
-				//}
-				//else
-				//{
-				//    a = (float)Math.PI;
-				//}
-
-				s = Options.minS + (Options.maxS - Options.minS) * (float)this.rand.NextDouble();
-
-				this.penguins.Add(new Penguin() { x = x, y = y, vx = (float)Math.Cos(a), vy = (float)Math.Sin(a), s = s, r = r });
-			}
-
-			this.start = new PointF(this.penguin.x, this.penguin.y);
-			this.finish = new PointF(this.penguin.r + (this.ClientSize.Width - 2 * this.penguin.r) * (float)this.rand.NextDouble(), this.penguin.r + (this.ClientSize.Height - 2 * this.penguin.r) * (float)this.rand.NextDouble());
+		private void StartLevel()
+		{
+			this.start = this.finish;
+			this.finish = new PointF(Options.RandomFloat(this.penguin.r, this.ClientSize.Width - this.penguin.r), Options.RandomFloat(this.penguin.r, this.ClientSize.Height - this.penguin.r));
 
 			this.path.Clear();
 			this.path.Add(new PointF(this.penguin.x, this.penguin.y));
 			this.currentIndex = 0;
-
-			this.collisionsCount = 0;
-
-			this.timer.Interval = 1000 / Options.needFPS;
-			this.timer.Start();
 		}
 
-		private Timer timer = new Timer();
+		private void CheckEnd()
+		{
+			if (this.currentIndex == this.path.Count - 1)
+			{
+				var x = this.penguin.x - this.finish.X;
+				var y = this.penguin.y - this.finish.Y;
+				if (x * x + y * y < this.penguin.r * this.penguin.r)
+				{
+					this.penguin.x = this.finish.X;
+					this.penguin.y = this.finish.Y;
+					this.StartLevel();
+				}
+			}
+		}
+
+		private readonly Stopwatch stopwatch = new Stopwatch();
+		private readonly Timer timer = new Timer();
 
 		protected override void Dispose(bool disposing)
 		{
@@ -105,6 +88,9 @@ namespace MetroPenguinTest
 			this.Load += this.MainForm_Load;
 			this.Paint += this.MainForm_Paint;
 
+			this.timer.Interval = 1000 / Options.needFPS;
+			this.timer.Enabled = true;
+
 			this.timer.Tick += this.Timer_Tick;
 
 			this.ResumeLayout(false);
@@ -124,7 +110,12 @@ namespace MetroPenguinTest
 
 		private void MainForm_Load(object sender, EventArgs e)
 		{
-			this.create();
+			for (int i = 0; i < Options.startCount; ++i)
+			{
+				this.penguins.Add(new Penguin());
+			}
+
+			this.Start();
 		}
 
 		private void MainForm_Paint(object sender, PaintEventArgs e)
@@ -197,7 +188,7 @@ namespace MetroPenguinTest
 				}
 
 				#region Collision between penguins.
-				// TODO: (R) Need to decrees complexity.
+				// TODO: (R) Need to decrease complexity.
 				for (var i = 0; i < this.penguins.Count - 1; ++i)
 				{
 					for (var j = i + 1; j < this.penguins.Count; ++j)
@@ -209,6 +200,8 @@ namespace MetroPenguinTest
 
 				this.penguin.ReturnInBorders(this.ClientSize);
 				this.penguins.ForEach(penguin => penguin.ReturnInBorders(this.ClientSize));
+
+				this.CheckEnd();
 			}
 			this.Invalidate();
 		}
