@@ -31,38 +31,6 @@ namespace MetroPenguinTest
 
 		private int collisionsCount = 0;
 
-		private bool isShowInfo = true;
-
-		private Timer timer = new Timer();
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				this.timer.Dispose();
-			}
-			base.Dispose(disposing);
-		}
-
-		public MainForm()
-		{
-			this.SuspendLayout();
-
-			this.DoubleBuffered = true;
-			this.Name = this.Text = "MainForm";
-			this.StartPosition = FormStartPosition.CenterScreen;
-			this.WindowState = FormWindowState.Maximized;
-			this.Paint += this.MainForm_Paint;
-			this.KeyUp += this.MainForm_KeyUp;
-			this.MouseDown += this.MainForm_MouseDown;
-			this.MouseMove += this.MainForm_MouseMove;
-			this.MouseUp += this.MainForm_MouseUp;
-
-			this.timer.Tick += this.Timer_Tick;
-
-			this.ResumeLayout(false);
-		}
-
 		private void create()
 		{
 			int r = this.rand.Next(Options.minR, Options.maxR);
@@ -113,28 +81,50 @@ namespace MetroPenguinTest
 			this.timer.Start();
 		}
 
-		private void collision(Penguin penguin, Penguin penguinOther)
+		private Timer timer = new Timer();
+
+		protected override void Dispose(bool disposing)
 		{
-			float vx = penguinOther.x - penguin.x;
-			float vy = penguinOther.y - penguin.y;
-			float d = (float)Math.Sqrt(vx * vx + vy * vy);
-			float r = penguinOther.r + penguin.r;
-
-			if (Options.eps < d && d < r - Options.eps)
+			if (disposing)
 			{
-				float coef = 0.5f * (r / d - 1);
-
-				vx *= coef;
-				vy *= coef;
-
-				penguinOther.x += vx;
-				penguinOther.y += vy;
-				penguin.x -= vx;
-				penguin.y -= vy;
-
-				penguinOther.isCollide = true;
-				penguin.isCollide = true;
+				this.timer.Dispose();
 			}
+			base.Dispose(disposing);
+		}
+
+		public MainForm()
+		{
+			this.SuspendLayout();
+
+			this.DoubleBuffered = true;
+			this.Name = this.Text = "MainForm";
+			this.StartPosition = FormStartPosition.CenterScreen;
+			this.WindowState = FormWindowState.Maximized;
+
+			this.KeyUp += this.MainForm_KeyUp;
+			this.Load += this.MainForm_Load;
+			this.Paint += this.MainForm_Paint;
+
+			this.timer.Tick += this.Timer_Tick;
+
+			this.ResumeLayout(false);
+		}
+
+		private void MainForm_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.KeyData == Keys.Escape)
+			{
+				this.Close();
+			}
+			if (e.KeyData == Keys.Enter)
+			{
+				this.SwitchEditState();
+			}
+		}
+
+		private void MainForm_Load(object sender, EventArgs e)
+		{
+			this.create();
 		}
 
 		private void Timer_Tick(object sender, EventArgs e)
@@ -144,21 +134,10 @@ namespace MetroPenguinTest
 
 			if (!this.isPause)
 			{
-				Penguin penguin;
-				float step;
-
-				#region Moving penguins.
-				for (var i = 0; i < this.penguins.Count; ++i)
-				{
-					penguin = this.penguins[i];
-					step = penguin.s * timeEllapsed;
-					penguin.x += penguin.vx * step;
-					penguin.y += penguin.vy * step;
-				}
-				#endregion Moving penguins.
+				this.penguins.ForEach(penguin => penguin.Move(timeEllapsed));
 
 				#region Moving penguin (check points).
-				step = this.penguin.s * timeEllapsed;
+				var step = this.penguin.s * timeEllapsed;
 				if (this.currentIndex < this.path.Count)
 				{
 					float x = this.path[this.currentIndex].X - this.penguin.x;
@@ -189,12 +168,9 @@ namespace MetroPenguinTest
 				}
 				#endregion Moving penguin (check points).
 
-				this.penguin.isCollide = false;
-				for (int j = 0; j < this.penguins.Count; ++j)
-				{
-					this.collision(this.penguin, this.penguins[j]);
-				}
-				if (this.penguin.isCollide && this.penguin.s != 0 && !(this.penguin.vx == 0 && this.penguin.vy == 0))
+				this.penguin.IsCollided = false;
+				this.penguins.ForEach(penguin => penguin.CheckCollision(this.penguin));
+				if (this.penguin.IsCollided && this.penguin.s != 0 && !(this.penguin.vx == 0 && this.penguin.vy == 0))
 				{
 					this.collisionsCount++;
 				}
@@ -205,61 +181,13 @@ namespace MetroPenguinTest
 				{
 					for (var j = i + 1; j < this.penguins.Count; ++j)
 					{
-						this.collision(this.penguins[i], this.penguins[j]);
+						this.penguins[i].CheckCollision(this.penguins[j]);
 					}
 				}
 				#endregion Collision between penguins.
 
-				#region Collision with borders.
-				if (this.penguin.x < this.penguin.r)
-				{
-					this.penguin.x = this.penguin.r;
-					this.penguin.vx = Math.Abs(this.penguin.vx);
-				}
-				if (this.penguin.x > this.ClientSize.Width - this.penguin.r)
-				{
-					this.penguin.x = this.ClientSize.Width - this.penguin.r;
-					this.penguin.vx = -Math.Abs(this.penguin.vx);
-				}
-
-				if (this.penguin.y < this.penguin.r)
-				{
-					this.penguin.y = this.penguin.r;
-					this.penguin.vy = Math.Abs(this.penguin.vy);
-				}
-				if (this.penguin.y > this.ClientSize.Height - this.penguin.r)
-				{
-					this.penguin.y = this.ClientSize.Height - this.penguin.r;
-					this.penguin.vy = -Math.Abs(this.penguin.vy);
-				}
-
-				for (var i = 0; i < this.penguins.Count; ++i)
-				{
-					penguin = this.penguins[i];
-
-					if (penguin.x < penguin.r)
-					{
-						penguin.x = penguin.r;
-						penguin.vx = Math.Abs(penguin.vx);
-					}
-					if (penguin.x > this.ClientSize.Width - penguin.r)
-					{
-						penguin.x = this.ClientSize.Width - penguin.r;
-						penguin.vx = -Math.Abs(penguin.vx);
-					}
-
-					if (penguin.y < penguin.r)
-					{
-						penguin.y = penguin.r;
-						penguin.vy = Math.Abs(penguin.vy);
-					}
-					if (penguin.y > this.ClientSize.Height - penguin.r)
-					{
-						penguin.y = this.ClientSize.Height - penguin.r;
-						penguin.vy = -Math.Abs(penguin.vy);
-					}
-				}
-				#endregion Collision with borders.
+				this.penguin.ReturnInBorders(this.ClientSize);
+				this.penguins.ForEach(penguin => penguin.ReturnInBorders(this.ClientSize));
 			}
 			this.Invalidate();
 		}
@@ -289,63 +217,58 @@ namespace MetroPenguinTest
 				e.Graphics.FillEllipse(this.brushPenguin, this.path[i].X - Options.pointR, this.path[i].Y - Options.pointR, 2 * Options.pointR, 2 * Options.pointR);
 			}
 
-			if (this.isShowInfo)
+			e.Graphics.DrawString(string.Format("Collision count: {0}", this.collisionsCount), this.Font, this.brushText, 0, 30);
+		}
+
+		#region EditState.
+
+		private bool isEditState = false;
+		private void SwitchEditState()
+		{
+			this.isEditState = !this.isEditState;
+			if (this.isEditState)
 			{
-				e.Graphics.DrawString(string.Format("Collision count: {0}", this.collisionsCount), this.Font, this.brushText, 0, 30);
+				RunInEditState();
+			}
+			else
+			{
+				RunOutEditState();
 			}
 		}
 
-		private void MainForm_KeyUp(object sender, KeyEventArgs e)
+		private void RunInEditState()
 		{
-			switch (e.KeyCode)
-			{
-				case Keys.Escape:
-					this.Close();
-					break;
-				case Keys.Enter:
-					this.create();
-					break;
-				case Keys.F1:
-					this.isShowInfo = !this.isShowInfo;
-					break;
-			}
+			this.isPause = true;
+
+			this.path.Clear();
+			this.path.Add(this.start);
+			this.path.Add(this.finish);
+
+			this.MouseDown += this.MainForm_MouseDown;
+			this.MouseMove += this.MainForm_MouseMove;
 		}
 
 		private void MainForm_MouseDown(object sender, MouseEventArgs e)
 		{
-			switch (e.Button)
-			{
-				case MouseButtons.Left:
-					this.isPause = true;
-					this.path.Clear();
-					this.currentIndex = 0;
-					break;
-				case MouseButtons.Right:
-					this.create();
-					break;
-			}
-			// TODO:
+			this.path.Insert(this.path.Count - 1, e.Location);
 		}
 
 		private void MainForm_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (this.isPause)
-			{
-				this.path.Add(e.Location);
-			}
-			// TODO:
+			// TODO: Add example for touchscreen.
 		}
 
-		private void MainForm_MouseUp(object sender, MouseEventArgs e)
+		private void RunOutEditState()
 		{
-			switch (e.Button)
-			{
-				case MouseButtons.Left:
-					this.isPause = false;
-					this.stopwatch.Restart();
-					this.collisionsCount = 0;
-					break;
-			}
+			this.MouseDown -= this.MainForm_MouseDown;
+			this.MouseMove -= this.MainForm_MouseMove;
+
+			// Go to MoveState or go to BeginState.
+			this.currentIndex = 0;
+			this.collisionsCount = 0;
+			this.isPause = false;
 		}
+
+		#endregion EditState.
 	}
 }
