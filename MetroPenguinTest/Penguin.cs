@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace MetroPenguinTest
@@ -10,12 +11,28 @@ namespace MetroPenguinTest
 
 		public int r = Options.minR;
 
-		public float vx = 0;
-		public float vy = 0;
+		private float vx = 0;
+		private float vy = 0;
+		private float speed = 0;
 
-		public float s = 0;
-
-		public bool IsCollided { get; set; }
+    private bool isCollided = false;
+    public bool IsCollided
+    {
+      get
+      {
+        return this.isCollided;
+      }
+      set
+      {
+        if (value && this.IsCollisionCounting)
+        {
+          this.CollisionCount++;
+        }
+        this.isCollided = value;
+      }
+    }
+    public bool IsCollisionCounting { get; set; }
+    public int CollisionCount { get; private set; }
 
 		public void Init(Size borders)
 		{
@@ -24,7 +41,7 @@ namespace MetroPenguinTest
 			this.y = Options.RandomFloat(r, borders.Height - this.r);
 			this.vx = 0;
 			this.vy = 0;
-			this.s = Options.maxS;
+			this.speed = Options.maxS;
 		}
 
 		public void InitRandomDirection()
@@ -33,15 +50,53 @@ namespace MetroPenguinTest
 			//float a = Options.Random.Next(2) != 0 ? (float)Math.PI : 0.0f;
 			this.vx = (float)Math.Cos(a);
 			this.vy = (float)Math.Sin(a);
-			this.s = Options.RandomFloat(Options.minS, Options.maxS);
+			this.speed = Options.RandomFloat(Options.minS, Options.maxS);
 		}
 
-		public void Move(float timeEllapsed)
+		public void Update(float timeEllapsed)
 		{
-			var step = this.s * timeEllapsed;
-			this.x += this.vx * step;
-			this.y += this.vy * step;
-		}
+      var step = this.speed * timeEllapsed;
+      this.x += this.vx * step;
+      this.y += this.vy * step;
+    }
+
+    public void Update(float timeEllapsed, List<PointF> path, ref int currentIndex)
+    {
+      var step = this.speed * timeEllapsed;
+      while (currentIndex < path.Count && this.MoveToPoint(path[currentIndex].X, path[currentIndex].Y, ref step))
+      {
+          currentIndex++;
+      }
+    }
+
+    private bool MoveToPoint(float x, float y, ref float step)
+    {
+      this.vx = x - this.x;
+      this.vy = y - this.y;
+      float d = (float)Math.Sqrt(this.vx * this.vx + this.vy * this.vy);
+      if (d <= step)
+      {
+        this.vx = 0.0f;
+        this.vy = 0.0f;
+
+        this.x = x;
+        this.y = y;
+
+        step -= d;
+        return true;
+      }
+      else
+      {
+        this.vx /= d;
+        this.vy /= d;
+
+        this.x += this.vx * step;
+        this.y += this.vy * step;
+
+        step = 0.0f;
+        return false;
+      }
+    }
 
 		public void CheckCollision(Penguin penguin)
 		{
@@ -97,6 +152,5 @@ namespace MetroPenguinTest
 			graphics.FillEllipse(brush, this.x - this.r, this.y - this.r, 2 * this.r, 2 * this.r);
 			graphics.DrawLine(pen, this.x, this.y, this.x + this.r * this.vx, this.y + this.r * this.vy);
 		}
-
 	}
 }

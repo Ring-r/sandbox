@@ -11,7 +11,7 @@ namespace MetroPenguinTest
 			return min + (max - min) * (float)Random.NextDouble();
 		}
 
-		public static readonly int startCount = 50;
+		public static readonly int startCount = 10;
 
 		public static readonly int minR = 20;
 		public static readonly int maxR = 30;
