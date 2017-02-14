@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<svg width="100vmin" height="100vmin" id="svg">
+	Sorry, your browser does not support inline SVG.
+</svg>
+ 
+</body>
+
+<script type="text/javascript">
+	var half_size_x = 500;
+	var half_size_y = 500;
+	var half_size_z = 500;
+	var step = 50;
+	
+	function z(x, y) {
+		return 100 * (Math.sin(x / half_size_x * Math.PI) + Math.cos(y / half_size_y * Math.PI));
+	}
+
+	var dim = 3;
+	function MultiplyVector(matrix, vector) {
+		var result = [0, 0, 0, 0];
+		for (var i = 0; i <= dim; i++) {
+			for (var j = 0; j <= dim; j++) {
+				result[i] += matrix[i][j] * vector[j];
+			}
+		}
+		return result;
+	}
+	
+	function MultiplyMatrix(matrix_i, matrix_j) {
+		var result = [
+			[0, 0, 0, 0],
+			[0, 0, 0, 0],
+			[0, 0, 0, 0],
+			[0, 0, 0, 0],
+		];
+		for (var i = 0; i <= dim; i++) {
+			for (var j = 0; j <= dim; j++) {
+				for (var k = 0; k <= dim; k++) {
+					result[i][j] += matrix_i[i][k] * matrix_j[k][j];
+				}
+			}
+		}
+		return result;
+	
+	}
+	
+	function CreateIMatrix() {
+		return [
+			[1, 0, 0, 0],
+			[0, 1, 0, 0],
+			[0, 0, 1, 0],
+			[0, 0, 0, 1],
+		];
+	}
+	
+	function RotateX(matrix, angle) {
+		var matrix_temp = [
+			[1, 0, 0, 0],
+			[0, Math.cos(angle), -Math.sin(angle), 0],
+			[0, Math.sin(angle), Math.cos(angle), 0],
+			[0, 0, 0, 1],
+		];
+		return MultiplyMatrix(matrix_temp, matrix);
+	}
+
+	function RotateY(matrix, angle) {
+		var matrix_temp = [
+			[Math.sin(angle), 0, Math.cos(angle), 0],
+			[0, 1, 0, 0],
+			[Math.cos(angle), 0, -Math.sin(angle), 0],
+			[0, 0, 0, 1],
+		];
+		return MultiplyMatrix(matrix_temp, matrix);
+	}
+
+	function RotateZ(matrix, angle) {
+		var matrix_temp = [
+			[Math.cos(angle), -Math.sin(angle), 0, 0],
+			[Math.sin(angle), Math.cos(angle), 0, 0],
+			[0, 0, 1, 0],
+			[0, 0, 0, 1],
+		];
+		return MultiplyMatrix(matrix_temp, matrix);
+	}
+	
+	function Translate(matrix, x, y, z) {
+		var matrix_temp = [
+			[1, 0, 0, x],
+			[0, 1, 0, y],
+			[0, 0, 1, z],
+			[0, 0, 0, 1],
+		];
+		return MultiplyMatrix(matrix_temp, matrix);
+	}
+	
+	function CreateLine(x1, y1, x2, y2, z, matrix) {
+		var vector1 = [x1, y1, z(x1, y1), 1];
+		vector1 = MultiplyVector(matrix, vector1);
+
+		var vector2 = [x2, y2, z(x2, y2), 1];
+		vector2 = MultiplyVector(matrix, vector2);
+
+		var line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+		line.setAttribute('x1', vector1[0]);
+		line.setAttribute('y1', vector1[1]);
+		line.setAttribute('x2', vector2[0]);
+		line.setAttribute('y2', vector2[1]);
+		var z = Math.min(Math.max((vector1[2] + vector2[2]) / 2, -half_size_z), half_size_z);
+		line.setAttribute('z', z);
+		var color_part = Math.floor((z + half_size_z) / half_size_z / 2 * 256);
+		line.setAttribute('stroke', 'rgb(' + color_part + ',' + color_part + ',' + color_part + ')');
+		
+		return line;
+	}
+	
+	var svg = document.getElementById('svg');
+	
+	function Draw(angleX, angleY, angleZ) {
+		svg.innerHTML = '';
+		
+		var matrix = CreateIMatrix();
+		matrix = RotateX(matrix, angleX);
+		matrix = RotateY(matrix, angleY);
+		matrix = RotateZ(matrix, angleZ);
+		matrix = Translate(matrix, half_size_x, half_size_y, 0);
+	
+		var lines = [];
+		for (var x = -half_size_x; x < half_size_x; x += step) {
+			for (var y = -half_size_y; y < half_size_y; y += step) {
+				lines.push(CreateLine(x, y, x + step, y, z, matrix));
+				lines.push(CreateLine(x, y, x, y + step, z, matrix));
+			}
+		}
+
+		lines.sort(function(a, b) {
+			return parseFloat(b.getAttribute('z')) - parseFloat(a.getAttribute('z'));
+		});
+		for (var line in lines) {
+			line = lines[line];
+			svg.appendChild(line);
+		}
+	}
+
+	var max_step = Math.PI / 1000;
+	var angleX = 0;
+	var angleY = 0;
+	var angleZ = 0;
+	var intervalId = window.setInterval(function() {
+		function Boardering(angle) {
+			if (angle < 0) {
+				angle += 2 * Math.PI;
+			}
+			if (angle >= 2 * Math.PI) {
+				angle -= 2 * Math.PI;
+			}
+			return angle;
+		}
+
+		angleX += 3 * max_step;
+		angleX = Boardering(angleX);
+		angleY += 5 * max_step;
+		angleY = Boardering(angleY);
+		angleZ += 7 * max_step;
+		angleZ = Boardering(angleZ);
+	
+		Draw(angleX, angleY, angleZ);
+	}, 10);
+</script>
+  
+</html>
