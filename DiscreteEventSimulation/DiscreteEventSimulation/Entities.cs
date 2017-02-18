@@ -28,7 +28,7 @@ namespace DiscreteEventSimulation
 
         private void RecalculateMinTime(Entity entity)
         {
-            entity.Time = float.PositiveInfinity;
+            entity.ClearEvent();
             this.RecalculateMinTime0(entity);
             // this.RecalculateMinTime1(entity);
         }
@@ -36,26 +36,24 @@ namespace DiscreteEventSimulation
         {
             if (entity.VX != 0)
             {
-                int ix = entity.VX > 0 ? entity.i + 1 : entity.i;
+                var @event = entity.VX > 0 ? 2 : 1;
+
+                var ix = entity.VX > 0 ? entity.i + 1 : entity.i;
                 ix = ix << cellShift;
-                float t = (ix - entity.X) / entity.VX;
-                if (entity.Time > t)
-                {
-                    entity.Time = t;
-                    entity.Event = entity.VX > 0 ? 2 : 1;
-                }
+                var time = (ix - entity.X) / entity.VX;
+
+                entity.SetEvent(time, @event);
             }
 
             if (entity.VY != 0)
             {
-                int jy = entity.VY > 0 ? entity.j + 1 : entity.j;
+                var @event = entity.VY > 0 ? 4 : 3;
+
+                var jy = entity.VY > 0 ? entity.j + 1 : entity.j;
                 jy = jy << cellShift;
-                float t = (jy - entity.Y) / entity.VY;
-                if (entity.Time > t)
-                {
-                    entity.Time = t;
-                    entity.Event = entity.VY > 0 ? 4 : 3;
-                }
+                var time = (jy - entity.Y) / entity.VY;
+
+                entity.SetEvent(time, @event);
             }
         }
         private void RecalculateMinTime_1(Entity entity)
@@ -91,19 +89,11 @@ namespace DiscreteEventSimulation
 
             float D = B * B - A * (C - L * L);
 
-            float t1 = (float)(B - Math.Sqrt(D)) / A;
-            float t2 = (float)(B + Math.Sqrt(D)) / A;
+            var t1 = (float)(B - Math.Sqrt(D)) / A;
+            entity.SetEvent(t1, -1, entityNext);
 
-            if (entity.Time > t1)
-            {
-                entity.Time = t1;
-                entity.Event = -1;
-            }
-            if (entityNext.Time > t2)
-            {
-                entityNext.Time = t2;
-                entityNext.Event = -1;
-            }
+            var t2 = (float)(B + Math.Sqrt(D)) / A;
+            entityNext.SetEvent(t2, -1, entity);
         }
 
         // procedure t_chast (ic, jc : longint);

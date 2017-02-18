@@ -20,7 +20,8 @@
             heap = new Entity[count];
 
             entities.CopyTo(this.heap, nstart);
-            Entity inf = new Entity() { Time = float.PositiveInfinity };
+            Entity inf = new Entity();
+            inf.ClearEvent();
             for (int i = nstart + n; i < count; ++i)
             {
                 this.heap[i] = inf;
