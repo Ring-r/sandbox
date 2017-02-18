@@ -9,14 +9,14 @@ namespace DiscreteEventSimulation
         private const int areaShift = 9;
         private const int areaSize = 1 << areaShift; // <- 512
 
-        private const int cellShift = 5;
-        private const int cellSize = 1 << cellShift; // <- 32.
+        private const int cellShift = 6;
+        private const int cellSize = 1 << cellShift; // <- 64.
 
         private const int cellsCount = (areaSize >> cellShift) + 1;
         private const int entitiesCount = 10;
 
-        private const float minRadius = 3.0f;
-        private const float maxRadius = 10.0f;
+        private const float minRadius = 10.0f;
+        private const float maxRadius = 20.0f;
         private const float minV = 0.1f;
         private const float maxV = 3.0f;
 
@@ -29,10 +29,12 @@ namespace DiscreteEventSimulation
         private void RecalculateMinTime(Entity entity)
         {
             entity.ClearEvent();
-            this.RecalculateMinTime0(entity);
-            // this.RecalculateMinTime1(entity);
+            this.CheckEventByX(entity);
+            this.CheckEventByY(entity);
+            this.CheckCollisionEvent(entity);
         }
-        private void RecalculateMinTime0(Entity entity)
+
+        private void CheckEventByX(Entity entity)
         {
             if (entity.VX != 0)
             {
@@ -44,7 +46,10 @@ namespace DiscreteEventSimulation
 
                 entity.SetEvent(time, @event);
             }
+        }
 
+        private void CheckEventByY(Entity entity)
+        {
             if (entity.VY != 0)
             {
                 var @event = entity.VY > 0 ? 4 : 3;
@@ -56,7 +61,8 @@ namespace DiscreteEventSimulation
                 entity.SetEvent(time, @event);
             }
         }
-        private void RecalculateMinTime_1(Entity entity)
+
+        private void CheckCollisionEvent(Entity entity)
         {
             int imin = Math.Max(0, entity.i - 1);
             int imax = Math.Min(entity.i + 1, this.cells.GetLength(0) - 1);
@@ -70,13 +76,13 @@ namespace DiscreteEventSimulation
                     {
                         if (entity != cells[i, j][k])
                         {
-                            this.RecalculateMinTime_10(entity, cells[i, j][k]);
+                            this.CheckCollisionEvent(entity, cells[i, j][k]);
                         }
                     }
                 }
             }
         }
-        private void RecalculateMinTime_10(Entity entity, Entity entityNext) // t_chast(ic,jc)
+        private void CheckCollisionEvent(Entity entity, Entity entityNext)
         {
             float x = entityNext.X - entity.X;
             float y = entityNext.Y - entity.Y;
@@ -89,31 +95,12 @@ namespace DiscreteEventSimulation
 
             float D = B * B - A * (C - L * L);
 
-            var t1 = (float)(B - Math.Sqrt(D)) / A;
-            entity.SetEvent(t1, -1, entityNext);
+            var entityTime = (float)(B - Math.Sqrt(D)) / A;
+            entity.SetEvent(entityTime, -1, entityNext);
 
-            var t2 = (float)(B + Math.Sqrt(D)) / A;
-            entityNext.SetEvent(t2, -1, entity);
+            var entityNextTime = (float)(B + Math.Sqrt(D)) / A;
+            entityNext.SetEvent(entityNextTime, -1, entity);
         }
-
-        // procedure t_chast (ic, jc : longint);
-        //double test = 1e20;
-        //bool ind_sosed = false;
-        //bool ind_tip = entity.tip == 2 && entity_2.tip == 2;
-        //if (ind_tip)
-        //    if (entity.k_sosedej > 0)
-        //    {
-        //        int k = 1;
-        //        while (entity.sosedi[k] != entity_2 && k <= entity.k_sosedej)
-        //            ++k;
-        //        if (k <= entity.k_sosedej)
-        //            ind_sosed = true;
-        //    }
-        //if (ind_sosed)
-        //    t_sosedi(ic, jc, test);
-        //else
-        //    t_not_sosedi(ic, jc, test);
-        //    new_times(ic, jc, test);
 
         private void RaiseEvent(Entity entity)
         {
@@ -129,59 +116,68 @@ namespace DiscreteEventSimulation
         private void RaiseEventMinX(Entity entity)
         {
             this.cells[entity.i, entity.j].Remove(entity);
-            --entity.i;
+            entity.i--;
             if (entity.i < 0)
             {
                 entity.i = this.cells.GetLength(0) - 1;
                 entity.X = areaSize;
             }
-            //int i = (int)entity.X >> cellShift; // TODO: For testing.
             this.cells[entity.i, entity.j].Add(entity);
         }
         private void RaiseEventMaxX(Entity entity)
         {
             this.cells[entity.i, entity.j].Remove(entity);
-            ++entity.i;
+            entity.i++;
             if (entity.i >= this.cells.GetLength(0))
             {
                 entity.i = 0;
                 entity.X = 0;
             }
-            //int i = (int)entity.X >> cellShift; // TODO: For testing.
             this.cells[entity.i, entity.j].Add(entity);
         }
         private void RaiseEventMinY(Entity entity)
         {
             this.cells[entity.i, entity.j].Remove(entity);
-            --entity.j;
+            entity.j--;
             if (entity.j < 0)
             {
                 entity.j = this.cells.GetLength(1) - 1;
                 entity.Y = areaSize;
             }
-            //int j = (int)entity.Y >> cellShift; // TODO: For testing.
             this.cells[entity.i, entity.j].Add(entity);
         }
         private void RaiseEventMaxY(Entity entity)
         {
             this.cells[entity.i, entity.j].Remove(entity);
-            ++entity.j;
+            entity.j++;
             if (entity.j >= this.cells.GetLength(1))
             {
                 entity.j = 0;
                 entity.Y = 0;
             }
-            //int j = (int)entity.Y >> cellShift; // TODO: For testing.
             this.cells[entity.i, entity.j].Add(entity);
         }
 
         private void RaiseEvent_1(Entity entity)
         {
             Entity entityNext = entity.Next;
-            if (entity == entityNext.Next && entity.Event == 0)
-            {
-                throw new NotImplementedException();
-            }
+
+            var x = entityNext.X - entity.X;
+            var y = entityNext.Y - entity.Y;
+            var vx = entityNext.VX - entity.VX;
+            var vy = entityNext.VY - entity.VY;
+
+            var coef = (vx * x + vy * y) / (x * x + y * y);
+
+            entity.VX += coef * x;
+            entity.VY += coef * y;
+
+            entityNext.VX -= coef * x;
+            entityNext.VY -= coef * y;
+
+            //var vx1 = entity.VX; entity.VX = entityNext.VX; entityNext.VX = vx1;
+            //var vy1 = entity.VY; entity.VY = entityNext.VY; entityNext.VY = vy1;
+
             this.AfterEvent(entity);
             this.AfterEvent(entityNext);
         }
@@ -260,19 +256,22 @@ namespace DiscreteEventSimulation
                 {
                     if (this.cells[i, j].Count > 0)
                     {
-                        g.FillRectangle(Brushes.Yellow, i << cellShift, j << cellShift, cellSize, cellSize);
+                        //g.FillRectangle(Brushes.Yellow, i << cellShift, j << cellShift, cellSize, cellSize);
                     }
                     g.DrawRectangle(Pens.Silver, i << cellShift, j << cellShift, cellSize, cellSize);
                 }
             }
             #endregion For testing.
 
+            var topEntityTime = this.heap.GetFirst().Time;
             foreach (Entity entity in this.entities)
             {
                 g.FillEllipse(Brushes.Blue, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
                 g.DrawEllipse(Pens.Black, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
-                g.DrawString($"Id: {entity.Id}, time: {entity.Time}", font, Brushes.Black, entity.X + entity.R, entity.Y + entity.R);
-                g.DrawLine(Pens.Black, entity.X, entity.Y, entity.X + entity.VX * entity.Time, entity.Y + entity.VY * entity.Time);
+                //g.DrawString($"Id: {entity.Id}, time: {entity.Time}", font, Brushes.Black, entity.X + entity.R, entity.Y + entity.R);
+                //g.DrawLine(Pens.Black, entity.X, entity.Y, entity.X + entity.VX * entity.Time, entity.Y + entity.VY * entity.Time);
+                g.DrawLine(Pens.Red, entity.X, entity.Y, entity.X + entity.VX * topEntityTime, entity.Y + entity.VY * topEntityTime);
+                
             }
         }
     }

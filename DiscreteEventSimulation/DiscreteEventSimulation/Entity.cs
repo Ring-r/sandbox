@@ -35,7 +35,7 @@ namespace DiscreteEventSimulation
 
         public void SetEvent(float time, int @event, Entity next = null)
         {
-            if (this.Time > time)
+            if (this.Time > time && time >= 0)
             {
                 this.Event = @event;
                 this.Time = time;
