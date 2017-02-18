@@ -30,7 +30,7 @@ namespace DiscreteEventSimulation
 
         private void RecalculateMinTime(Entity entity)
         {
-            entity.T = float.PositiveInfinity;
+            entity.Time = float.PositiveInfinity;
             this.RecalculateMinTime0(entity);
             // this.RecalculateMinTime1(entity);
         }
@@ -41,9 +41,9 @@ namespace DiscreteEventSimulation
                 int ix = entity.VX > 0 ? entity.i + 1 : entity.i;
                 ix = ix << cellShift;
                 float t = (ix - entity.X) / entity.VX;
-                if (entity.T > t)
+                if (entity.Time > t)
                 {
-                    entity.T = t;
+                    entity.Time = t;
                     entity.Event = entity.VX > 0 ? 2 : 1;
                 }
             }
@@ -53,9 +53,9 @@ namespace DiscreteEventSimulation
                 int jy = entity.VY > 0 ? entity.j + 1 : entity.j;
                 jy = jy << cellShift;
                 float t = (jy - entity.Y) / entity.VY;
-                if (entity.T > t)
+                if (entity.Time > t)
                 {
-                    entity.T = t;
+                    entity.Time = t;
                     entity.Event = entity.VY > 0 ? 4 : 3;
                 }
             }
@@ -96,14 +96,14 @@ namespace DiscreteEventSimulation
             float t1 = (float)(B - Math.Sqrt(D)) / A;
             float t2 = (float)(B + Math.Sqrt(D)) / A;
 
-            if (entity.T > t1)
+            if (entity.Time > t1)
             {
-                entity.T = t1;
+                entity.Time = t1;
                 entity.Event = -1;
             }
-            if (entityNext.T > t2)
+            if (entityNext.Time > t2)
             {
-                entityNext.T = t2;
+                entityNext.Time = t2;
                 entityNext.Event = -1;
             }
         }
@@ -214,6 +214,7 @@ namespace DiscreteEventSimulation
                     this.cells[i, j] = new CellList(cellEntityCount);
                 }
             }
+            this.Create();
         }
 
         public void Create()
@@ -243,19 +244,14 @@ namespace DiscreteEventSimulation
 
         public void Update()
         {
-            if (this.heap.isBuild)
-            {
-                Entity entity = this.heap.GetFirst();
-                while (entity.T <= 0)
-                {
-                    this.RaiseEvent(entity);
-                    this.AfterEvent(entity);
-                    entity = this.heap.GetFirst();
-                }
+            var enity = this.heap.GetFirst();
 
-                entity.Move();
-                //this.AfterEvent(entity); // TODO: For testing.
-            }
+            var time = enity.Time;
+            foreach (var entity in entities)
+                entity.Update(time);
+
+            this.RaiseEvent(enity);
+            this.AfterEvent(enity);
         }
 
         public void Draw(Graphics g, float width, float height, Font font)
@@ -278,8 +274,8 @@ namespace DiscreteEventSimulation
             {
                 g.FillEllipse(Brushes.Blue, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
                 g.DrawEllipse(Pens.Black, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
-                g.DrawString(entity.T.ToString(), font, Brushes.Black, entity.X + entity.R, entity.Y + entity.R);
-                g.DrawLine(Pens.Black, entity.X, entity.Y, entity.X + entity.VX * entity.T, entity.Y + entity.VY * entity.T);
+                g.DrawString(entity.Time.ToString(), font, Brushes.Black, entity.X + entity.R, entity.Y + entity.R);
+                g.DrawLine(Pens.Black, entity.X, entity.Y, entity.X + entity.VX * entity.Time, entity.Y + entity.VY * entity.Time);
             }
         }
     }

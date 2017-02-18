@@ -20,7 +20,7 @@
             heap = new Entity[count];
 
             entities.CopyTo(this.heap, nstart);
-            Entity inf = new Entity() { T = float.PositiveInfinity };
+            Entity inf = new Entity() { Time = float.PositiveInfinity };
             for (int i = nstart + n; i < count; ++i)
             {
                 this.heap[i] = inf;
@@ -31,7 +31,7 @@
             {
                 for (int i = count_ >> 1; i < count_; i += 2)
                 {
-                    heap[(i - 1) >> 1] = heap[i].T < heap[i + 1].T ? heap[i] : heap[i + 1];
+                    heap[(i - 1) >> 1] = heap[i].Time < heap[i + 1].Time ? heap[i] : heap[i + 1];
                 }
                 count_ = count_ >> 1;
             } while ((count_ >> 1) > 0);
@@ -47,7 +47,7 @@
             {
                 i_sosed = (i & 1) == 1 ? i + 1 : i - 1;
                 i_parent = (i - 1) >> 1;
-                heap[i_parent] = heap[i].T < heap[i_sosed].T ? heap[i] : heap[i_sosed];
+                heap[i_parent] = heap[i].Time < heap[i_sosed].Time ? heap[i] : heap[i_sosed];
                 i = i_parent;
             } while (i > 0);
         }

@@ -12,7 +12,7 @@ namespace DiscreteEventSimulation
         {
             InitializeComponent();
 
-            this.timer.Interval = 1000;
+            this.timer.Interval = 100;
 
             this.entities.Create();
         }

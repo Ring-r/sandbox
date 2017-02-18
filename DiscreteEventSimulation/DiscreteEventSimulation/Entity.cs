@@ -17,18 +17,18 @@
 
         public float R; // Radius.
 
-        public float T; // Time.
+        public float Time; // Time.
 
         public int i, j, k; // Cell indexes.
 
         public int Event; // Next event type.
         public Entity Next; // Next collision event entity.
 
-        public void Move()
+        public void Update(float time)
         {
-            this.X += this.VX * this.T;
-            this.Y += this.VY * this.T;
-            this.T = 0;
+            this.X += time * this.VX;
+            this.Y += time * this.VY;
+            this.Time -= time;
         }
     }
 }
