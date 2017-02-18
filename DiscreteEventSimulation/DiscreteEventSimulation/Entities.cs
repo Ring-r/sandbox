@@ -20,8 +20,6 @@ namespace DiscreteEventSimulation
         private const float minV = 0.1f;
         private const float maxV = 3.0f;
 
-        private const int cellEntityCount = 5;
-
 
         private readonly CellList[,] cells = new CellList[cellsCount, cellsCount];
         private readonly List<Entity> entities = new List<Entity>();
@@ -211,14 +209,23 @@ namespace DiscreteEventSimulation
             {
                 for (int j = 0; j < this.cells.GetLength(1); ++j)
                 {
-                    this.cells[i, j] = new CellList(cellEntityCount);
+                    this.cells[i, j] = new CellList();
                 }
             }
+
             this.Create();
         }
 
         public void Create()
         {
+            for (int i = 0; i < this.cells.GetLength(0); ++i)
+            {
+                for (int j = 0; j < this.cells.GetLength(1); ++j)
+                {
+                    this.cells[i, j].Clear();
+                }
+            }
+
             this.entities.Clear();
             for (int i = 0; i < entitiesCount; i++)
             {
@@ -274,7 +281,7 @@ namespace DiscreteEventSimulation
             {
                 g.FillEllipse(Brushes.Blue, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
                 g.DrawEllipse(Pens.Black, entity.X - entity.R, entity.Y - entity.R, 2 * entity.R, 2 * entity.R);
-                g.DrawString(entity.Time.ToString(), font, Brushes.Black, entity.X + entity.R, entity.Y + entity.R);
+                g.DrawString($"Id: {entity.Id}, time: {entity.Time}", font, Brushes.Black, entity.X + entity.R, entity.Y + entity.R);
                 g.DrawLine(Pens.Black, entity.X, entity.Y, entity.X + entity.VX * entity.Time, entity.Y + entity.VY * entity.Time);
             }
         }

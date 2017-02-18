@@ -1,31 +1,21 @@
-﻿namespace DiscreteEventSimulation
+﻿using System.Collections.Generic;
+
+namespace DiscreteEventSimulation
 {
-    public class CellList
+    public class CellList : List<Entity>
     {
-        private int capacity = 0;
-        private int count = 0;
-        private Entity[] array = null;
-
-        public int Count { get { return this.count; } }
-        public Entity this[int index] { get { return this.array[index]; } }
-
-        public CellList(int capacity)
+        public new void Add(Entity entity)
         {
-            this.capacity = capacity;
-            this.array = new Entity[capacity];
+            base.Add(entity);
+            entity.indexInCell = Count - 1;
         }
-        public void Add(Entity entity)
+
+        public new void Remove(Entity entity)
         {
-            this.array[this.count] = entity;
-            entity.k = this.count;
-            ++this.count;
-        }
-        public void Remove(Entity entity)
-        {
-            int index = entity.k;
-            this.array[index] = this.array[this.count - 1];
-            this.array[index].k = index;
-            --this.count;
+            var lastEntity = this[Count - 1];
+            lastEntity.indexInCell = entity.indexInCell;
+            this[lastEntity.indexInCell] = lastEntity;
+            RemoveAt(Count - 1);
         }
     }
 }

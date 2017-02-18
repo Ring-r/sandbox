@@ -19,7 +19,7 @@
 
         public float Time; // Time.
 
-        public int i, j, k; // Cell indexes.
+        public int i, j, indexInCell; // Cell indexes.
 
         public int Event; // Next event type.
         public Entity Next; // Next collision event entity.
