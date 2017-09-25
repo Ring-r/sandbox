@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlgorithmsAndDataStructures;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -11,7 +12,7 @@ namespace RegionFilter
     public partial class MainForm : Form
     {
         private readonly RegionBuilder regionBuilder;
-        private readonly IRegionFilter regionFilter = new RegionFilter();
+        private readonly IRegionFilter regionFilter = new AlgorithmsAndDataStructures.RegionFilter();
 
         private long preCalculateTime;
         private long calculateTime;

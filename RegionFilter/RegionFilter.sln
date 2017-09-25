@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegionFilter", "RegionFilter\RegionFilter.csproj", "{F5F7234C-5F1B-418F-B465-F7E798A41B22}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgorithmsAndDataStructures", "..\AlgorithmsAndDataStructures\AlgorithmsAndDataStructures\AlgorithmsAndDataStructures.csproj", "{549DE38B-ED91-41C7-BABE-59418800CE92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{F5F7234C-5F1B-418F-B465-F7E798A41B22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5F7234C-5F1B-418F-B465-F7E798A41B22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5F7234C-5F1B-418F-B465-F7E798A41B22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{549DE38B-ED91-41C7-BABE-59418800CE92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{549DE38B-ED91-41C7-BABE-59418800CE92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{549DE38B-ED91-41C7-BABE-59418800CE92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{549DE38B-ED91-41C7-BABE-59418800CE92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
