@@ -36,9 +36,11 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Grid.cs" />
     <Compile Include="IRegionFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionFilter.cs" />
+    <Compile Include="GridSegmentation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
