@@ -66,7 +66,7 @@ namespace RegionFilter
         {
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            this.regionFilter.Update(this.region);
+            this.regionFilter.Init(this.region);
             stopwatch.Stop();
             this.updateRegionTime = stopwatch.ElapsedMilliseconds;
         }
@@ -290,7 +290,7 @@ namespace RegionFilter
         {
             if (this.indexPart < 0)
             {
-                var regionPart = new List<Point3D> {new Point3D(x, y, 0.0)};
+                var regionPart = new List<Point3D> { new Point3D(x, y, 0.0) };
                 this.region.Add(regionPart);
                 this.indexPart = 0;
             }

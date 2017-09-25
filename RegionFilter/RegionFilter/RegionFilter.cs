@@ -10,7 +10,12 @@ namespace RegionFilter
         private double[] xs = new double[0];
         private double[][][] xEdges = new double[0][][];
 
-        public void Update(List<List<Point3D>> pointListList)
+        public void Init(List<Point3D> pointList)
+        {
+            this.Init(new List<List<Point3D>> { pointList });
+        }
+
+        public void Init(List<List<Point3D>> pointListList)
         {
             var sortedSet = new SortedSet<double>();
             pointListList.ForEach(pointList => pointList.ForEach(point => sortedSet.Add(point.X)));
@@ -26,11 +31,8 @@ namespace RegionFilter
 
             foreach (var pointList in pointListList)
             {
-                var indexList = new List<int>(pointList.Count);
-                for (var j = 0; j < pointList.Count; ++j)
-                {
-                    indexList.Add(Array.BinarySearch(this.xs, pointList[j].X) - 1);
-                }
+                var indexList = pointList.Select(point => Array.BinarySearch(this.xs, point.X) - 1).ToList();
+
                 for (int i = pointList.Count - 1, j = 0; j < pointList.Count; i = j, ++j)
                 {
                     if (pointList[i].X == pointList[j].X)
@@ -62,19 +64,13 @@ namespace RegionFilter
             }
         }
 
-        public void Update(List<Point3D> pointListList)
-        {
-            this.Update(new List<List<Point3D>> { pointListList });
-        }
-
         public bool Contains(double x, double y)
         {
             var xBegin = -1;
             var xEnd = this.xs.Length;
-            int xMiddle;
             while (xEnd - xBegin > 1)
             {
-                xMiddle = (xEnd + xBegin) >> 1;
+                var xMiddle = (xEnd + xBegin) >> 1;
                 if (this.xs[xMiddle] < x)
                     xBegin = xMiddle;
                 else
@@ -89,10 +85,9 @@ namespace RegionFilter
             var edges = this.xEdges[xBegin];
             var edgeBegin = -1;
             var edgeEnd = edges.Length;
-            int edgeMiddle;
             while (edgeEnd - edgeBegin > 1)
             {
-                edgeMiddle = (edgeEnd + edgeBegin) >> 1;
+                var edgeMiddle = (edgeEnd + edgeBegin) >> 1;
                 if (edges[edgeMiddle][0] + dx * edges[edgeMiddle][1] < y)
                     edgeBegin = edgeMiddle;
                 else

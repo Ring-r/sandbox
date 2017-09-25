@@ -3,10 +3,10 @@ using System.Windows.Media.Media3D;
 
 namespace RegionFilter
 {
-	public interface IRegionFilter
-	{
-		void Update(List<Point3D> pointListList);
-		void Update(List<List<Point3D>> pointListList);
-		bool Contains(double x, double y);
-	}
+    public interface IRegionFilter
+    {
+        void Init(List<Point3D> pointList);
+        void Init(List<List<Point3D>> pointListList);
+        bool Contains(double x, double y);
+    }
 }
