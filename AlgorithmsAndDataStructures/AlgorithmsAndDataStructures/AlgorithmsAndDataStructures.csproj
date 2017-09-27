@@ -34,13 +34,18 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Grid.cs" />
+    <Compile Include="GridWithGeometryUtils.cs" />
+    <Compile Include="GridUtils.cs" />
+    <Compile Include="GridWithGeometry.cs" />
+    <Compile Include="GridWithGeometryViewer.cs" />
     <Compile Include="IRegionFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionFilter.cs" />
-    <Compile Include="GridSegmentation.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

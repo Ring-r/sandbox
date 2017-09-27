@@ -1,10 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AlgorithmsAndDataStructures
 {
-    public class GridSegmentation
+    public static class GridUtils
     {
-        public static List<List<int>> Segmentate(Grid grid)
+        public static void SetValue<T>(this Grid<T> grid, T value, IReadOnlyList<int> gridVector)
+        {
+            for (var indexVector = 0; indexVector < gridVector.Count; indexVector += 2)
+            {
+                for (var index = gridVector[indexVector]; index <= gridVector[indexVector + 1]; ++index)
+                {
+                    grid[index] = value;
+                }
+            }
+        }
+
+        public static void Clear<T>(this Grid<T> grid, IReadOnlyList<int> gridVector)
+        {
+            for (var i = 0; i < gridVector.Count; i += 2)
+            {
+                grid.Clear(gridVector[i], gridVector[i + 1] - gridVector[i] + 1);
+            }
+        }
+
+        public static List<List<int>> Segmentate<T>(Grid<T> grid)
         {
             var resultGridVectors = new List<List<int>>();
 
@@ -12,20 +32,20 @@ namespace AlgorithmsAndDataStructures
 
             for (var index = 0; index < gridTemp.CellsCount; ++index)
             {
-                if (gridTemp[index] == 0)
+                if (!Convert.ToBoolean(gridTemp[index]))
                 {
                     continue;
                 }
 
                 var gridVector = Border(gridTemp, index);
-                GridClear(gridTemp, gridVector);
+                Clear(gridTemp, gridVector);
                 resultGridVectors.Add(gridVector);
             }
 
             return resultGridVectors;
         }
 
-        private static List<int> Border(Grid grid, int startIndex)
+        public static List<int> Border<T>(this Grid<T> grid, int startIndex)
         {
             var resultGridVector = new List<int>();
 
@@ -49,15 +69,14 @@ namespace AlgorithmsAndDataStructures
                 var bNext =
                     0 <= iNext && iNext < grid.ICount &&
                     0 <= jNext && jNext < grid.JCount &&
-                    grid[indexNext] > 0;
+                    Convert.ToBoolean(grid[indexNext]);
 
                 var iLeft = iNext - jv;
                 var jLeft = jNext + iv;
-                var indexLeft = grid.Index(iLeft, jLeft);
                 var bLeft =
                     0 <= iLeft && iLeft < grid.ICount &&
                     0 <= jLeft && jLeft < grid.JCount &&
-                    grid[indexLeft] > 0;
+                    Convert.ToBoolean(grid[indexNext]);
 
                 if (bLeft)
                 {
@@ -84,25 +103,7 @@ namespace AlgorithmsAndDataStructures
             return resultGridVector;
         }
 
-        private static void GridClear(Grid grid, IReadOnlyList<int> gridVector)
-        {
-            for (var i = 0; i < gridVector.Count; i += 2)
-            {
-                grid.Clear(gridVector[i], gridVector[i + 1] - gridVector[i] + 1);
-            }
-        }
-
-        private static int GridCount(IReadOnlyList<int> gridVector)
-        {
-            var gridCount = 0;
-            for (var i = 0; i < gridVector.Count; i += 2)
-            {
-                gridCount += gridVector[i + 1] - gridVector[i] + 1;
-            }
-            return gridCount;
-        }
-
-        private static bool AtBorder(Grid grid, IReadOnlyList<int> gridVector)
+        public static bool AtBorder<T>(this Grid<T> grid, IReadOnlyList<int> gridVector)
         {
             var atBorder = false;
             for (var i = 0; i < gridVector.Count && !atBorder; ++i)
@@ -113,6 +114,16 @@ namespace AlgorithmsAndDataStructures
                     jIndex <= 0 || grid.JCount - 1 <= jIndex;
             }
             return atBorder;
+        }
+
+        public static int GridCount(IReadOnlyList<int> gridVector)
+        {
+            var gridCount = 0;
+            for (var i = 0; i < gridVector.Count; i += 2)
+            {
+                gridCount += gridVector[i + 1] - gridVector[i] + 1;
+            }
+            return gridCount;
         }
     }
 }
