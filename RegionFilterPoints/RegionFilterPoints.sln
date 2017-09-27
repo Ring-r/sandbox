@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegionFilter", "RegionFilter\RegionFilter.csproj", "{F5F7234C-5F1B-418F-B465-F7E798A41B22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegionFilterPoints", "RegionFilterPoints\RegionFilterPoints.csproj", "{F5F7234C-5F1B-418F-B465-F7E798A41B22}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgorithmsAndDataStructures", "..\AlgorithmsAndDataStructures\AlgorithmsAndDataStructures\AlgorithmsAndDataStructures.csproj", "{549DE38B-ED91-41C7-BABE-59418800CE92}"
 EndProject
