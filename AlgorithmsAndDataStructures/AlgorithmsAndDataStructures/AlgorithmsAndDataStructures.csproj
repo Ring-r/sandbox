@@ -46,6 +46,7 @@
     <Compile Include="GridWithGeometryViewer.cs" />
     <Compile Include="Enteties\IEntity.cs" />
     <Compile Include="IRegionFilter.cs" />
+    <Compile Include="LocatorZ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegionFilter.cs" />
     <Compile Include="Utils.cs" />

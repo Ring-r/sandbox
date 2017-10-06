@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Buildings
+namespace AlgorithmsAndDataStructures
 {
     public class LocatorZ
     {
