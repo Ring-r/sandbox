@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media.Media3D;
 
 namespace AlgorithmsAndDataStructures
 {
@@ -10,12 +9,12 @@ namespace AlgorithmsAndDataStructures
         private double[] xs = new double[0];
         private double[][][] xEdges = new double[0][][];
 
-        public void Init(List<Point3D> pointList)
+        public void Init(List<Vector3d> pointList)
         {
-            this.Init(new List<List<Point3D>> { pointList });
+            this.Init(new List<List<Vector3d>> { pointList });
         }
 
-        public void Init(List<List<Point3D>> pointListList)
+        public void Init(List<List<Vector3d>> pointListList)
         {
             var sortedSet = new SortedSet<double>();
             pointListList.ForEach(pointList => pointList.ForEach(point => sortedSet.Add(point.X)));

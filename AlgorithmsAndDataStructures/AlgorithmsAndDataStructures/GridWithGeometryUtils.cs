@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Windows.Media.Media3D;
 
 namespace AlgorithmsAndDataStructures
 {
     public static class GridWithGeometryUtils
     {
-        public static void Border(this GridWithGeometry<bool> grid, List<List<Point3D>> region)
+        public static void Border(this GridWithGeometry<bool> grid, List<List<Vector3d>> region)
         {
             foreach (var part in region)
             {
@@ -17,7 +16,7 @@ namespace AlgorithmsAndDataStructures
             }
         }
 
-        private static void Border(this GridWithGeometry<bool> grid, Point3D point0, Point3D point1)
+        private static void Border(this GridWithGeometry<bool> grid, Vector3d point0, Vector3d point1)
         {
             if (point0.Y > point1.Y)
             {

@@ -6,11 +6,11 @@ namespace Buildings
 {
     public class PolygonBuilder
     {
-        public readonly List<LocatorZ> points = new List<LocatorZ>();
+        public readonly List<Vector3d> points = new List<Vector3d>();
         public readonly List<int> contour = new List<int>();
         public List<Tuple<int, int, int>> triangles = null;
 
-        private static double Distance2D(LocatorZ loc1, LocatorZ loc2)
+        private static double Distance2D(Vector3d loc1, Vector3d loc2)
         {
             double dX = loc1.X - loc2.X;
             double dY = loc1.Y - loc2.Y;
@@ -23,7 +23,7 @@ namespace Buildings
             this.contour.Clear();
         }
 
-        public void Init(List<LocatorZ> points)
+        public void Init(List<Vector3d> points)
         {
             this.points.AddRange(points);
         }
@@ -48,8 +48,8 @@ namespace Buildings
             #endregion Find first point.
             this.contour.Add(currIndex);
 
-            LocatorZ lastVector = new LocatorZ(0, 1, 0);
-            LocatorZ currPoint = this.points[currIndex];
+            Vector3d lastVector = new Vector3d(0, 1, 0);
+            Vector3d currPoint = this.points[currIndex];
 
             bool isExit = false;
             do
@@ -61,7 +61,7 @@ namespace Buildings
                 {
                     if (i != currIndex && Distance2D(this.points[i], currPoint) <= radius)
                     {
-                        LocatorZ vec = this.points[i] - currPoint;
+                        Vector3d vec = this.points[i] - currPoint;
                         double cos = (vec.X * lastVector.X + vec.Y * lastVector.Y) / vec.Length2D() / lastVector.Length2D();
                         double sign = vec.X * lastVector.Y - vec.Y * lastVector.X;
                         if (sign > 0 || (sign == 0 && cos > 0))
@@ -106,14 +106,14 @@ namespace Buildings
                 {
                     // Check vectors to form left-handed pair (positive cross-product)
                     int lastIndex = i + 2 < pointsToProcess.Count ? i + 2 : 0;
-                    LocatorZ vec1 = this.points[pointsToProcess[lastIndex]] - this.points[pointsToProcess[i]];
-                    LocatorZ vec2 = this.points[pointsToProcess[i + 1]] - this.points[pointsToProcess[i]];
+                    Vector3d vec1 = this.points[pointsToProcess[lastIndex]] - this.points[pointsToProcess[i]];
+                    Vector3d vec2 = this.points[pointsToProcess[i + 1]] - this.points[pointsToProcess[i]];
                     if (vec1.CrossProduct2D(vec2) > 0)
                     {
                         // Check that there are no polygon vertices inside
-                        LocatorZ v1 = this.points[pointsToProcess[i]];
-                        LocatorZ v2 = this.points[pointsToProcess[i + 1]];
-                        LocatorZ v3 = this.points[pointsToProcess[lastIndex]];
+                        Vector3d v1 = this.points[pointsToProcess[i]];
+                        Vector3d v2 = this.points[pointsToProcess[i + 1]];
+                        Vector3d v3 = this.points[pointsToProcess[lastIndex]];
                         bool inside = false;
                         for (int j = 0; j < pointsToProcess.Count; ++j)
                         {
@@ -122,7 +122,7 @@ namespace Buildings
                                 continue;
                             }
 
-                            LocatorZ pt = this.points[pointsToProcess[j]];
+                            Vector3d pt = this.points[pointsToProcess[j]];
                             double cp1 = (v1.X - pt.X) * (v2.Y - v1.Y) - (v2.X - v1.X) * (v1.Y - pt.Y);
                             double cp2 = (v2.X - pt.X) * (v3.Y - v2.Y) - (v3.X - v2.X) * (v2.Y - pt.Y);
                             double cp3 = (v3.X - pt.X) * (v1.Y - v3.Y) - (v1.X - v3.X) * (v3.Y - pt.Y);
@@ -146,8 +146,8 @@ namespace Buildings
                 }
             }
             // Add last three points as the last triangle if they form left-handed pair
-            LocatorZ lvec1 = this.points[pointsToProcess[2]] - this.points[pointsToProcess[0]];
-            LocatorZ lvec2 = this.points[pointsToProcess[1]] - this.points[pointsToProcess[0]];
+            Vector3d lvec1 = this.points[pointsToProcess[2]] - this.points[pointsToProcess[0]];
+            Vector3d lvec2 = this.points[pointsToProcess[1]] - this.points[pointsToProcess[0]];
             if (lvec1.CrossProduct2D(lvec2) > 0)
             {
                 this.triangles.Add(new Tuple<int, int, int>(pointsToProcess[0], pointsToProcess[1], pointsToProcess[2]));

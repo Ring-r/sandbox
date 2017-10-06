@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AlgorithmsAndDataStructures;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Media.Media3D;
 
 namespace Prototypes.Forms
 {
@@ -16,7 +16,7 @@ namespace Prototypes.Forms
         private Point mousePoint;
         private bool updateOnMouseUp;
 
-        public List<List<Point3D>> Data { get; } = new List<List<Point3D>>();
+        public List<List<Vector3d>> Data { get; } = new List<List<Vector3d>>();
 
         public float PointSize { get; set; }
 
@@ -151,7 +151,7 @@ namespace Prototypes.Forms
             if (e.Button == MouseButtons.Left && this.indexPoint >= 0)
             {
                 var regionPart = this.Data[this.indexPart];
-                regionPart[this.indexPoint] = new Point3D(e.X, e.Y, 0.0);
+                regionPart[this.indexPoint] = new Vector3d(e.X, e.Y, 0.0);
                 this.updateOnMouseUp = true;
                 isInvalidate = true;
             }
@@ -175,7 +175,7 @@ namespace Prototypes.Forms
         {
             if (this.indexPart < 0)
             {
-                var regionPart = new List<Point3D> { new Point3D(x, y, 0.0) };
+                var regionPart = new List<Vector3d> { new Vector3d(x, y, 0.0) };
                 this.Data.Add(regionPart);
                 this.indexPart = 0;
             }
@@ -184,22 +184,22 @@ namespace Prototypes.Forms
                 var regionPart = this.Data[this.indexPart];
                 if (regionPart.Count < 3)
                 {
-                    regionPart.Add(new Point3D(x, y, 0.0));
+                    regionPart.Add(new Vector3d(x, y, 0.0));
                 }
                 else
                 {
                     if (this.indexLine >= 0)
                     {
-                        regionPart.Insert(this.indexLine + 1, new Point3D(x, y, 0.0));
+                        regionPart.Insert(this.indexLine + 1, new Vector3d(x, y, 0.0));
                     }
                     else
                     {
                         regionPart = this.Data[this.Data.Count - 1];
                         if (regionPart.Count >= 3)
                         {
-                            regionPart = new List<Point3D>();
+                            regionPart = new List<Vector3d>();
                         }
-                        regionPart.Add(new Point3D(x, y, 0.0));
+                        regionPart.Add(new Vector3d(x, y, 0.0));
                         this.Data.Add(regionPart);
                         this.indexPart = this.Data.Count - 1;
                     }

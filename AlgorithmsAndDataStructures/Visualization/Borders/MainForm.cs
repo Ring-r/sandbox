@@ -92,8 +92,8 @@ namespace Buildings
 			{
 				List<PointF> points = this.polygonBuilder.contour.ConvertAll(pointIndex =>
 				{
-					LocatorZ locatorZ = this.polygonBuilder.points[pointIndex];
-					return new PointF((float)locatorZ.X, (float)locatorZ.Y);
+					Vector3d vector3D = this.polygonBuilder.points[pointIndex];
+					return new PointF((float)vector3D.X, (float)vector3D.Y);
 				});
 				//e.Graphics.DrawPolygon(Pens.Pink, points.ToArray());
 				e.Graphics.DrawLines(Pens.Pink, points.ToArray());
@@ -152,7 +152,7 @@ namespace Buildings
 			this.DisposeEnumerator();
 
 			this.FillPointsRandom();
-			List<LocatorZ> locators = this.points.ConvertAll(point => new LocatorZ(point.X, point.Y, 0.0));
+			List<Vector3d> locators = this.points.ConvertAll(point => new Vector3d(point.X, point.Y, 0.0));
 			this.polygonBuilder.Clear();
 			this.polygonBuilder.Init(locators);
 			this.enumerator = this.polygonBuilder.BuildContour(2 * this.stepSize).GetEnumerator();
