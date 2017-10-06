@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
+using Entities;
 
-namespace Entities
+namespace AlgorithmsAndDataStructures.Enteties
 {
 	class EntityCircle : IEntity
 	{

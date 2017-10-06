@@ -26,10 +26,10 @@ namespace MapsTest
     private void CreateSquares()
     {
       float y = 0;
-      for (int i = 0; i < iCount; ++i)
+      for (var i = 0; i < iCount; ++i)
       {
         float x = 0;
-        for (int j = 0; j < jCount; ++j)
+        for (var j = 0; j < jCount; ++j)
         {
           this.points[i, j] = new PointF(x, y);
           x += step;
@@ -40,13 +40,13 @@ namespace MapsTest
 
     private void CreateTriangles()
     {
-      float yStep = 0.5f * (float)Math.Sqrt(2) * step;
-      float step_2 = 0.5f * step;
+      var yStep = 0.5f * (float)Math.Sqrt(2) * step;
+      var step_2 = 0.5f * step;
       float y = 0;
-      for (int i = 0; i < iCount; ++i)
+      for (var i = 0; i < iCount; ++i)
       {
-        float x = (i & 1) == 0 ? 0 : step_2;
-        for (int j = 0; j < jCount; ++j)
+        var x = (i & 1) == 0 ? 0 : step_2;
+        for (var j = 0; j < jCount; ++j)
         {
           this.points[i, j] = new PointF(x, y);
           x += step;
@@ -99,18 +99,18 @@ namespace MapsTest
 
     private void DrawSquaresLines(Graphics g)
     {
-      for (int i = 0; i < iCount; ++i)
+      for (var i = 0; i < iCount; ++i)
       {
-        for (int j = 0; j < jCount - 1; ++j)
+        for (var j = 0; j < jCount - 1; ++j)
         {
           g.DrawLine(Pens.Black, this.points[i, j], this.points[i, j + 1]);
         }
       }
 
 
-      for (int i = 0; i < iCount - 1; ++i)
+      for (var i = 0; i < iCount - 1; ++i)
       {
-        for (int j = 0; j < jCount; ++j)
+        for (var j = 0; j < jCount; ++j)
         {
           g.DrawLine(Pens.Black, this.points[i, j], this.points[i + 1, j]);
         }
@@ -119,34 +119,34 @@ namespace MapsTest
 
     private void DrawTrianglesLines(Graphics g)
     {
-      for (int i = 0; i < iCount; ++i)
+      for (var i = 0; i < iCount; ++i)
       {
-        for (int j = 0; j < jCount - 1; ++j)
+        for (var j = 0; j < jCount - 1; ++j)
         {
           g.DrawLine(Pens.Black, this.points[i, j], this.points[i, j + 1]);
         }
       }
 
 
-      for (int i = 0; i < iCount - 1; ++i)
+      for (var i = 0; i < iCount - 1; ++i)
       {
-        for (int j = 0; j < jCount; ++j)
+        for (var j = 0; j < jCount; ++j)
         {
           g.DrawLine(Pens.Black, this.points[i, j], this.points[i + 1, j]);
         }
       }
 
-      for (int i = 0; i < iCount - 1; i += 2)
+      for (var i = 0; i < iCount - 1; i += 2)
       {
-        for (int j = 1; j < jCount; ++j)
+        for (var j = 1; j < jCount; ++j)
         {
           g.DrawLine(Pens.Black, this.points[i, j], this.points[i + 1, j - 1]);
         }
       }
 
-      for (int i = 1; i < iCount - 1; i += 2)
+      for (var i = 1; i < iCount - 1; i += 2)
       {
-        for (int j = 0; j < jCount - 1; ++j)
+        for (var j = 0; j < jCount - 1; ++j)
         {
           g.DrawLine(Pens.Black, this.points[i, j], this.points[i + 1, j + 1]);
         }
@@ -155,9 +155,9 @@ namespace MapsTest
 
     private void DrawNodes(Graphics g)
     {
-      for (int i = 0; i < iCount; ++i)
+      for (var i = 0; i < iCount; ++i)
       {
-        for (int j = 0; j < jCount; ++j)
+        for (var j = 0; j < jCount; ++j)
         {
           g.DrawEllipse(Pens.Red, this.points[i, j].X, this.points[i, j].Y, 1, 1);
         }
@@ -166,7 +166,7 @@ namespace MapsTest
 
     private void DrawIcosahedron(Graphics g)
     {
-      PointF[] triangle = new PointF[3];
+      var triangle = new PointF[3];
       triangle[0] = new PointF();
     }
 

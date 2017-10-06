@@ -77,22 +77,22 @@ namespace Buildings
 				{
 					e.Graphics.DrawPolygon(Pens.Silver, this.polygon.ToArray());
 				}
-				foreach (PointF point in this.polygon)
+				foreach (var point in this.polygon)
 				{
 					e.Graphics.FillEllipse(Brushes.Blue, point.X - this.pointBigRadius, point.Y - this.pointBigRadius, 2 * this.pointBigRadius, 2 * this.pointBigRadius);
 				}
 			}
 
-			foreach (PointF point in this.points)
+			foreach (var point in this.points)
 			{
 				e.Graphics.FillEllipse(Brushes.Black, point.X - this.pointSmallRadius, point.Y - this.pointSmallRadius, 2 * this.pointSmallRadius, 2 * this.pointSmallRadius);
 			}
 
 			if (this.polygonBuilder.contour.Count > 0)
 			{
-				List<PointF> points = this.polygonBuilder.contour.ConvertAll(pointIndex =>
+				var points = this.polygonBuilder.contour.ConvertAll(pointIndex =>
 				{
-					Vector3d vector3D = this.polygonBuilder.points[pointIndex];
+					var vector3D = this.polygonBuilder.points[pointIndex];
 					return new PointF((float)vector3D.X, (float)vector3D.Y);
 				});
 				//e.Graphics.DrawPolygon(Pens.Pink, points.ToArray());
@@ -106,30 +106,30 @@ namespace Buildings
 			this.points.Clear();
 			for (float x = 0; x < this.ClientSize.Width; x += this.stepSize)
 			{
-				for (int i = 0; i < this.polygon.Count; ++i)
+				for (var i = 0; i < this.polygon.Count; ++i)
 				{
-					int j = (i + 1) % this.polygon.Count;
-					PointF pi = this.polygon[i];
-					PointF pj = this.polygon[j];
-					float a = (x - pi.X) / (pj.X - pi.X);
+					var j = (i + 1) % this.polygon.Count;
+					var pi = this.polygon[i];
+					var pj = this.polygon[j];
+					var a = (x - pi.X) / (pj.X - pi.X);
 					if (0 <= a && a < 1)
 					{
-						float y = a * pj.Y + (1 - a) * pi.Y;
+						var y = a * pj.Y + (1 - a) * pi.Y;
 						this.points.Add(new PointF(x + this.eps * ((float)this.random.NextDouble() - 0.5f), y + this.eps * ((float)this.random.NextDouble() - 0.5f)));
 					}
 				}
 			}
 			for (float y = 0; y < this.ClientSize.Height; y += this.stepSize)
 			{
-				for (int i = 0; i < this.polygon.Count; ++i)
+				for (var i = 0; i < this.polygon.Count; ++i)
 				{
-					int j = (i + 1) % this.polygon.Count;
-					PointF pi = this.polygon[i];
-					PointF pj = this.polygon[j];
-					float a = (y - pi.Y) / (pj.Y - pi.Y);
+					var j = (i + 1) % this.polygon.Count;
+					var pi = this.polygon[i];
+					var pj = this.polygon[j];
+					var a = (y - pi.Y) / (pj.Y - pi.Y);
 					if (0 <= a && a < 1)
 					{
-						float x = a * pj.X + (1 - a) * pi.X;
+						var x = a * pj.X + (1 - a) * pi.X;
 						this.points.Add(new PointF(x + this.eps * ((float)this.random.NextDouble() - 0.5f), y + this.eps * ((float)this.random.NextDouble() - 0.5f)));
 					}
 				}
@@ -139,7 +139,7 @@ namespace Buildings
 		private void FillPointsRandom()
 		{
 			this.points.Clear();
-			for (int i = 0; i < 1000; ++i)
+			for (var i = 0; i < 1000; ++i)
 			{
 				float x = this.ClientSize.Width / 3 + this.random.Next(this.ClientSize.Width / 3);
 				float y = this.ClientSize.Height / 3 + this.random.Next(this.ClientSize.Height / 3);
@@ -152,7 +152,7 @@ namespace Buildings
 			this.DisposeEnumerator();
 
 			this.FillPointsRandom();
-			List<Vector3d> locators = this.points.ConvertAll(point => new Vector3d(point.X, point.Y, 0.0));
+			var locators = this.points.ConvertAll(point => new Vector3d(point.X, point.Y, 0.0));
 			this.polygonBuilder.Clear();
 			this.polygonBuilder.Init(locators);
 			this.enumerator = this.polygonBuilder.BuildContour(2 * this.stepSize).GetEnumerator();

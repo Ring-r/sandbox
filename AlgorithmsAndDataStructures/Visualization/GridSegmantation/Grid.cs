@@ -32,7 +32,7 @@ namespace GridSegmentation
 
     public Grid Copy()
     {
-      Grid grid = new Grid(this.iCount, this.jCount);
+      var grid = new Grid(this.iCount, this.jCount);
       Array.Copy(this.cells, grid.cells, this.cellsCount);
       return grid;
     }
@@ -50,8 +50,8 @@ namespace GridSegmentation
     {
       Array.Clear(this.cells, 0, this.cellsCount);
 
-      int filledCount = filledCountPercents * this.cellsCount / 100;
-      for (int i = 0; i < filledCount; ++i)
+      var filledCount = filledCountPercents * this.cellsCount / 100;
+      for (var i = 0; i < filledCount; ++i)
       {
         this.cells[this.Index(Utils.Random.Next(this.iCount), Utils.Random.Next(this.jCount))] = value;
       }

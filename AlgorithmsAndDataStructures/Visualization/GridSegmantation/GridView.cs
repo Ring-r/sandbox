@@ -21,9 +21,9 @@ namespace GridSegmentation
 
     public void DrawGrid(Graphics g, Grid grid)
     {
-      for (int i = 0; i < grid.iCount; ++i)
+      for (var i = 0; i < grid.iCount; ++i)
       {
-        for (int j = 0; j < grid.jCount; ++j)
+        for (var j = 0; j < grid.jCount; ++j)
         {
           if (grid[grid.Index(i, j)] > 0)
           {
@@ -40,8 +40,8 @@ namespace GridSegmentation
         return;
       }
 
-      Random random = new Random(0);
-      for (int i = 0; i < gridVectors.Count - 1; ++i)
+      var random = new Random(0);
+      for (var i = 0; i < gridVectors.Count - 1; ++i)
       {
         DrawGridVector(g, grid, gridVectors[i], ColorFrom(random, this.filledAlpha));
       }
@@ -56,10 +56,10 @@ namespace GridSegmentation
     private void DrawGridVector(Graphics g, Grid grid, List<int> gridVector, Color color)
     {
       Brush brush = new SolidBrush(color);
-      int count = gridVector.Count;
-      for (int i = 0; i < count; i += 2)
+      var count = gridVector.Count;
+      for (var i = 0; i < count; i += 2)
       {
-        for (int index = gridVector[i]; index <= gridVector[i + 1]; ++index)
+        for (var index = gridVector[i]; index <= gridVector[i + 1]; ++index)
         {
           int index_i, index_j; grid.Index(index, out index_i, out index_j);
           g.FillRectangle(brush, index_i * this.cellSize, index_j * this.cellSize, this.cellSize, this.cellSize);
@@ -69,8 +69,8 @@ namespace GridSegmentation
     private void DrawGridVectorBorders(Graphics g, Grid grid, List<int> gridVector, Color color)
     {
       Brush brush = new SolidBrush(color);
-      int count = gridVector.Count;
-      for (int i = 0; i < count; ++i)
+      var count = gridVector.Count;
+      for (var i = 0; i < count; ++i)
       {
         int index_i, index_j; grid.Index(gridVector[i], out index_i, out index_j);
         g.FillRectangle(brush, index_i * this.cellSize, index_j * this.cellSize, this.cellSize, this.cellSize);
