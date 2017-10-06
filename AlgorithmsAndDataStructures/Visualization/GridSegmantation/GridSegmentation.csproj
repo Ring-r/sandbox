@@ -48,7 +48,7 @@
     <Compile Include="Grid.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Prototypes\Forms\Forms.csproj">
+    <ProjectReference Include="..\..\Prototypes\Forms\Forms.csproj">
       <Project>{B7A0CF99-EE80-4C3A-B880-50DEC1AF7AD1}</Project>
       <Name>Prototypes.Forms</Name>
     </ProjectReference>

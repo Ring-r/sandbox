@@ -78,7 +78,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AlgorithmsAndDataStructures\AlgorithmsAndDataStructures\AlgorithmsAndDataStructures.csproj">
+    <ProjectReference Include="..\..\AlgorithmsAndDataStructures\AlgorithmsAndDataStructures.csproj">
       <Project>{549de38b-ed91-41c7-babe-59418800ce92}</Project>
       <Name>AlgorithmsAndDataStructures</Name>
     </ProjectReference>
