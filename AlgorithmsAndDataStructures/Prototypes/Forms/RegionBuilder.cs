@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Media.Media3D;
 
-namespace RegionFilter
+namespace Prototypes.Forms
 {
     public sealed class RegionBuilder
     {
@@ -25,11 +26,13 @@ namespace RegionFilter
         public float PartWidth { get; set; }
         public int CurrentPartAlpha { get; set; }
         public float CurrentPartWidth { get; set; }
+        public Font InformationFont { get; set; }
+        public Brush InformationBrush { get; set; }
 
         public event EventHandler Changed;
         public event EventHandler ChangedLight;
 
-        public RegionBuilder(Form form)
+        public RegionBuilder(System.Windows.Forms.Form form)
         {
             form.MouseDown += this.Form_MouseDown;
             form.MouseMove += this.Form_MouseMove;
@@ -69,6 +72,27 @@ namespace RegionFilter
                     graphics.DrawLine(pen, (float)(regionPointSource.X), (float)(regionPointSource.Y), (float)(regionPointTarget.X), (float)(regionPointTarget.Y));
                 }
             }
+        }
+
+        public void DrawInformation(Graphics graphics, float x, ref float y)
+        {
+            var font = this.InformationFont;
+            var textHeight = graphics.MeasureString(" ", font).Height;
+            var brush = this.InformationBrush;
+
+            graphics.DrawString("To add point (points count in current part less then 3) click mouse left button in any place.", font, brush, x, y);
+            y += textHeight;
+            graphics.DrawString("To add point (points count in current part more then 3) click mouse left button on edge.", font, brush, x, y);
+            y += textHeight;
+            graphics.DrawString("To move point click mouse left button on point, hold and move.", font, brush, x, y);
+            y += textHeight;
+            graphics.DrawString("To delete point click mouse right button on point.", font, brush, x, y);
+            y += textHeight;
+            graphics.DrawString("To delete part delete all points in part.", font, brush, x, y);
+            y += textHeight;
+            y += textHeight;
+            graphics.DrawString($"The region has {this.Data.Sum(part => part.Count)} points in {this.Data.Count} parts.", font, brush, x, y);
+            y += textHeight;
         }
 
         private void RaiseChanged()

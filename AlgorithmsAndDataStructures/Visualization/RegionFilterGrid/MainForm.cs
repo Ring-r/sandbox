@@ -5,6 +5,8 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using AlgorithmsAndDataStructures;
+using Prototypes.Forms;
+using Form = System.Windows.Forms.Form;
 
 namespace RegionFilter
 {
